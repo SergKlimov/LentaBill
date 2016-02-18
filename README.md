@@ -19,3 +19,12 @@ MySQL
 #День 2ой:#
 Собрание - 20:30
 
+#День опять
+
+- Ксения - бд с точки зрения перформанса и всяких плюшек
+
+##Компас##
+Кодик:
+http://gitlab.kcup.ws/5802_bng/rsapr-airliner/tree/3236090c3f2a98662ee24ff430088168f0739d80/Airliner
+
+https://yadi.sk/i/CKAF1AE4p5Pu3
