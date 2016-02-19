@@ -1,6 +1,10 @@
 package com.kspt.it.resources;
 
 import com.kspt.it.services.checks.ChecksAggregationService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import static java.util.stream.Collectors.toList;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -12,8 +16,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@Path("api/checks/aggregation")
+@Path("/api/checks/aggregation")
 @Produces(MediaType.APPLICATION_XML)
+@Api(value = "checks_aggregation", description = "Aggregation for checks")
 public class ChecksAggregationResource {
 
   @Inject
@@ -21,8 +26,13 @@ public class ChecksAggregationResource {
 
   @GET
   @Path("/byDateAndStore")
+  @ApiOperation(value = "Aggregate checks info by date and sore", notes = "Anything Else?")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "OK"),
+      @ApiResponse(code = 500, message = "Something wrong in Server")
+  })
   public List<ChecksAggregationResultRepresentation> aggregateByDateAndStore() {
-    return service.aggregateByDateAndStore()
+    final List<ChecksAggregationResultRepresentation> list = service.aggregateByDateAndStore()
         .stream()
         .map(ar -> new ChecksAggregationResultRepresentation(
             ar.getTimestamp(),
@@ -33,25 +43,30 @@ public class ChecksAggregationResource {
             ar.getAllChecksValueSum(),
             ar.getChecksCount())
         ).collect(toList());
+    return list;
   }
 }
 
-@XmlRootElement()
+@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 class ChecksAggregationResultRepresentation {
-  private final long timestamp;
 
-  private final int storeId;
+  private long timestamp;
 
-  private final double minCheckValue;
+  private int storeId;
 
-  private final double avgCheckValue;
+  private double minCheckValue;
 
-  private final double maxCheckValue;
+  private double avgCheckValue;
 
-  private final double allChecksValueSum;
+  private double maxCheckValue;
 
-  private final int checksCount;
+  private double allChecksValueSum;
+
+  private int checksCount;
+
+  public ChecksAggregationResultRepresentation() {
+  }
 
   public ChecksAggregationResultRepresentation(
       final long timestamp,

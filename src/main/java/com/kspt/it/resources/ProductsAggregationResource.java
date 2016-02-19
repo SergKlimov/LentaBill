@@ -1,6 +1,10 @@
 package com.kspt.it.resources;
 
 import com.kspt.it.services.products.ProductsAggregationService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import static java.util.stream.Collectors.toList;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -14,6 +18,7 @@ import java.util.List;
 
 @Path("api/products/aggregation")
 @Produces(MediaType.APPLICATION_XML)
+@Api(value = "products_aggregation", description = "Aggregation for products")
 public class ProductsAggregationResource {
 
   @Inject
@@ -21,8 +26,14 @@ public class ProductsAggregationResource {
 
   @GET
   @Path("/byDate")
+  @ApiOperation(value = "Aggregate products info by date", notes = "Anything Else?")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "OK"),
+      @ApiResponse(code = 500, message = "Something wrong in Server")
+  })
   public List<ProductsAggregationByDateResultRepresentation> aggregateByDate() {
-    return service.aggregateByDateAndProduct().stream()
+    final List<ProductsAggregationByDateResultRepresentation> list = service
+        .aggregateByDateAndProduct().stream()
         .map(ar -> new ProductsAggregationByDateResultRepresentation(
             ar.getTimestamp(),
             ar.getProductId(),
@@ -36,12 +47,19 @@ public class ProductsAggregationResource {
             ar.getAllProductsQuantitySum(),
             ar.getItemsCount())
         ).collect(toList());
+    return list;
   }
 
   @GET
   @Path("/byStore")
+  @ApiOperation(value = "Aggregate products info by sore", notes = "Anything Else?")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "OK"),
+      @ApiResponse(code = 500, message = "Something wrong in Server")
+  })
   public List<ProductsAggregationByStoreResultRepresentation> aggregateByStore() {
-    return service.aggregateByStoreAndProduct().stream()
+    final List<ProductsAggregationByStoreResultRepresentation> list = service
+        .aggregateByStoreAndProduct().stream()
         .map(ar -> new ProductsAggregationByStoreResultRepresentation(
             ar.getStoreId(),
             ar.getProductId(),
@@ -55,12 +73,19 @@ public class ProductsAggregationResource {
             ar.getAllProductsQuantitySum(),
             ar.getItemsCount())
         ).collect(toList());
+    return list;
   }
 
   @GET
   @Path("/byDateAndStore")
+  @ApiOperation(value = "Aggregate products info by date and sore", notes = "Anything Else?")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "OK"),
+      @ApiResponse(code = 500, message = "Something wrong in Server")
+  })
   public List<ProductsAggregationByStoreAndDateResultRepresentation> aggregateByDateAndStore() {
-    return service.aggregateByStoreAndDateAndProduct().stream()
+    final List<ProductsAggregationByStoreAndDateResultRepresentation> list = service
+        .aggregateByStoreAndDateAndProduct().stream()
         .map(ar -> new ProductsAggregationByStoreAndDateResultRepresentation(
             ar.getTimestamp(),
             ar.getStoreId(),
@@ -75,6 +100,7 @@ public class ProductsAggregationResource {
             ar.getAllProductsQuantitySum(),
             ar.getItemsCount())
         ).collect(toList());
+    return list;
   }
 }
 
@@ -82,27 +108,30 @@ public class ProductsAggregationResource {
 @XmlAccessorType(XmlAccessType.FIELD)
 class ProductsAggregationByDateResultRepresentation {
 
-  private final long timestamp;
+  private long timestamp;
 
-  private final int productId;
+  private int productId;
 
-  private final double minCheckValue;
+  private double minCheckValue;
 
-  private final double avgCheckValue;
+  private double avgCheckValue;
 
-  private final double maxCheckValue;
+  private double maxCheckValue;
 
-  private final double allChecksValueSum;
+  private double allChecksValueSum;
 
-  private final double minProductQuantity;
+  private double minProductQuantity;
 
-  private final double avgProductQuantity;
+  private double avgProductQuantity;
 
-  private final double maxProductQuantity;
+  private double maxProductQuantity;
 
-  private final double allProductsQuantitySum;
+  private double allProductsQuantitySum;
 
-  private final int itemsCount;
+  private int itemsCount;
+
+  public ProductsAggregationByDateResultRepresentation() {
+  }
 
   public ProductsAggregationByDateResultRepresentation(
       final long timestamp,
@@ -134,29 +163,32 @@ class ProductsAggregationByDateResultRepresentation {
 @XmlAccessorType(XmlAccessType.FIELD)
 class ProductsAggregationByStoreAndDateResultRepresentation {
 
-  private final long timestamp;
+  private long timestamp;
 
-  private final int storeId;
+  private int storeId;
 
-  private final int productId;
+  private int productId;
 
-  private final double minCheckValue;
+  private double minCheckValue;
 
-  private final double avgCheckValue;
+  private double avgCheckValue;
 
-  private final double maxCheckValue;
+  private double maxCheckValue;
 
-  private final double allChecksValueSum;
+  private double allChecksValueSum;
 
-  private final double minProductQuantity;
+  private double minProductQuantity;
 
-  private final double avgProductQuantity;
+  private double avgProductQuantity;
 
-  private final double maxProductQuantity;
+  private double maxProductQuantity;
 
-  private final double allProductsQuantitySum;
+  private double allProductsQuantitySum;
 
-  private final int itemsCount;
+  private int itemsCount;
+
+  public ProductsAggregationByStoreAndDateResultRepresentation() {
+  }
 
   public ProductsAggregationByStoreAndDateResultRepresentation(
       final long timestamp,
@@ -190,27 +222,30 @@ class ProductsAggregationByStoreAndDateResultRepresentation {
 @XmlAccessorType(XmlAccessType.FIELD)
 class ProductsAggregationByStoreResultRepresentation {
 
-  private final int storeId;
+  private int storeId;
 
-  private final int productId;
+  private int productId;
 
-  private final double minCheckValue;
+  private double minCheckValue;
 
-  private final double avgCheckValue;
+  private double avgCheckValue;
 
-  private final double maxCheckValue;
+  private double maxCheckValue;
 
-  private final double allChecksValueSum;
+  private double allChecksValueSum;
 
-  private final double minProductQuantity;
+  private double minProductQuantity;
 
-  private final double avgProductQuantity;
+  private double avgProductQuantity;
 
-  private final double maxProductQuantity;
+  private double maxProductQuantity;
 
-  private final double allProductsQuantitySum;
+  private double allProductsQuantitySum;
 
-  private final int itemsCount;
+  private int itemsCount;
+
+  public ProductsAggregationByStoreResultRepresentation() {
+  }
 
   public ProductsAggregationByStoreResultRepresentation(
       final int storeId,
