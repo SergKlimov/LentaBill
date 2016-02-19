@@ -28,7 +28,7 @@ class TestDemoApplication extends DemoApplication {
   public void initialize(final Bootstrap<DemoApplicationConfig> bootstrap) {
     GuiceBundle<DemoApplicationConfig> bundle = GuiceBundle.<DemoApplicationConfig>newBuilder()
         .addModule(Modules.override(new GuiceModule()).with(new TestGuiceModule()))
-        .build(Stage.PRODUCTION);
+        .build(Stage.DEVELOPMENT);
     bootstrap.addBundle(bundle);
   }
 }
