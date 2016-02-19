@@ -1,4 +1,4 @@
-package com.kspt.it.services;
+package com.kspt.it.services.products.real;
 
 import com.google.inject.Inject;
 import com.kspt.it.dao.products.ProductsAggregationDAO;

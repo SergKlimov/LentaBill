@@ -1,4 +1,4 @@
-package com.kspt.it.services;
+package com.kspt.it.services.checks.real;
 
 import com.kspt.it.dao.checks.ChecksAggregationDAO;
 import com.kspt.it.services.checks.ChecksAggregationApi;
