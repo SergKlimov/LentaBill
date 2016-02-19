@@ -1,6 +1,6 @@
 package com.kspt.it.resources;
 
-import com.kspt.it.services.checks.ChecksAggregationService;
+import com.kspt.it.services.checks.ChecksAggregationApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -22,7 +22,7 @@ import java.util.List;
 public class ChecksAggregationResource {
 
   @Inject
-  private ChecksAggregationService service;
+  private ChecksAggregationApi service;
 
   @GET
   @Path("/byDateAndStore")

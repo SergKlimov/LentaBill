@@ -7,6 +7,10 @@ import com.google.common.base.Stopwatch;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.kspt.it.services.ChecksAggregationService;
+import com.kspt.it.services.ProductsAggregationService;
+import com.kspt.it.services.checks.ChecksAggregationApi;
+import com.kspt.it.services.products.ProductsAggregationApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +20,8 @@ public class GuiceModule extends AbstractModule {
 
   @Override
   protected void configure() {
-
+    bind(ProductsAggregationApi.class).to(ProductsAggregationService.class);
+    bind(ChecksAggregationApi.class).to(ChecksAggregationService.class);
   }
 
   @Provides

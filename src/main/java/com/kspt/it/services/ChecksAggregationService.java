@@ -1,13 +1,15 @@
-package com.kspt.it.services.checks;
+package com.kspt.it.services;
 
 import com.kspt.it.dao.checks.ChecksAggregationDAO;
+import com.kspt.it.services.checks.ChecksAggregationApi;
+import com.kspt.it.services.checks.ChecksAggregationResult;
 import static java.util.stream.Collectors.toList;
 import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.List;
 
-public class ChecksAggregationService {
+public class ChecksAggregationService implements ChecksAggregationApi {
 
   private final ChecksAggregationDAO dao;
 
@@ -16,6 +18,7 @@ public class ChecksAggregationService {
     this.dao = dao;
   }
 
+  @Override
   public List<ChecksAggregationResult> aggregateByDateAndStore() {
     return dao.aggregateByDateAndStore().stream()
         .map(are -> new ChecksAggregationResult(

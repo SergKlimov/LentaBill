@@ -1,13 +1,17 @@
-package com.kspt.it.services.products;
+package com.kspt.it.services;
 
 import com.google.inject.Inject;
 import com.kspt.it.dao.products.ProductsAggregationDAO;
+import com.kspt.it.services.products.ProductsAggregationApi;
+import com.kspt.it.services.products.ProductsAggregationByDateResult;
+import com.kspt.it.services.products.ProductsAggregationByStoreAndDateResult;
+import com.kspt.it.services.products.ProductsAggregationByStoreResult;
 import static java.util.stream.Collectors.toList;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.List;
 
-public class ProductsAggregationService {
+public class ProductsAggregationService implements ProductsAggregationApi {
 
   private final ProductsAggregationDAO dao;
 
@@ -16,6 +20,7 @@ public class ProductsAggregationService {
     this.dao = dao;
   }
 
+  @Override
   public List<ProductsAggregationByDateResult> aggregateByDateAndProduct() {
     return dao.aggregateByDateAndProduct().stream()
         .map(are -> new ProductsAggregationByDateResult(
@@ -35,6 +40,7 @@ public class ProductsAggregationService {
         ).collect(toList());
   }
 
+  @Override
   public List<ProductsAggregationByStoreResult> aggregateByStoreAndProduct() {
     return dao.aggregateByStoreAndDateAndProduct().stream()
         .map(are -> new ProductsAggregationByStoreResult(
@@ -52,6 +58,7 @@ public class ProductsAggregationService {
         ).collect(toList());
   }
 
+  @Override
   public List<ProductsAggregationByStoreAndDateResult> aggregateByStoreAndDateAndProduct() {
     return dao.aggregateByStoreAndDateAndProduct().stream()
         .map(are -> new ProductsAggregationByStoreAndDateResult(
