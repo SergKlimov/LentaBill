@@ -1,6 +1,5 @@
 package com.kspt.it;
 
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.inject.Stage;
 import com.hubspot.dropwizard.guice.GuiceBundle;
 import io.dropwizard.Application;
@@ -10,8 +9,6 @@ import io.dropwizard.setup.Environment;
 import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
 import io.swagger.jaxrs.listing.SwaggerSerializers;
-import io.swagger.util.Json;
-import io.swagger.util.Yaml;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import static org.eclipse.jetty.servlets.CrossOriginFilter.*;
 import org.glassfish.jersey.server.validation.ValidationFeature;
@@ -68,8 +65,6 @@ public class DemoApplication extends Application<DemoApplicationConfig> {
     beanConfig.setHost("localhost:8080");
     beanConfig.setResourcePackage(RESOURCES_PACKAGE);
     beanConfig.setScan(true);
-    Json.mapper().registerModule(new JaxbAnnotationModule());
-    Yaml.mapper().registerModule(new JaxbAnnotationModule());
   }
 
   public static void main(final String[] args)
