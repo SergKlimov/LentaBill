@@ -115,6 +115,11 @@
             <version>${h2.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.lbordowitz.openforecast</groupId>
+            <artifactId>openforecast</artifactId>
+            <version>0.5.0</version>
+        </dependency>
     </dependencies>
 
     <build>
