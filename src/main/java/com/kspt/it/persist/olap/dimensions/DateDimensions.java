@@ -30,6 +30,9 @@ public class DateDimensions {
   @Column(nullable = false, length = 2)
   private final Integer second;
 
+  @Column(nullable = false)
+  private final Long asMillisecond;
+
   public DateDimensions(
       final Integer id,
       final Integer year,
@@ -37,7 +40,8 @@ public class DateDimensions {
       final Integer day,
       final Integer hour,
       final Integer minute,
-      final Integer second) {
+      final Integer second,
+      final Long asMillisecond) {
     this.id = id;
     this.year = year;
     this.month = month;
@@ -45,6 +49,7 @@ public class DateDimensions {
     this.hour = hour;
     this.minute = minute;
     this.second = second;
+    this.asMillisecond = asMillisecond;
   }
 
   public Integer getId() {
@@ -73,5 +78,9 @@ public class DateDimensions {
 
   public Integer getSecond() {
     return second;
+  }
+
+  public Long getAsMillisecond() {
+    return asMillisecond;
   }
 }

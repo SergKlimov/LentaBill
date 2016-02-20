@@ -10,10 +10,12 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
 @Path("/api/checks/aggregation")
@@ -31,8 +33,11 @@ public class ChecksAggregationResource {
       @ApiResponse(code = 200, message = "OK"),
       @ApiResponse(code = 500, message = "Something wrong in Server")
   })
-  public List<ChecksAggregationResultRepresentation> aggregateByDateAndStore() {
-    final List<ChecksAggregationResultRepresentation> list = service.aggregateByDateAndStore()
+  public List<ChecksAggregationResultRepresentation> aggregateByDateAndStore(
+      final @QueryParam("since") long since,
+      final @QueryParam("limit") int limit) {
+    final List<ChecksAggregationResultRepresentation> list = service
+        .aggregateByDateAndStore(since, limit)
         .stream()
         .map(ar -> new ChecksAggregationResultRepresentation(
             ar.getTimestamp(),
@@ -55,7 +60,8 @@ class ChecksAggregationResultRepresentation {
 
   private int storeId;
 
-  private double minCheckValue;
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double minCheckValue;
 
   private double avgCheckValue;
 

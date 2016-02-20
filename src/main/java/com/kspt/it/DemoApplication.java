@@ -47,7 +47,7 @@ public class DemoApplication extends Application<DemoApplicationConfig> {
     final String urlPattern = environment.getApplicationContext().getContextPath() + "*";
     filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, urlPattern);
     filter.setInitParameter(ALLOWED_METHODS_PARAM, "GET,PUT,POST,OPTIONS");
-    filter.setInitParameter(ALLOWED_ORIGINS_PARAM, "null,localhost");
+    filter.setInitParameter(ALLOWED_ORIGINS_PARAM, "null,localhost,http://localhost:*");
     filter.setInitParameter(ALLOWED_HEADERS_PARAM, "Origin, Content-Type, Accept");
     filter.setInitParameter(ALLOW_CREDENTIALS_PARAM, "true");
   }

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="css/metro.css" rel="stylesheet">
+    <script src="scripts/jquery.js"></script>
+    <script src="scripts/metro.js"></script>
+
+    <!--<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>-->
+
+    <script src="scripts/aggregating.js"></script>
+</head>
+<body>
+<div class="app-bar">
+    <a class="app-bar-element" href="...">Home</a>
+    <span class="app-bar-divider"></span>
+</div>
+<div class="grid">
+    <div class="row cells5">
+        <div class="cell padding20">
+            <label class="input-control checkbox">
+                <input type="checkbox" id="byDate">
+                <span class="check"></span>
+                <span class="caption">aggregate by date</span>
+            </label>
+            <br/>
+            <label class="input-control checkbox">
+                <input type="checkbox" id="byStore">
+                <span class="check"></span>
+                <span class="caption">aggregate by store</span>
+            </label>
+            <br/>
+            <label class="input-control checkbox">
+                <input type="checkbox" id="byProduct">
+                <span class="check"></span>
+                <span class="caption">aggregate by product</span>
+            </label>
+            <br/>
+            <br/>
+            <button id="createReportButton"
+                    style="width:150px"
+                    class="button primary block-shadow-success">
+                Create Report
+            </button>
+            <br/>
+            <button id="downloadReportButton"
+                    style="width:150px"
+                    class="button primary">
+                Download Report
+            </button>
+        </div>
+        <div class="cell colspan4 padding20">
+            <div id="byDateResults">
+            </div>
+            <div class="slider large"
+                 data-role="slider"
+                 data-max-value="29"
+                 data-min-value="0"
+                 data-accuracy="3.33"
+                 data-show-hint="true"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

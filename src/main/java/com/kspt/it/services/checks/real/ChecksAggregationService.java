@@ -19,12 +19,14 @@ public class ChecksAggregationService implements ChecksAggregationApi {
   }
 
   @Override
-  public List<ChecksAggregationResult> aggregateByDateAndStore() {
-    return dao.aggregateByDateAndStore().stream()
+  public List<ChecksAggregationResult> aggregateByDateAndStore(final long since, final int limit) {
+
+    return dao.aggregateByDateAndStore(since, limit).stream()
         .map(are -> new ChecksAggregationResult(
             LocalDate.of(are.getYear(), are.getMonth(), are.getDay())
                 .atStartOfDay()
-                .toEpochSecond(ZoneOffset.UTC),
+                .toInstant(ZoneOffset.UTC)
+                .toEpochMilli(),
             are.getStoreId(),
             are.getMinCheckValue(),
             are.getAvgCheckValue(),

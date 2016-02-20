@@ -38,7 +38,7 @@ public class GuiceModule extends AbstractModule {
       final Config serviceConfig = c.getConfig("services_types." + type);
       final int daysCount = serviceConfig.getInt("days_count");
       final int storesCount = serviceConfig.getInt("stores_count");
-      return new SyntheticChecksAggregationApi(daysCount, storesCount);
+      return new SyntheticChecksAggregationApi(storesCount);
     }
   }
 

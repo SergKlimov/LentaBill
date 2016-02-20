@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -106,8 +107,8 @@ public class ChecksAggregatingDaoExample {
             ldt.getDayOfMonth(),
             ldt.getHour(),
             ldt.getMinute(),
-            ldt.getSecond()
-        )).forEach(ebean::save);
+            ldt.getSecond(),
+            ldt.toInstant(ZoneOffset.UTC).toEpochMilli())).forEach(ebean::save);
   }
 
   private void createChecks() {
@@ -176,8 +177,6 @@ public class ChecksAggregatingDaoExample {
     config.setDdlRun(false);
     config.setDefaultServer(false);
     config.setRegister(false);
-    // specify jars to search for entity beans
-    //config.addJar("elvis-commons-0.1-SNAPSHOT.jar");
     // create the EbeanServer instance
     final EbeanServer ebeanServer = EbeanServerFactory.create(config);
     DdlGenerator ddl = new DdlGenerator();
@@ -194,7 +193,8 @@ public class ChecksAggregatingDaoExample {
   @Test
   public void byDateAndStore() {
     final ChecksAggregationDAO dao = new ChecksAggregationDAO(ebean);
-    final List<ChecksAggregationResultEntry> r = dao.aggregateByDateAndStore();
+    final List<ChecksAggregationResultEntry> r = dao
+        .aggregateByDateAndStore(currentTimeMillis() - 24 * 60 * 60 * 1000, 2);
     final int a = 1;
   }
 }

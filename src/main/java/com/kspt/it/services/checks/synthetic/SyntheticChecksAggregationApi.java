@@ -5,25 +5,31 @@ import com.kspt.it.services.checks.ChecksAggregationApi;
 import com.kspt.it.services.checks.ChecksAggregationResult;
 import static java.util.stream.Collectors.toList;
 import org.jetbrains.annotations.NotNull;
-import org.joda.time.LocalDate;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class SyntheticChecksAggregationApi implements ChecksAggregationApi {
 
-  private final int daysCount;
-
   private final int storesCount;
 
-  public SyntheticChecksAggregationApi(final int daysCount, final int storesCount) {
-    this.daysCount = daysCount;
+  public SyntheticChecksAggregationApi(final int storesCount) {
     this.storesCount = storesCount;
   }
 
   @Override
-  public List<ChecksAggregationResult> aggregateByDateAndStore() {
-    return IntStream.range(0, daysCount)
-        .mapToObj(i -> LocalDate.now().minusDays(i))
+  public List<ChecksAggregationResult> aggregateByDateAndStore(final long since, final int limit) {
+    return IntStream.range(0, limit)
+        .mapToObj(i -> LocalDateTime
+            .ofInstant(
+                Instant.ofEpochMilli(since),
+                ZoneId.systemDefault())
+            .toLocalDate()
+            .plusDays(i))
         .flatMap(d -> IntStream.range(0, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
         .map(this::generateChecksAggregationResult)
         .collect(toList());
@@ -35,7 +41,7 @@ public class SyntheticChecksAggregationApi implements ChecksAggregationApi {
     final double minCheckValue = 100 * Math.random();
     final double maxCheckValue = minCheckValue + 100 * Math.random();
     return new ChecksAggregationResult(
-        t2._1.toDateTimeAtStartOfDay().getMillis(),
+        t2._1.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
         t2._2,
         minCheckValue,
         (minCheckValue + maxCheckValue) / 2,

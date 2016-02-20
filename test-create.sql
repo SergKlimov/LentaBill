@@ -29,6 +29,7 @@ create table date_dimensions (
   hour                      integer(2) not null,
   minute                    integer(2) not null,
   second                    integer(2) not null,
+  as_millisecond            bigint not null,
   constraint pk_date_dimensions primary key (id))
 ;
 
