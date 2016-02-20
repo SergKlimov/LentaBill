@@ -10,9 +10,13 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.kspt.it.dao.aggregation.checks.ChecksAggregationDAO;
 import com.kspt.it.dao.aggregation.products.ProductsAggregationDAO;
+import com.kspt.it.dao.meta.ChecksMetaDAO;
 import com.kspt.it.services.checks.ChecksAggregationApi;
 import com.kspt.it.services.checks.real.ChecksAggregationService;
 import com.kspt.it.services.checks.synthetic.SyntheticChecksAggregationApi;
+import com.kspt.it.services.meta.MetaRetrievingApi;
+import com.kspt.it.services.meta.real.MetaRetrievingService;
+import com.kspt.it.services.meta.synthetic.SyntheticMetaRetrievingApi;
 import com.kspt.it.services.products.ProductsAggregationApi;
 import com.kspt.it.services.products.real.ProductsAggregationService;
 import com.kspt.it.services.products.synthetic.SyntheticProductsAggregationApi;
@@ -54,6 +58,19 @@ public class GuiceModule extends AbstractModule {
       final int storesCount = serviceConfig.getInt("stores_count");
       final int productsCount = serviceConfig.getInt("products_count");
       return new SyntheticProductsAggregationApi(daysCount, storesCount, productsCount);
+    }
+  }
+
+  @Provides
+  @Singleton
+  public MetaRetrievingApi provideMetaRetrievingApi(final Config c, final Injector i) {
+    final String type = c.getString("services.meta.type");
+    if (type.equals("real")) {
+      return new MetaRetrievingService(i.getInstance(ChecksMetaDAO.class));
+    } else if(c.hasPath("services_types." + type)) {
+      return new SyntheticMetaRetrievingApi();
+    } else {
+      throw new RuntimeException("Cannot instantinate MetaRetrievingApi.class");
     }
   }
 
