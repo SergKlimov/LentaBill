@@ -1,4 +1,4 @@
-package com.kspt.it.dao.products;
+package com.kspt.it.dao.aggregation.products;
 
 import com.avaje.ebean.annotation.Sql;
 import javax.persistence.Entity;

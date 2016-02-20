@@ -1,17 +1,19 @@
-package com.kspt.it.dao.products;
+package com.kspt.it.dao.aggregation.products;
 
 import com.avaje.ebean.annotation.Sql;
 import javax.persistence.Entity;
 
 @Entity
 @Sql
-public class ProductsAggregationByDateResultEntry {
+public class ProductsAggregationByStoreAndDateResultEntry {
 
   private final int year;
 
   private final int month;
 
   private final int day;
+
+  private final int storeId;
 
   private final int productId;
 
@@ -33,10 +35,11 @@ public class ProductsAggregationByDateResultEntry {
 
   private final int itemsCount;
 
-  public ProductsAggregationByDateResultEntry(
+  public ProductsAggregationByStoreAndDateResultEntry(
       final int year,
       final int month,
       final int day,
+      final int storeId,
       final int productId,
       final double minCheckValue,
       final double avgCheckValue,
@@ -50,6 +53,7 @@ public class ProductsAggregationByDateResultEntry {
     this.year = year;
     this.month = month;
     this.day = day;
+    this.storeId = storeId;
     this.productId = productId;
     this.minCheckValue = minCheckValue;
     this.avgCheckValue = avgCheckValue;
@@ -72,6 +76,10 @@ public class ProductsAggregationByDateResultEntry {
 
   public int getDay() {
     return day;
+  }
+
+  public int getStoreId() {
+    return storeId;
   }
 
   public int getProductId() {

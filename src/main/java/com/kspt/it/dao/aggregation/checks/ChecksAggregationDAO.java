@@ -1,4 +1,4 @@
-package com.kspt.it.dao.checks;
+package com.kspt.it.dao.aggregation.checks;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.RawSql;

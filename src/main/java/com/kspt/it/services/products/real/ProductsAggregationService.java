@@ -1,7 +1,7 @@
 package com.kspt.it.services.products.real;
 
 import com.google.inject.Inject;
-import com.kspt.it.dao.products.ProductsAggregationDAO;
+import com.kspt.it.dao.aggregation.products.ProductsAggregationDAO;
 import com.kspt.it.services.products.ProductsAggregationApi;
 import com.kspt.it.services.products.ProductsAggregationByDateResult;
 import com.kspt.it.services.products.ProductsAggregationByStoreAndDateResult;

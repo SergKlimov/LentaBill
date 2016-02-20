@@ -1,6 +1,6 @@
 package com.kspt.it.services.checks.real;
 
-import com.kspt.it.dao.checks.ChecksAggregationDAO;
+import com.kspt.it.dao.aggregation.checks.ChecksAggregationDAO;
 import com.kspt.it.services.checks.ChecksAggregationApi;
 import com.kspt.it.services.checks.ChecksAggregationResult;
 import static java.util.stream.Collectors.toList;
