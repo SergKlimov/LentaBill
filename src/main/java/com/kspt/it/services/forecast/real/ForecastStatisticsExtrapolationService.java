@@ -8,32 +8,30 @@ import net.sourceforge.openforecast.ForecastingModel;
 import net.sourceforge.openforecast.Observation;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-public class ForecastStatisticsExtropalationService {
+public class ForecastStatisticsExtrapolationService {
     /**
      * Функция, экстрополирующая численный ряд
      *
-     * @param inputList список пар Значение/Дата с данными за предыдущее время
+     * @param inputList список пар Значение/Дата (в формате Unix Timestamp) с данными за предыдущее время
      * @param stepSize  переменная, задающая на сколько шагов производится экстраполяция. Если ее значние меньше
      *                  единицы, то экстраполяция производится на 15 шагов вперед.
      * @return список пар Значение/Дата с предсказанным рядом
      */
-    public static List<Pair<Float, Date>> extrapolateStatistics(
-            final List<Pair<Float, Date>> inputList,
+    public static List<Pair<Double, Long>> extrapolateStatistics(
+            final List<Pair<Double, Long>> inputList,
             int stepSize) {
         DataSet observedData = new DataSet();
-        Date maxDate = new Date(Long.MIN_VALUE);
+        Long maxDate = Long.MIN_VALUE;
         final String tagString = "date";
 
-        for (Pair<Float, Date> pair : inputList) {
+        for (Pair<Double, Long> pair : inputList) {
             DataPoint dp = new Observation(pair.getKey());
-            dp.setIndependentValue(tagString, pair.getValue().getTime());
+            dp.setIndependentValue(tagString, pair.getValue().doubleValue());
             observedData.add(dp);
 
-            if (maxDate.before(pair.getValue())) {
+            if (maxDate < pair.getValue()) {
                 maxDate = pair.getValue();
             }
         }
@@ -46,28 +44,29 @@ public class ForecastStatisticsExtropalationService {
             stepSize = 15;
         }
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(maxDate);
-
         DataSet requiredDataPoints = new DataSet();
 
         for (int i = 0; i < stepSize; i++) {
-            calendar.add(Calendar.DATE, 1);
             DataPoint dp = new Observation(0.0);
-            dp.setIndependentValue(tagString, calendar.getTime().getTime());
+            maxDate += daysToMilliseconds(1);
+            dp.setIndependentValue(tagString, maxDate.doubleValue());
             requiredDataPoints.add(dp);
         }
 
         forecastingModel.forecast(requiredDataPoints);
 
-        List<Pair<Float, Date>> returnList = new ArrayList<>();
+        List<Pair<Double, Long>> returnList = new ArrayList<>();
 
         for (DataPoint dp : requiredDataPoints) {
             Double doubleTime = dp.getIndependentValue(tagString);
-            Date date = new Date(doubleTime.longValue());
-            Float val = (float) dp.getDependentValue();
+            Long date = doubleTime.longValue();
+            Double val = dp.getDependentValue();
             returnList.add(new Pair<>(val, date));
         }
         return returnList;
+    }
+
+    private static Long daysToMilliseconds(final int days) {
+        return (long) (days * 24 * 60 * 60 * 1000);
     }
 }

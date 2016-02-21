@@ -1,6 +1,6 @@
 package com.kspt.it.services.forecast;
 
-import com.kspt.it.services.forecast.real.ForecastStatisticsExtropalationService;
+import com.kspt.it.services.forecast.real.ForecastStatisticsExtrapolationService;
 import javafx.util.Pair;
 import org.junit.Test;
 
@@ -17,18 +17,18 @@ public class ForecastStatisticsExtropalationServiceTest {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
-        List<Pair<Float, Date>> inputList = new ArrayList<>();
+        List<Pair<Double, Long>> inputList = new ArrayList<>();
 
         for (int i = 0; i < 6; i++) {
             calendar.add(Calendar.DATE, 1);
-            inputList.add(new Pair<Float, Date>(new Float(i), calendar.getTime()));
+            inputList.add(new Pair<Double, Long>(new Double(i), calendar.getTime().getTime()));
         }
 
-        List<Pair<Float, Date>> outputList = ForecastStatisticsExtropalationService
+        List<Pair<Double, Long>> outputList = ForecastStatisticsExtrapolationService
                 .extrapolateStatistics(inputList, 9);
 
-        for (Pair<Float, Date> pair : outputList) {
-            System.out.println(pair.getKey() + " " + pair.getValue());
+        for (Pair<Double, Long> pair : outputList) {
+            System.out.println(pair.getKey() + " " + new Date(pair.getValue()));
         }
     }
 }
