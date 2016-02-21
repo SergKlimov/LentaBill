@@ -24,13 +24,13 @@ public class MetaRetrievingResource {
   private MetaRetrievingApi api;
 
   @GET
-  @Path("/dataCollectionOrigin")
+  @Path("/dataCollectionDomain")
   @ApiOperation(value = "Retrieves time domain of processed collection")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "OK"),
       @ApiResponse(code = 500, message = "Something wrong in Server")
   })
-  public DataCollectionDomainRepresentation getDataCollectionOrigin() {
+  public DataCollectionDomainRepresentation getDataCollectionDomain() {
     final Range<Long> domain = api.getDataCollectionOrigin();
     return new DataCollectionDomainRepresentation(domain.lowerEndpoint(), domain.upperEndpoint());
   }

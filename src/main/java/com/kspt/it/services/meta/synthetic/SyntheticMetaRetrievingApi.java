@@ -10,7 +10,7 @@ public class SyntheticMetaRetrievingApi implements MetaRetrievingApi {
   public Range<Long> getDataCollectionOrigin() {
     final ZonedDateTime utcNow = ZonedDateTime.now(ZoneOffset.UTC);
     return Range.closed(
-        utcNow.minusDays(30).toEpochSecond() * 1000,
+        utcNow.minusDays(29).toEpochSecond() * 1000,
         utcNow.toEpochSecond() * 1000);
   }
 }
