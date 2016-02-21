@@ -10,7 +10,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.kspt.it.dao.aggregation.checks.ChecksAggregationDAO;
 import com.kspt.it.dao.aggregation.products.ProductsAggregationDAO;
-import com.kspt.it.dao.meta.ChecksMetaDAO;
+import com.kspt.it.dao.meta.checks.ChecksMetaDAO;
+import com.kspt.it.dao.meta.stores.StoresMetaDAO;
 import com.kspt.it.services.checks.ChecksAggregationApi;
 import com.kspt.it.services.checks.real.ChecksAggregationService;
 import com.kspt.it.services.checks.synthetic.SyntheticChecksAggregationApi;
@@ -40,7 +41,6 @@ public class GuiceModule extends AbstractModule {
       return new ChecksAggregationService(i.getInstance(ChecksAggregationDAO.class));
     } else {
       final Config serviceConfig = c.getConfig("services_types." + type);
-      final int daysCount = serviceConfig.getInt("days_count");
       final int storesCount = serviceConfig.getInt("stores_count");
       return new SyntheticChecksAggregationApi(storesCount);
     }
@@ -66,11 +66,13 @@ public class GuiceModule extends AbstractModule {
   public MetaRetrievingApi provideMetaRetrievingApi(final Config c, final Injector i) {
     final String type = c.getString("services.meta.type");
     if (type.equals("real")) {
-      return new MetaRetrievingService(i.getInstance(ChecksMetaDAO.class));
-    } else if(c.hasPath("services_types." + type)) {
-      return new SyntheticMetaRetrievingApi();
+      return new MetaRetrievingService(
+          i.getInstance(ChecksMetaDAO.class),
+          i.getInstance(StoresMetaDAO.class));
     } else {
-      throw new RuntimeException("Cannot instantinate MetaRetrievingApi.class");
+      final Config serviceConfig = c.getConfig("services_types." + type);
+      final int storesCount = serviceConfig.getInt("stores_count");
+      return new SyntheticMetaRetrievingApi(storesCount);
     }
   }
 

@@ -1,15 +1,15 @@
-package com.kspt.it.dao.meta;
+package com.kspt.it.dao.meta.checks;
 
 import com.avaje.ebean.annotation.Sql;
 import javax.persistence.Entity;
 
 @Entity
 @Sql
-public class CheckOrigin {
+public class CheckOriginEntry {
 
   private final Long origin;
 
-  public CheckOrigin(final Long origin) {
+  public CheckOriginEntry(final Long origin) {
     this.origin = origin;
   }
 
