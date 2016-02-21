@@ -1,14 +1,16 @@
 package com.kspt.it.services.meta.synthetic;
 
-import com.kspt.it.services.meta.DataCollectionOrigin;
+import com.google.common.collect.Range;
 import com.kspt.it.services.meta.MetaRetrievingApi;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 public class SyntheticMetaRetrievingApi implements MetaRetrievingApi {
   @Override
-  public DataCollectionOrigin getDataCollectionOrigin() {
-    final long currentUTCTimeMs = ZonedDateTime.now(ZoneOffset.UTC).toInstant().toEpochMilli();
-    return new DataCollectionOrigin(currentUTCTimeMs);
+  public Range<Long> getDataCollectionOrigin() {
+    final ZonedDateTime utcNow = ZonedDateTime.now(ZoneOffset.UTC);
+    return Range.closed(
+        utcNow.minusDays(30).toEpochSecond() * 1000,
+        utcNow.toEpochSecond() * 1000);
   }
 }

@@ -5,11 +5,11 @@ import javax.persistence.Entity;
 
 @Entity
 @Sql
-public class FirstCheckOrigin {
+public class CheckOrigin {
 
   private final Long origin;
 
-  public FirstCheckOrigin(final Long origin) {
+  public CheckOrigin(final Long origin) {
     this.origin = origin;
   }
 

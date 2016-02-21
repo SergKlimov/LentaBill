@@ -1,7 +1,8 @@
 package com.kspt.it.services.meta;
 
+import com.google.common.collect.Range;
+
 public interface MetaRetrievingApi {
 
-  DataCollectionOrigin getDataCollectionOrigin();
-
+  Range<Long> getDataCollectionOrigin();
 }

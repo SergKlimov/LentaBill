@@ -14,13 +14,24 @@ public class ChecksMetaDAO {
     this.ebean = ebean;
   }
 
-  public FirstCheckOrigin getFirstCheckOrigin() {
+  public CheckOrigin getFirstCheckOrigin() {
     final String query = "SELECT "
         + "MIN(as_millisecond) "
         + "FROM "
         + "date_dimensions";
     final RawSql sql = RawSqlBuilder.parse(query).create();
-    return ebean.find(FirstCheckOrigin.class)
+    return ebean.find(CheckOrigin.class)
+        .setRawSql(sql)
+        .findUnique();
+  }
+
+  public CheckOrigin getLastCheckOrigin() {
+    final String query = "SELECT "
+        + "MAX(as_millisecond) "
+        + "FROM "
+        + "date_dimensions";
+    final RawSql sql = RawSqlBuilder.parse(query).create();
+    return ebean.find(CheckOrigin.class)
         .setRawSql(sql)
         .findUnique();
   }

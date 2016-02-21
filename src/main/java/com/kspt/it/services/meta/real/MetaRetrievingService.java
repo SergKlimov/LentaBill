@@ -1,7 +1,7 @@
 package com.kspt.it.services.meta.real;
 
+import com.google.common.collect.Range;
 import com.kspt.it.dao.meta.ChecksMetaDAO;
-import com.kspt.it.services.meta.DataCollectionOrigin;
 import com.kspt.it.services.meta.MetaRetrievingApi;
 
 public class MetaRetrievingService implements MetaRetrievingApi {
@@ -13,7 +13,9 @@ public class MetaRetrievingService implements MetaRetrievingApi {
   }
 
   @Override
-  public DataCollectionOrigin getDataCollectionOrigin() {
-    return new DataCollectionOrigin(dao.getFirstCheckOrigin().getOrigin());
+  public Range<Long> getDataCollectionOrigin() {
+    return Range.closed(
+        dao.getFirstCheckOrigin().getOrigin(),
+        dao.getLastCheckOrigin().getOrigin());
   }
 }
