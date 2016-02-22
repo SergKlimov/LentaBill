@@ -34,3 +34,11 @@ function toHumanReadableDate(timestampMs) {
   var humanReadableDate = day.substr(-2) + '.' + month.substr(-2) + "." + year;
   return humanReadableDate;
 }
+
+function toMilliseconds(dateString) {
+  var match = /^(\d\d)\.(\d\d)\.(\d{4})/.exec(dateString);
+  var day = Number(match[1])
+  var month = Number(match[2]) - 1
+  var year = Number(match[3])
+  return new Date(year, month, day, 0, 0, 0).getTime();
+}

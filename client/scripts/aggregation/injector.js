@@ -33,8 +33,14 @@ function buildAggregationView(title, aggregationView) {
 
 function buildChecksAggregationViewsContent(dataList, valueTag) {
   var table = buildTable(dataList, valueTag);
+  var wrappedTable = wrapByTag(table, "div", "aggregation-table-view");
   var control = buildController();
-  return wrapByTag(table + control, "div", "");
+  var content = wrappedTable + control;
+  return "<div " +
+    "class=\"aggregation-view-content\" " +
+    "tag=\"" + valueTag +"\"" +
+    ">" + content + "</div>";
+  //return wrapByTag(table + control, "div", "");
 }
 
 function buildChecksAggregationViews(dataList) {

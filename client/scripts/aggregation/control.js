@@ -35,3 +35,29 @@ function buildController() {
     "></div>"
   return wrappedInput + slider
 }
+
+function updateAggregationView(v, slider) {
+  var aggregationView = $(slider).parent();
+  var controlDisplay = $(aggregationView).find('input')[0];
+  var currentDisplayValue = $(controlDisplay).val();
+  var updateDisplayValue = toHumanReadableDate(v)
+  if (currentDisplayValue == updateDisplayValue) {
+    return ;
+  }
+  $(controlDisplay).val(updateDisplayValue)
+  var d = new Date(v);
+  var truncated = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0)
+  $.ajax({
+    url: address + "/api/checks/aggregation/byDateAndStore",
+    method: "GET",
+    contentType: "application/xml",
+    data: {since: toMilliseconds(updateDisplayValue), limit: 7},
+    success: function (d) {
+      var fullDataSet = $(d).find("checksAggregationResultRepresentation");
+
+      var tag = aggregationView.attr("tag");
+      var table = buildTable(fullDataSet, tag);
+      $(aggregationView).find(".aggregation-table-view").html(table);
+    }
+  });
+}
