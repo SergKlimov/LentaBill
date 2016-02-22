@@ -1,4 +1,4 @@
-package com.kspt.it.dao.meta;
+package com.kspt.it.dao.meta.checks;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.RawSql;
@@ -14,24 +14,24 @@ public class ChecksMetaDAO {
     this.ebean = ebean;
   }
 
-  public CheckOrigin getFirstCheckOrigin() {
+  public CheckOriginEntry getFirstCheckOrigin() {
     final String query = "SELECT "
         + "MIN(as_millisecond) "
         + "FROM "
         + "date_dimensions";
     final RawSql sql = RawSqlBuilder.parse(query).create();
-    return ebean.find(CheckOrigin.class)
+    return ebean.find(CheckOriginEntry.class)
         .setRawSql(sql)
         .findUnique();
   }
 
-  public CheckOrigin getLastCheckOrigin() {
+  public CheckOriginEntry getLastCheckOrigin() {
     final String query = "SELECT "
         + "MAX(as_millisecond) "
         + "FROM "
         + "date_dimensions";
     final RawSql sql = RawSqlBuilder.parse(query).create();
-    return ebean.find(CheckOrigin.class)
+    return ebean.find(CheckOriginEntry.class)
         .setRawSql(sql)
         .findUnique();
   }

@@ -202,6 +202,9 @@ $(document).ready(function() {
   reportControlDiv = $("#reportControl")
 
   var dataDomain;
+
+  var reportData = new vis.DataSet()
+
   $.ajax({
     url: address + "/api/meta/dataCollectionDomain",
     method: "GET",
@@ -217,7 +220,7 @@ $(document).ready(function() {
 
   $("#createReportButton").click(function() {
     if (isChecked(byDateCheckbox) && isChecked(byStoreCheckbox)) {
-      buildReport(dataDomain.lb, 8)
+      buildReport(dataDomain.lb)
 
       reportControlDiv.html("<div class=\"input-control text\"> " +
         "<input " +
@@ -234,6 +237,43 @@ $(document).ready(function() {
         "></div>"
         )
       reportControlDiv.show()
+      buildGraph(dataDomain.lb, reportData)
     }
   });
+
 });
+
+var buildGraph = function(since, data) {
+  $.ajax({
+      url: address + "/api/checks/aggregation/byDateAndStore",
+      method: "GET",
+      contentType: "application/xml",
+      data: {since: since, limit: limit},
+      success: function (d) {
+        $(d)
+          .find("checksAggregationResultRepresentation")
+          .each(function() {
+            var ts = Number($(this).find("timestamp").text())
+            var v = parseFloat($(this).find("minCheckValue").text())
+            var group = Number($(this).find("storeId").text())
+            data.add({
+              x: new Date(ts),
+              y: v,
+              group: group
+            })
+          })
+      }
+  })
+  var graphOptions = {
+    start: new Date(since),
+    end: new Date(since + limit * 24 * 60 * 60 * 1000),
+    drawPoints: {
+      style: "circle"
+    },
+    shaded: {
+      orientation: "bottom"
+    }
+  }
+  var graphContainer = document.getElementById("reportAlternativeView")
+  var graph = new vis.Graph2d(graphContainer, data, graphOptions)
+}

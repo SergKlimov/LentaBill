@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link href="css/metro.css" rel="stylesheet">
     <script src="scripts/jquery.js"></script>
+
     <script src="scripts/metro.js"></script>
+    <link href="css/metro.css" rel="stylesheet">
 
-    <!--<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>-->
+    <script src="scripts/vis.js"></script>
+    <link href="css/vis.css" rel="stylesheet">
 
-    <script src="scripts/aggregating.js"></script>
+    <!--<script src="scripts/aggregating.js"></script>-->
+    <script src="scripts/aggregation/meta.js"></script>
+    <script src="scripts/aggregation/utils.js"></script>
+    <script src="scripts/aggregation/views.js"></script>
+    <script src="scripts/aggregation/injector.js"></script>
+    <script src="scripts/aggregation/control.js"></script>
 </head>
 <body>
 <div class="app-bar">
@@ -50,9 +56,13 @@
             </button>
         </div>
         <div class="cell colspan4 padding20">
-            <div id="reportView">
+            <!--<div id="reportView">
             </div>
             <div id="reportControl">
+            </div>
+            <div class="visualization" id="reportAlternativeView">
+            </div>-->
+            <div id="reportView" class="listview" data-role="listview">
             </div>
         </div>
     </div>

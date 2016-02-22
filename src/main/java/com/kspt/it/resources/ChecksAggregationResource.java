@@ -56,20 +56,23 @@ public class ChecksAggregationResource {
 @XmlAccessorType(XmlAccessType.FIELD)
 class ChecksAggregationResultRepresentation {
 
-  private long timestamp;
+  private Long timestamp;
 
-  private int storeId;
+  private Integer storeId;
 
   @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
   private Double minCheckValue;
 
-  private double avgCheckValue;
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double avgCheckValue;
 
-  private double maxCheckValue;
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double maxCheckValue;
 
-  private double allChecksValueSum;
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double allChecksValueSum;
 
-  private int checksCount;
+  private Integer checksCount;
 
   public ChecksAggregationResultRepresentation() {
   }
