@@ -31,12 +31,18 @@ function buildAggregationView(title, aggregationView) {
   return wrapByTag(wrappedTitle + wrappedAggregationView, "div", ["list-group", "collapsed"]);
 }
 
+function buildChecksAggregationViewsContent(dataList, valueTag) {
+  var table = buildTable(dataList, valueTag);
+  var control = buildController();
+  return wrapByTag(table + control, "div", "");
+}
+
 function buildChecksAggregationViews(dataList) {
-  var minCheckValueView = wrapByTag(buildTable(dataList, "minCheckValue"), "div", "");
-  var avgCheckValueView = wrapByTag(buildTable(dataList, "avgCheckValue"), "div", "");
-  var maxCheckValueView = wrapByTag(buildTable(dataList, "maxCheckValue"), "div", "");
-  var checksValueSumView = wrapByTag(buildTable(dataList, "allChecksValueSum"), "div", "");
-  var checksCountView = wrapByTag(buildTable(dataList, "checksCount"), "div", "");
+  var minCheckValueView = buildChecksAggregationViewsContent(dataList, "minCheckValue");
+  var avgCheckValueView = buildChecksAggregationViewsContent(dataList, "avgCheckValue");
+  var maxCheckValueView = buildChecksAggregationViewsContent(dataList, "maxCheckValue");
+  var checksValueSumView = buildChecksAggregationViewsContent(dataList, "allChecksValueSum");
+  var checksCountView = buildChecksAggregationViewsContent(dataList, "checksCount");
   var av1 = buildAggregationView("Minimum check value.", minCheckValueView);
   var av2 = buildAggregationView("Maximum check value.", maxCheckValueView);
   var av3 = buildAggregationView("Average check value.", avgCheckValueView);

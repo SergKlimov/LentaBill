@@ -14,7 +14,7 @@ function concatArray(contentArray, separator) {
     return "";
   }
   var accumulator = contentArray[0];
-  for(i = 0; i < contentArray.length; ++i) {
+  for(i = 1; i < contentArray.length; ++i) {
     accumulator += (separator + contentArray[i]);
   }
   return accumulator;
@@ -22,7 +22,7 @@ function concatArray(contentArray, separator) {
 
 function byTimestampComparator(o1, o2) {
   ts1 = Number($(o1).find("timestamp").text());
-  ts2 = Number($(02).find("timestamp").text());
+  ts2 = Number($(o2).find("timestamp").text());
   return ts1 - ts2;
 }
 
