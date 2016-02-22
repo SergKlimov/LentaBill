@@ -23,7 +23,7 @@ public class TestGuiceModule extends AbstractModule {
     h2DataSourceConfig.setDriver("org.h2.Driver");
     h2DataSourceConfig.setUsername("sa");
     h2DataSourceConfig.setPassword("");
-    h2DataSourceConfig.setUrl(String.format("jdbc:h2:mem:%s", databaseName));
+    h2DataSourceConfig.setUrl(String.format("jdbc:h2:mem:%s;MODE=MySQL", databaseName));
     config.setDataSourceConfig(h2DataSourceConfig);
     // specify a JNDI DataSource
     // config.setDataSourceJndiName("someJndiDataSourceName");

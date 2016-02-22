@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
@@ -48,6 +49,22 @@ public class ReceiptsExtrapolationResource {
 @XmlAccessorType(XmlAccessType.FIELD)
 class ReceiptsExtrapolationAllShopsResultRepresentation {
 
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public double getTotalSum() {
+        return totalSum;
+    }
+
+    public void setTotalSum(double totalSum) {
+        this.totalSum = totalSum;
+    }
+
     private long timestamp;
     private double totalSum;
 
@@ -57,4 +74,6 @@ class ReceiptsExtrapolationAllShopsResultRepresentation {
         this.timestamp = timestamp;
         this.totalSum = totalSum;
     }
+
+    public ReceiptsExtrapolationAllShopsResultRepresentation() {}
 }
