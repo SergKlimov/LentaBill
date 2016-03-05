@@ -46,6 +46,8 @@ function buildChecksAggregationViewsContent(dataList, selector) {
     "class=\"aggregation-view-content\" " +
     "selector=\"" + selector +"\" " +
     "mode=\"table\" " +
+    "from=\"" + dataDomain.lb + "\" " +
+    "to=\"" + addDays(dataDomain.lb, 7) + "\" " +
     ">" + content + "</div>";
   //return wrapByTag(table + control, "div", "");
 }

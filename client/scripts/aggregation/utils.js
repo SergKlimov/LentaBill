@@ -42,3 +42,7 @@ function toMilliseconds(dateString) {
   var year = Number(match[3])
   return new Date(year, month, day, 0, 0, 0).getTime();
 }
+
+function addDays(timestampMs, daysToAdd) {
+  return timestampMs + daysToAdd * 24 * 60 * 60 * 1000;
+}
