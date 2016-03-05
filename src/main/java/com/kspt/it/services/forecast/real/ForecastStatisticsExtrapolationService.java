@@ -66,7 +66,7 @@ public class ForecastStatisticsExtrapolationService {
         return returnList;
     }
 
-    private static Long daysToMilliseconds(final int days) {
+    public static Long daysToMilliseconds(final int days) {
         return (long) (days * 24 * 60 * 60 * 1000);
     }
 }
