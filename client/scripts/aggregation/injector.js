@@ -31,11 +31,11 @@ function buildAggregationView(title, aggregationView) {
   return wrapByTag(wrappedTitle + wrappedAggregationView, "div", ["list-group", "collapsed"]);
 }
 
-function buildChecksAggregationViewsContent(dataList, valueTag) {
+function buildChecksAggregationViewsContent(dataList, selector) {
   var switcher = buildSwitcher();
-  var table = buildTable(dataList, valueTag);
+  var table = buildTable(dataList, selector);
   var wrappedTable = wrapByTag(table, "div", "aggregation-table-view");
-  var graph = buildGraph(dataList, valueTag);
+  var graph = buildGraph(dataList, selector);
   var wrappedGraph = "<div " +
     "class=\"aggregation-graph-view\" style=\"display: none\">" +
     graph +
@@ -44,7 +44,7 @@ function buildChecksAggregationViewsContent(dataList, valueTag) {
   var content = switcher + wrappedTable + wrappedGraph + control;
   return "<div " +
     "class=\"aggregation-view-content\" " +
-    "tag=\"" + valueTag +"\" " +
+    "selector=\"" + selector +"\" " +
     "mode=\"table\" " +
     ">" + content + "</div>";
   //return wrapByTag(table + control, "div", "");

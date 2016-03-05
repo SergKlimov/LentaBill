@@ -55,13 +55,13 @@ function updateAggregationView(v, slider) {
     success: function (d) {
       var fullDataSet = $(d).find("checksAggregationResultRepresentation");
 
-      var tag = aggregationView.attr("tag");
-      var table = buildTable(fullDataSet, tag);
+      var selector = aggregationView.attr("selector");
+      var table = buildTable(fullDataSet, selector);
       $(aggregationView).find(".aggregation-table-view").html(table);
 
       var graphContext = $(aggregationView).find("#graph")[0].getContext("2d");
       graphContext.canvas.width = aggregationView.width() - 30;
-      var graphData = buildGraphDataSet(fullDataSet, tag);
+      var graphData = buildGraphDataSet(fullDataSet, selector);
       var graph = new Chart(graphContext).Line(graphData, {});
     }
   });
