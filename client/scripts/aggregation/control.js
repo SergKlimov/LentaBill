@@ -1,4 +1,4 @@
-/*function buildSwitcher() {
+function buildSwitcher() {
   var tableViewIndicator = "<button class=\"button primary\" onclick=\"switchView(this)\">table</button>";
   var graphViewIndicator = "<button class=\"button\" onclick=\"switchView(this)\">graph</button>";
   return "<div align=\"right\">" + tableViewIndicator + graphViewIndicator + "</div>";
@@ -9,7 +9,7 @@ function switchView(btn) {
   if ($(btn).hasClass("primary")) {
     return ;
   }
-  var aggregationView = $(btn).parents(".aggregation-view")
+  var aggregationView = $(btn).parents(".aggregation-view-content")
   var currentMode = $(aggregationView).attr("mode");
   if (currentMode == "table") {
     $(aggregationView).find(".aggregation-table-view").hide();
@@ -22,7 +22,7 @@ function switchView(btn) {
   }
   $(btn).addClass("primary");
   $(btn).siblings(".button").removeClass("primary");
-}*/
+}
 
 function buildController() {
   var input = "<input value=\"" + toHumanReadableDate(dataDomain.lb) + "\" readonly>";
@@ -58,6 +58,11 @@ function updateAggregationView(v, slider) {
       var tag = aggregationView.attr("tag");
       var table = buildTable(fullDataSet, tag);
       $(aggregationView).find(".aggregation-table-view").html(table);
+
+      var graphContext = $(aggregationView).find("#graph")[0].getContext("2d");
+      graphContext.canvas.width = aggregationView.width() - 30;
+      var graphData = buildGraphDataSet(fullDataSet, tag);
+      var graph = new Chart(graphContext).Line(graphData, {});
     }
   });
 }

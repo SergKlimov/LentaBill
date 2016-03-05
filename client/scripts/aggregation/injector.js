@@ -32,13 +32,20 @@ function buildAggregationView(title, aggregationView) {
 }
 
 function buildChecksAggregationViewsContent(dataList, valueTag) {
+  var switcher = buildSwitcher();
   var table = buildTable(dataList, valueTag);
   var wrappedTable = wrapByTag(table, "div", "aggregation-table-view");
+  var graph = buildGraph(dataList, valueTag);
+  var wrappedGraph = "<div " +
+    "class=\"aggregation-graph-view\" style=\"display: none\">" +
+    graph +
+    "</div>";
   var control = buildController();
-  var content = wrappedTable + control;
+  var content = switcher + wrappedTable + wrappedGraph + control;
   return "<div " +
     "class=\"aggregation-view-content\" " +
-    "tag=\"" + valueTag +"\"" +
+    "tag=\"" + valueTag +"\" " +
+    "mode=\"table\" " +
     ">" + content + "</div>";
   //return wrapByTag(table + control, "div", "");
 }

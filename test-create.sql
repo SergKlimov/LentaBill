@@ -98,5 +98,3 @@ alter table supplier_dimensions add constraint fk_supplier_dimensions_store_8 fo
 create index ix_supplier_dimensions_store_8 on supplier_dimensions (store_id);
 alter table supplier_dimensions add constraint fk_supplier_dimensions_cashMac_9 foreign key (cash_machine_id) references cash_machines (id) on delete restrict on update restrict;
 create index ix_supplier_dimensions_cashMac_9 on supplier_dimensions (cash_machine_id);
-
-

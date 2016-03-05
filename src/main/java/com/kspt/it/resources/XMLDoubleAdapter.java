@@ -1,6 +1,7 @@
 package com.kspt.it.resources;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.util.Locale;
 
 public class XMLDoubleAdapter extends XmlAdapter<String, Double> {
   @Override
@@ -12,6 +13,6 @@ public class XMLDoubleAdapter extends XmlAdapter<String, Double> {
   @Override
   public String marshal(final Double v)
   throws Exception {
-    return String.format("%.2f", v);
+    return String.format(Locale.US, "%.2f", v);
   }
 }

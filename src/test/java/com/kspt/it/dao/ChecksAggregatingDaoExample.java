@@ -1,13 +1,9 @@
 package com.kspt.it.dao;
 
 import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.EbeanServerFactory;
-import com.avaje.ebean.config.DataSourceConfig;
-import com.avaje.ebean.config.ServerConfig;
-import com.avaje.ebean.config.dbplatform.H2Platform;
-import com.avaje.ebeaninternal.api.SpiEbeanServer;
-import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import com.google.common.collect.Lists;
+import com.google.inject.Guice;
+import com.kspt.it.GuiceModule;
 import com.kspt.it.Tuple2;
 import com.kspt.it.dao.aggregation.checks.ChecksAggregationDAO;
 import com.kspt.it.dao.aggregation.checks.ChecksAggregationResultEntry;
@@ -35,7 +31,7 @@ public class ChecksAggregatingDaoExample {
 
   @Before
   public void setUp() {
-    ebean = ebeanServer();
+    ebean = Guice.createInjector(new GuiceModule()).getInstance(EbeanServer.class);
     createSupplierDimensions();
     createProducts();
     createChecks();
@@ -158,37 +154,7 @@ public class ChecksAggregatingDaoExample {
         ).forEach(ebean::save);
   }
 
-  EbeanServer ebeanServer() {
-    //final String databaseName = UUID.randomUUID().toString().replaceAll("-", "");
-    final String databaseName = "test";
-    final ServerConfig config = new ServerConfig();
-    config.setName(databaseName);
-    // Define DataSource parameters
-    DataSourceConfig h2DataSourceConfig = new DataSourceConfig();
-    h2DataSourceConfig.setDriver("org.h2.Driver");
-    h2DataSourceConfig.setUsername("sa");
-    h2DataSourceConfig.setPassword("");
-    h2DataSourceConfig.setUrl(String.format("jdbc:h2:mem:%s", databaseName));
-    config.setDataSourceConfig(h2DataSourceConfig);
-    // specify a JNDI DataSource
-    // config.setDataSourceJndiName("someJndiDataSourceName");
-    // set DDL options...
-    config.setDdlGenerate(true);
-    config.setDdlRun(false);
-    config.setDefaultServer(false);
-    config.setRegister(false);
-    // create the EbeanServer instance
-    final EbeanServer ebeanServer = EbeanServerFactory.create(config);
-    DdlGenerator ddl = new DdlGenerator();
-    ddl.setup((SpiEbeanServer) ebeanServer, new H2Platform(), config);
-    // Drop
-    ddl.runScript(false, ddl.generateDropDdl());
-    // Create
-    ddl.runScript(false, ddl.generateCreateDdl());
-    ((SpiEbeanServer) ebeanServer).clearQueryStatistics();
-    ebeanServer.getServerCacheManager().clearAll();
-    return ebeanServer;
-  }
+
 
   @Test
   public void byDateAndStore() {
