@@ -3,8 +3,6 @@ package com.kspt.it.resources;
 import com.kspt.it.services.checks.ChecksAggregationApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import static java.util.stream.Collectors.toList;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -29,10 +27,6 @@ public class ChecksAggregationResource {
   @GET
   @Path("/aggregation/byDateAndStore")
   @ApiOperation(value = "Aggregate checks info by date and sore", notes = "Anything Else?")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "OK"),
-      @ApiResponse(code = 500, message = "Something wrong in Server")
-  })
   public List<ChecksAggregationResultRepresentation> aggregateByDateAndStore(
       final @QueryParam("since") long since,
       final @QueryParam("limit") int limit) {
@@ -52,12 +46,26 @@ public class ChecksAggregationResource {
   }
 
   @GET
+  @Path("/aggregation/byDateAndStore/{aggregationFunction}")
+  @ApiOperation(
+      value = "Aggregate checks info by date and sore using arbitrary function as a parameter.",
+      notes = "Available functions are: min, avg, max, sum, count.")
+  public List<CompactChecksAggregationResultRepresentation> aggregateByDateAndStore(
+      final @QueryParam("aggregationFunction") String aggregationFunction) {
+    final List<CompactChecksAggregationResultRepresentation> list = service
+        .aggregateUsing(aggregationFunction)
+        .stream()
+        .map(ar -> new CompactChecksAggregationResultRepresentation(
+            ar.getOrigin(),
+            ar.getStoreId(),
+            ar.getValue())
+        ).collect(toList());
+    return list;
+  }
+
+  @GET
   @Path("/forecast/byDateAndStore")
   @ApiOperation(value = "Build forecast for checks info by date and sore", notes = "Anything Else?")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "OK"),
-      @ApiResponse(code = 500, message = "Something wrong in Server")
-  })
   public List<ChecksAggregationResultRepresentation> forecastAggregationByDateAndStore() {
     final List<ChecksAggregationResultRepresentation> list = service
         .forecastAggregationByDateAndStore()
@@ -72,6 +80,30 @@ public class ChecksAggregationResource {
             ar.getChecksCount())
         ).collect(toList());
     return list;
+  }
+
+}
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+class CompactChecksAggregationResultRepresentation {
+  private Long timestamp;
+
+  private Integer storeId;
+
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double value;
+
+  public CompactChecksAggregationResultRepresentation(
+      final Long timestamp,
+      final Integer storeId,
+      final Double value) {
+    this.timestamp = timestamp;
+    this.storeId = storeId;
+    this.value = value;
+  }
+
+  public CompactChecksAggregationResultRepresentation() {
   }
 }
 
