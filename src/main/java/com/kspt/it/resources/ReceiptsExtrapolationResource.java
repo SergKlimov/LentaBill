@@ -5,7 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
+import static java.util.stream.Collectors.toList;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -13,11 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Path("api/receipts/extrapolation")
 @Produces(MediaType.APPLICATION_XML)
@@ -49,6 +46,19 @@ public class ReceiptsExtrapolationResource {
 @XmlAccessorType(XmlAccessType.FIELD)
 class ReceiptsExtrapolationAllShopsResultRepresentation {
 
+    private long timestamp;
+
+    private double totalSum;
+
+    public ReceiptsExtrapolationAllShopsResultRepresentation(
+            final long timestamp,
+            final double totalSum) {
+        this.timestamp = timestamp;
+        this.totalSum = totalSum;
+    }
+
+    public ReceiptsExtrapolationAllShopsResultRepresentation() {}
+
     public long getTimestamp() {
         return timestamp;
     }
@@ -64,16 +74,4 @@ class ReceiptsExtrapolationAllShopsResultRepresentation {
     public void setTotalSum(double totalSum) {
         this.totalSum = totalSum;
     }
-
-    private long timestamp;
-    private double totalSum;
-
-    public ReceiptsExtrapolationAllShopsResultRepresentation(
-            final long timestamp,
-            final double totalSum) {
-        this.timestamp = timestamp;
-        this.totalSum = totalSum;
-    }
-
-    public ReceiptsExtrapolationAllShopsResultRepresentation() {}
 }

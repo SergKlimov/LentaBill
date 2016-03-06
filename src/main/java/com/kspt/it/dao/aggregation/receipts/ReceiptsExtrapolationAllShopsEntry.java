@@ -1,7 +1,6 @@
 package com.kspt.it.dao.aggregation.receipts;
 
 import com.avaje.ebean.annotation.Sql;
-
 import javax.persistence.Entity;
 
 @Entity

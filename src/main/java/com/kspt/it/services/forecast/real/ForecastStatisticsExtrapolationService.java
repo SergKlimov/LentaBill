@@ -6,7 +6,6 @@ import net.sourceforge.openforecast.DataSet;
 import net.sourceforge.openforecast.Forecaster;
 import net.sourceforge.openforecast.ForecastingModel;
 import net.sourceforge.openforecast.Observation;
-
 import java.util.ArrayList;
 import java.util.List;
 

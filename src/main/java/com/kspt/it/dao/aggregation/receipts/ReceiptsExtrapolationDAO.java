@@ -3,7 +3,6 @@ package com.kspt.it.dao.aggregation.receipts;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
-
 import javax.inject.Inject;
 import java.util.List;
 

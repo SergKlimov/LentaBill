@@ -4,16 +4,16 @@ import com.kspt.it.services.forecast.real.ForecastStatisticsExtrapolationService
 import com.kspt.it.services.receipts.ReceiptsExtrapolationAllShopsResult;
 import com.kspt.it.services.receipts.ReceiptsExtrapolationApi;
 import javafx.util.Pair;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SyntheticReceiptsExtrapolationApi implements ReceiptsExtrapolationApi {
 
+    private final int observedDaySize = 30;
+
     private List<Pair<Double, Long>> observedDays;
 
-    private final int observedDaySize = 30;
     private long startDay;
 
     public SyntheticReceiptsExtrapolationApi() {

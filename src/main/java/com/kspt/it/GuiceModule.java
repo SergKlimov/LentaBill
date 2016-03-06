@@ -82,6 +82,17 @@ public class GuiceModule extends AbstractModule {
 
   @Provides
   @Singleton
+  public ReceiptsExtrapolationApi provideReceiptsExtrapolationApi(final Config c, final Injector i) {
+    final String type = c.getString("services.products.type");
+    if (type.equals("real")) {
+      return new ReceiptsExtrapolationService(i.getInstance(ReceiptsExtrapolationDAO.class));
+    } else {
+      return new SyntheticReceiptsExtrapolationApi();
+    }
+  }
+
+  @Provides
+  @Singleton
   EbeanServer provideEbeanServer() {
     final Stopwatch started = Stopwatch.createStarted();
     final EbeanServer server = Ebean.getServer(null);
@@ -105,16 +116,5 @@ public class GuiceModule extends AbstractModule {
     final File folder = new File(c.origin().filename()).getParentFile();
     LOGGER.warn("Loading {} from {}", appConf, folder);
     return c.resolve();
-  }
-
-  @Provides
-  @Singleton
-  public ReceiptsExtrapolationApi provideReceiptsExtrapolationApi(final Config c, final Injector i) {
-    final String type = c.getString("services.products.type");
-    if (type.equals("real")) {
-      return new ReceiptsExtrapolationService(i.getInstance(ReceiptsExtrapolationDAO.class));
-    } else {
-      return new SyntheticReceiptsExtrapolationApi();
-    }
   }
 }
