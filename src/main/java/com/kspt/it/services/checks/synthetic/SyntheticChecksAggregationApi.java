@@ -3,6 +3,7 @@ package com.kspt.it.services.checks.synthetic;
 import com.kspt.it.Tuple2;
 import com.kspt.it.services.checks.ChecksAggregationApi;
 import com.kspt.it.services.checks.ChecksAggregationResult;
+import com.kspt.it.services.checks.CompactChecksAggregationResult;
 import static java.util.stream.Collectors.toList;
 import org.jetbrains.annotations.NotNull;
 import java.time.Instant;
@@ -32,6 +33,30 @@ public class SyntheticChecksAggregationApi implements ChecksAggregationApi {
             .plusDays(i))
         .flatMap(d -> IntStream.range(0, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
         .map(this::generateChecksAggregationResult)
+        .collect(toList());
+  }
+
+  @Override
+  public List<ChecksAggregationResult> forecastAggregationByDateAndStore() {
+    final int forecastHorizon = 15;
+    return IntStream.range(0, forecastHorizon)
+        .mapToObj(i -> LocalDate.now().plusDays(i))
+        .flatMap(d -> IntStream.range(0, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
+        .map(this::generateChecksAggregationResult)
+        .collect(toList());
+  }
+
+  @Override
+  public List<CompactChecksAggregationResult> aggregateUsing(final String aggregationFunction) {
+    final int sampleSize = 30;
+    final LocalDate startOfReport = LocalDate.now().minusDays(sampleSize);
+    return IntStream.range(0, sampleSize)
+        .mapToObj(startOfReport::plusDays)
+        .flatMap(d -> IntStream.range(0, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
+        .map(t2 -> new CompactChecksAggregationResult(
+            t2._1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
+            t2._2,
+            100 * Math.random()))
         .collect(toList());
   }
 

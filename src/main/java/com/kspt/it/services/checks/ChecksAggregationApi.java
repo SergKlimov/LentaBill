@@ -6,4 +6,6 @@ public interface ChecksAggregationApi {
   List<ChecksAggregationResult> aggregateByDateAndStore(final long since, final int limit);
 
   List<ChecksAggregationResult> forecastAggregationByDateAndStore();
+
+  List<CompactChecksAggregationResult> aggregateUsing(final String aggregationFunction);
 }

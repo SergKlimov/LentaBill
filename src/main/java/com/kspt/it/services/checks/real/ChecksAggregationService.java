@@ -4,6 +4,7 @@ import com.kspt.it.dao.aggregation.checks.ChecksAggregationDAO;
 import com.kspt.it.dao.aggregation.checks.ChecksAggregationResultEntry;
 import com.kspt.it.services.checks.ChecksAggregationApi;
 import com.kspt.it.services.checks.ChecksAggregationResult;
+import com.kspt.it.services.checks.CompactChecksAggregationResult;
 import com.kspt.it.services.forecast.real.ForecastStatisticsExtrapolationService;
 import static java.util.stream.Collectors.*;
 import javafx.util.Pair;
@@ -47,6 +48,19 @@ public class ChecksAggregationService implements ChecksAggregationApi {
     return buildForecastForAllStores(dao.aggregateByDateAndStore());
   }
 
+  @Override
+  public List<CompactChecksAggregationResult> aggregateUsing(final String aggregationFunction) {
+    return dao.aggregateUsing(aggregationFunction).stream()
+        .map(are -> new CompactChecksAggregationResult(
+            LocalDate.of(are.getYear(), are.getMonth(), are.getDay())
+                .atStartOfDay()
+                .toInstant(ZoneOffset.UTC)
+                .toEpochMilli(),
+            are.getStoreId(),
+            are.getValue())
+        ).collect(toList());
+  }
+
   private List<ChecksAggregationResult> buildForecastForAllStores(
       final List<ChecksAggregationResultEntry> entries) {
     final Map<Integer, List<ChecksAggregationResultEntry>> aggregationsForStore = entries.stream()
@@ -83,7 +97,18 @@ public class ChecksAggregationService implements ChecksAggregationApi {
         )).collect(toList());
   }
 
-  private List<Pair<Double, Long>> buildForecastFor(
+  @Override
+  public List<CompactChecksAggregationResult> aggregateUsing(final String aggregationFunction) {
+    return dao.aggregateUsing(aggregationFunction).stream()
+        .map(are -> new CompactChecksAggregationResult(
+            LocalDate.of(are.getYear(), are.getMonth(), are.getDay())
+                .atStartOfDay()
+                .toInstant(ZoneOffset.UTC)
+                .toEpochMilli(),
+            are.getStoreId(),
+            are.getValue())
+        ).collect(toList());
+  }  private List<Pair<Double, Long>> buildForecastFor(
       final List<ChecksAggregationResultEntry> entries,
       final Function<ChecksAggregationResultEntry, Double> valueMapper,
       final int forecastHorizon) {

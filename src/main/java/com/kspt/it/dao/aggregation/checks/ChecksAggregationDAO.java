@@ -58,6 +58,33 @@ public class ChecksAggregationDAO {
         + "as_millisecond < " + (since + TimeUnit.DAYS.toMillis(limit));
   }
 
+  public List<CompactChecksAggregationResultEntry> aggregateUsing(
+      final String aggregationFunction) {
+    final String aggregationFunctionArgument =
+        aggregationFunction.equalsIgnoreCase("count") ? "*" : "check_facts.value";
+    final String query = "SELECT "
+        + "dates.year AS year, "
+        + "dates.month AS month, "
+        + "dates.day AS day, "
+        + "supplier_dimensions.store_id AS storeId, "
+        + aggregationFunction + "(" + aggregationFunctionArgument + ") AS value "
+        + "FROM "
+        + "check_facts "
+        + "JOIN supplier_dimensions "
+        + "ON check_facts.supplier_id = supplier_dimensions.id "
+        + "RIGHT JOIN date_dimensions "
+        + "ON check_facts.date_id = date_dimensions.id "
+        + "GROUP BY "
+        + "supplier_dimensions.store_id, "
+        + "date_dimensions.year, "
+        + "date_dimensions.month, "
+        + "date_dimensions.day";
+    final RawSql sql = RawSqlBuilder.parse(query).create();
+    return ebean.find(CompactChecksAggregationResultEntry.class)
+        .setRawSql(sql)
+        .findList();
+  }
+
   public List<ChecksAggregationResultEntry> aggregateByDateAndStore() {
     final String query = "SELECT "
         + "dates.year AS year, "
