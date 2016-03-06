@@ -59,7 +59,7 @@ public class DemoApplicationRunner {
       //setupEbean();
 
       //read products from db
-      /*List<ProductEntry> peList = new ArrayList<>();
+      List<ProductEntry> peList = new ArrayList<>();
       peList.addAll(ebean.find(ProductEntry.class).setRawSql(RawSqlBuilder.parse("SELECT "
               + "products.id AS id, "
               + "products.name AS name, "
@@ -67,7 +67,7 @@ public class DemoApplicationRunner {
       ).create()).findList());
       for(ProductEntry pe : peList){
         System.out.println("product " + pe.getId().toString() + " : " + pe.getName() + " value: " + pe.getValue());
-      }*/
+      }
 
       final String ymlConfigFile = Resources.getResource("config.yml").getFile();
       new TestDemoApplication().run("server", ymlConfigFile);
@@ -210,7 +210,6 @@ public class DemoApplicationRunner {
   }
 
   static EbeanServer mySqlEbeanServer() {
-    //final String databaseName = UUID.randomUUID().toString().replaceAll("-", "");
     final String databaseName = "adler1_lenta2";
     final ServerConfig config = new ServerConfig();
     config.setName(databaseName);
@@ -219,28 +218,20 @@ public class DemoApplicationRunner {
     h2DataSourceConfig.setDriver("com.mysql.jdbc.Driver");
     h2DataSourceConfig.setUsername("adler1_lenta2");
     h2DataSourceConfig.setPassword("lenta2pass");
-    h2DataSourceConfig.setUrl(String.format("jdbc:h2:mem:%s;MODE=MySQL", databaseName));
+    h2DataSourceConfig.setUrl(String.format("jdbc:mysql://jacket.beget.ru:3306/%s", databaseName));
 
-    System.out.println("server url:" + String.format("jdbc:h2:mem:%s", databaseName));
+    System.out.println(String.format("server url: jdbc:mysql://jacket.beget.ru:3306/%s", databaseName));
 
     config.setDataSourceConfig(h2DataSourceConfig);
     // specify a JNDI DataSource
     // config.setDataSourceJndiName("someJndiDataSourceName");
     // set DDL options...
-    config.setDdlGenerate(true);
+    config.setDdlGenerate(false);
     config.setDdlRun(false);
     config.setDefaultServer(false);
     config.setRegister(false);
     // create the EbeanServer instance
     final EbeanServer ebeanServer = EbeanServerFactory.create(config);
-    DdlGenerator ddl = new DdlGenerator();
-    ddl.setup((SpiEbeanServer) ebeanServer, new H2Platform(), config);
-    // Drop
-    ddl.runScript(false, ddl.generateDropDdl());
-    // Create
-    ddl.runScript(false, ddl.generateCreateDdl());
-    ((SpiEbeanServer) ebeanServer).clearQueryStatistics();
-    ebeanServer.getServerCacheManager().clearAll();
     return ebeanServer;
   }
 
