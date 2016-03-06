@@ -68,19 +68,15 @@ public class ChecksAggregationResource {
   @ApiOperation(
       value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<ChecksAggregationResultRepresentation> forecastAggregationByDateAndStore(
+  public List<CompactChecksAggregationResultRepresentation> forecastAggregationByDateAndStore(
       final @QueryParam("aggregationFunction") String aggregationFunction) {
-    final List<ChecksAggregationResultRepresentation> list = service
+    final List<CompactChecksAggregationResultRepresentation> list = service
         .forecastFor(aggregationFunction)
         .stream()
-        .map(ar -> new ChecksAggregationResultRepresentation(
-            ar.getTimestamp(),
+        .map(ar -> new CompactChecksAggregationResultRepresentation(
+            ar.getOrigin(),
             ar.getStoreId(),
-            ar.getMinCheckValue(),
-            ar.getAvgCheckValue(),
-            ar.getMaxCheckValue(),
-            ar.getAllChecksValueSum(),
-            ar.getChecksCount())
+            ar.getValue())
         ).collect(toList());
     return list;
   }
