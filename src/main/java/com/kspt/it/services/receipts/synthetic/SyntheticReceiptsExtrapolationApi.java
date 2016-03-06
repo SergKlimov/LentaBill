@@ -6,6 +6,7 @@ import com.kspt.it.services.receipts.ReceiptsExtrapolationApi;
 import javafx.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class SyntheticReceiptsExtrapolationApi implements ReceiptsExtrapolationApi {
@@ -20,11 +21,11 @@ public class SyntheticReceiptsExtrapolationApi implements ReceiptsExtrapolationA
 
         this.observedDays = new ArrayList<>();
         this.startDay = System.currentTimeMillis() -
-                ForecastStatisticsExtrapolationService.daysToMilliseconds(observedDaySize);
+            TimeUnit.DAYS.toMillis(observedDaySize);
 
         for (int i = 0; i < this.observedDaySize; i++) {
             observedDays.add(new Pair<>(Math.random() * 100, this.startDay));
-            this.startDay += ForecastStatisticsExtrapolationService.daysToMilliseconds(1);
+            this.startDay += TimeUnit.DAYS.toMillis(1);
         }
     }
 

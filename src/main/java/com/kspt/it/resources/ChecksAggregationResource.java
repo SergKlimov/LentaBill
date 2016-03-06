@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
-@Path("/api/checks/aggregation")
+@Path("/api/checks/")
 @Produces(MediaType.APPLICATION_XML)
 @Api(value = "checks_aggregation", description = "Aggregation for checks")
 public class ChecksAggregationResource {
@@ -27,7 +27,7 @@ public class ChecksAggregationResource {
   private ChecksAggregationApi service;
 
   @GET
-  @Path("/byDateAndStore")
+  @Path("/aggregation/byDateAndStore")
   @ApiOperation(value = "Aggregate checks info by date and sore", notes = "Anything Else?")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "OK"),
@@ -38,6 +38,29 @@ public class ChecksAggregationResource {
       final @QueryParam("limit") int limit) {
     final List<ChecksAggregationResultRepresentation> list = service
         .aggregateByDateAndStore(since, limit)
+        .stream()
+        .map(ar -> new ChecksAggregationResultRepresentation(
+            ar.getTimestamp(),
+            ar.getStoreId(),
+            ar.getMinCheckValue(),
+            ar.getAvgCheckValue(),
+            ar.getMaxCheckValue(),
+            ar.getAllChecksValueSum(),
+            ar.getChecksCount())
+        ).collect(toList());
+    return list;
+  }
+
+  @GET
+  @Path("/forecast/byDateAndStore")
+  @ApiOperation(value = "Build forecast for checks info by date and sore", notes = "Anything Else?")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "OK"),
+      @ApiResponse(code = 500, message = "Something wrong in Server")
+  })
+  public List<ChecksAggregationResultRepresentation> forecastAggregationByDateAndStore() {
+    final List<ChecksAggregationResultRepresentation> list = service
+        .forecastAggregationByDateAndStore()
         .stream()
         .map(ar -> new ChecksAggregationResultRepresentation(
             ar.getTimestamp(),

@@ -8,6 +8,7 @@ import net.sourceforge.openforecast.ForecastingModel;
 import net.sourceforge.openforecast.Observation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ForecastStatisticsExtrapolationService {
     /**
@@ -47,7 +48,7 @@ public class ForecastStatisticsExtrapolationService {
 
         for (int i = 0; i < stepSize; i++) {
             DataPoint dp = new Observation(0.0);
-            maxDate += daysToMilliseconds(1);
+            maxDate += TimeUnit.DAYS.toMillis(1);
             dp.setIndependentValue(tagString, maxDate.doubleValue());
             requiredDataPoints.add(dp);
         }
@@ -63,9 +64,5 @@ public class ForecastStatisticsExtrapolationService {
             returnList.add(new Pair<>(val, date));
         }
         return returnList;
-    }
-
-    public static Long daysToMilliseconds(final int days) {
-        return (long) (days * 24 * 60 * 60 * 1000);
     }
 }
