@@ -7,11 +7,13 @@ import io.dropwizard.Configuration;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
-import static org.eclipse.jetty.servlets.CrossOriginFilter.*;
 import org.glassfish.jersey.server.validation.ValidationFeature;
+
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 import java.util.EnumSet;
+
+import static org.eclipse.jetty.servlets.CrossOriginFilter.*;
 
 public class DemoApplication extends Application<DemoApplicationConfig> {
 
@@ -44,6 +46,7 @@ public class DemoApplication extends Application<DemoApplicationConfig> {
 
   private void setupCORSFilter(final Environment environment) {
     Dynamic filter = environment.servlets().addFilter("CORSFilter", CrossOriginFilter.class);
+
     final String urlPattern = environment.getApplicationContext().getContextPath() + "*";
     filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, urlPattern);
     filter.setInitParameter(ALLOWED_METHODS_PARAM, "GET,PUT,POST,OPTIONS");

@@ -48,6 +48,11 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-jersey</artifactId>
+        </dependency>
         <!--commons-->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -120,24 +125,24 @@
             <artifactId>openforecast</artifactId>
             <version>0.5.0</version>
         </dependency>
-    </dependencies>
+      </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.avaje.ebeanorm</groupId>
-                <artifactId>avaje-ebeanorm-mavenenhancer</artifactId>
-                <version>4.5.4</version>
-                <executions>
-                    <execution>
-                        <id>main</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>enhance</goal>
-                        </goals>
-                        <configuration>
-                            <packages>com.kspt.it.persist.*</packages>
-                            <!--<transformArgs>debug=0</transformArgs>-->
+      <build>
+          <plugins>
+              <plugin>
+                  <groupId>org.avaje.ebeanorm</groupId>
+                  <artifactId>avaje-ebeanorm-mavenenhancer</artifactId>
+                  <version>4.5.4</version>
+                  <executions>
+                      <execution>
+                          <id>main</id>
+                          <phase>process-classes</phase>
+                          <goals>
+                              <goal>enhance</goal>
+                          </goals>
+                          <configuration>
+                              <packages>com.kspt.it.persist.*</packages>
+                              <!--<transformArgs>debug=0</transformArgs>-->
                             <classSource>${project.build.outputDirectory}</classSource>
                             <classDestination>${project.build.outputDirectory}</classDestination>
                         </configuration>
