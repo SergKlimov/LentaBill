@@ -34,5 +34,5 @@ public class ChecksAggregationService implements ChecksAggregationApi {
             are.getAllChecksValueSum(),
             are.getChecksCount())
         ).collect(toList());
-  }
-}
+        }
+        }
