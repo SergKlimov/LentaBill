@@ -37,12 +37,15 @@ public class SyntheticChecksAggregationApi implements ChecksAggregationApi {
   }
 
   @Override
-  public List<ChecksAggregationResult> forecastAggregationByDateAndStore() {
+  public List<CompactChecksAggregationResult> forecastFor(final String aggregationFunction) {
     final int forecastHorizon = 15;
     return IntStream.range(0, forecastHorizon)
         .mapToObj(i -> LocalDate.now().plusDays(i))
         .flatMap(d -> IntStream.range(0, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
-        .map(this::generateChecksAggregationResult)
+        .map(t2 -> new CompactChecksAggregationResult(
+            t2._1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
+            t2._2,
+            100 * Math.random()))
         .collect(toList());
   }
 

@@ -64,11 +64,14 @@ public class ChecksAggregationResource {
   }
 
   @GET
-  @Path("/forecast/byDateAndStore")
-  @ApiOperation(value = "Build forecast for checks info by date and sore", notes = "Anything Else?")
-  public List<ChecksAggregationResultRepresentation> forecastAggregationByDateAndStore() {
+  @Path("/forecast/byDateAndStore/{aggregationFunction}")
+  @ApiOperation(
+      value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
+      notes = "Available functions are: min, avg, max, sum, count.")
+  public List<ChecksAggregationResultRepresentation> forecastAggregationByDateAndStore(
+      final @QueryParam("aggregationFunction") String aggregationFunction) {
     final List<ChecksAggregationResultRepresentation> list = service
-        .forecastAggregationByDateAndStore()
+        .forecastFor(aggregationFunction)
         .stream()
         .map(ar -> new ChecksAggregationResultRepresentation(
             ar.getTimestamp(),
