@@ -4,7 +4,6 @@ import com.kspt.it.dao.aggregation.checks.ChecksAggregationDAO;
 import com.kspt.it.services.checks.ChecksAggregationApi;
 import com.kspt.it.services.checks.ChecksAggregationResult;
 import com.kspt.it.services.checks.CompactChecksAggregationResult;
-import com.kspt.it.services.checks.CompactChecksAggregationResultForProduct;
 import com.kspt.it.services.forecast.real.ForecastStatisticsExtrapolationService;
 import static java.util.stream.Collectors.*;
 import javafx.util.Pair;
@@ -47,11 +46,6 @@ public class ChecksAggregationService implements ChecksAggregationApi {
     return buildForecastForAllStores(aggregateUsing(aggregationFunction));
   }
 
-  @Override
-  public List<CompactChecksAggregationResultForProduct> forecastForProducts(final String aggregationFunction) {
-    return buildForecastForAllProducts(aggregateUsing(aggregationFunction));
-  }
-
   private List<CompactChecksAggregationResult> buildForecastForAllStores(
       final List<CompactChecksAggregationResult> entries) {
     final Map<Integer, List<CompactChecksAggregationResult>> aggregationsForStore = entries
@@ -74,30 +68,6 @@ public class ChecksAggregationService implements ChecksAggregationApi {
             storeId,
             forecast.get(i).getKey()))
         .collect(toList());
-  }
-
-  private List<CompactChecksAggregationResultForProduct> buildForecastForAllProducts(
-          final List<CompactChecksAggregationResult> entries) {
-    final Map<Integer, List<CompactChecksAggregationResult>> aggregationsForProduct = entries
-            .stream()
-            .collect(groupingBy(CompactChecksAggregationResult::getStoreId));
-    return aggregationsForProduct.entrySet().stream()
-            .map(e -> buildForecastForProduct(e.getKey(), e.getValue()))
-            .flatMap(List::stream)
-            .collect(toList());
-  }
-
-  private List<CompactChecksAggregationResultForProduct> buildForecastForProduct(
-          final int productId,
-          final List<CompactChecksAggregationResult> entries) {
-    final int forecastHorizon = 15;
-    final List<Pair<Double, Long>> forecast = buildForecastFor(entries, forecastHorizon);
-    return IntStream.range(0, forecastHorizon)
-            .mapToObj(i -> new CompactChecksAggregationResultForProduct(
-                    forecast.get(i).getValue(),
-                    productId,
-                    forecast.get(i).getKey()))
-            .collect(toList());
   }
 
   private List<Pair<Double, Long>> buildForecastFor(

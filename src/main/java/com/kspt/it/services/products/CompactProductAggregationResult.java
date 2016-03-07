@@ -1,14 +1,13 @@
-package com.kspt.it.services.checks;
+package com.kspt.it.services.products;
 
-public class CompactChecksAggregationResultForProduct {
-
+public class CompactProductAggregationResult {
     private final long origin;
 
     private final int productId;
 
     private final double value;
 
-    public CompactChecksAggregationResultForProduct(final long origin, final int productId, final double value) {
+    public CompactProductAggregationResult(final long origin, final int productId, final double value) {
         this.origin = origin;
         this.productId = productId;
         this.value = value;

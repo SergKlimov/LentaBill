@@ -6,7 +6,6 @@ import com.kspt.it.services.checks.ChecksAggregationResult;
 import com.kspt.it.services.checks.CompactChecksAggregationResult;
 import static java.util.stream.Collectors.toList;
 
-import com.kspt.it.services.checks.CompactChecksAggregationResultForProduct;
 import org.jetbrains.annotations.NotNull;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -49,19 +48,6 @@ public class SyntheticChecksAggregationApi implements ChecksAggregationApi {
             t2._2,
             100 * Math.random()))
         .collect(toList());
-  }
-
-  @Override
-  public List<CompactChecksAggregationResultForProduct> forecastForProducts(final String aggregationFunction) {
-    final int forecastHorizon = 15;
-    return IntStream.range(0, forecastHorizon)
-            .mapToObj(i -> LocalDate.now().plusDays(i))
-            .flatMap(d -> IntStream.range(0, 3).mapToObj(i -> new Tuple2<>(d, i)))
-            .map(t2 -> new CompactChecksAggregationResultForProduct(
-                    t2._1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
-                    t2._2,
-                    100 * Math.random()))
-            .collect(toList());
   }
 
   @Override

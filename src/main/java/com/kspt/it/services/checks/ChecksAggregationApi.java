@@ -7,7 +7,5 @@ public interface ChecksAggregationApi {
 
   List<CompactChecksAggregationResult> forecastForStores(final String aggregationFunction);
 
-  List<CompactChecksAggregationResultForProduct> forecastForProducts(final String aggregationFunction);
-
   List<CompactChecksAggregationResult> aggregateUsing(final String aggregationFunction);
 }

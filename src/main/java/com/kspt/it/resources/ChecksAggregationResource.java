@@ -81,24 +81,6 @@ public class ChecksAggregationResource {
     return list;
   }
 
-  @GET
-  @Path("/forecast/byDateAndProduct/{aggregationFunction}")
-  @ApiOperation(
-          value = "Build forecast for checks info aggregated by date and product using arbitrary function",
-          notes = "Available functions are: min, avg, max, sum, count.")
-  public List<CompactChecksAggregationResultRepresentationForProduct> forecastAggregationByDateAndProduct(
-          final @QueryParam("aggregationFunction") String aggregationFunction) {
-    final List<CompactChecksAggregationResultRepresentationForProduct> list = service
-            .forecastForProducts(aggregationFunction)
-            .stream()
-            .map(ar -> new CompactChecksAggregationResultRepresentationForProduct(
-                    ar.getOrigin(),
-                    ar.getProductId(),
-                    ar.getValue())
-            ).collect(toList());
-    return list;
-  }
-
 }
 
 @XmlRootElement
@@ -122,29 +104,6 @@ class CompactChecksAggregationResultRepresentationForStores {
 
   public CompactChecksAggregationResultRepresentationForStores() {
   }
-}
-
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-class CompactChecksAggregationResultRepresentationForProduct {
-    private Long timestamp;
-
-    private Integer productId;
-
-    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-    private Double value;
-
-    public CompactChecksAggregationResultRepresentationForProduct(
-            final Long timestamp,
-            final Integer productId,
-            final Double value) {
-        this.timestamp = timestamp;
-        this.productId = productId;
-        this.value = value;
-    }
-
-    public CompactChecksAggregationResultRepresentationForProduct() {
-    }
 }
 
 @XmlRootElement
