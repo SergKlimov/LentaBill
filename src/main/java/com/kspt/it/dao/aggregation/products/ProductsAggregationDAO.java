@@ -107,7 +107,7 @@ public class ProductsAggregationDAO {
         .findList();
   }
 
-  public List<CompactChecksAggregationResultEntry> aggregateUsing(
+  public List<CompactProductsAggregationByDateResultEntry> aggregateUsingByDate(
           final String aggregationFunction) {
     //TODO
     // Написать правильный запрос к БД
@@ -131,7 +131,7 @@ public class ProductsAggregationDAO {
             + "date_dimensions.month, "
             + "date_dimensions.day";
     final RawSql sql = RawSqlBuilder.parse(query).create();
-    return ebean.find(CompactChecksAggregationResultEntry.class)
+    return ebean.find(CompactProductsAggregationByDateResultEntry.class)
             .setRawSql(sql)
             .findList();
   }

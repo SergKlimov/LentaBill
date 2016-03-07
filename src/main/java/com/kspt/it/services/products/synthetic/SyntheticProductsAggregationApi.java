@@ -58,12 +58,12 @@ public class SyntheticProductsAggregationApi implements ProductsAggregationApi {
   }
 
   @Override
-  public List<CompactProductAggregationResult> forecastForProducts(final String aggregationFunction) {
+  public List<CompactProductsAggregationByDateResult> forecastForProductsByDate(final String aggregationFunction) {
     final int forecastHorizon = 15;
     return IntStream.range(0, forecastHorizon)
             .mapToObj(i -> java.time.LocalDate.now().plusDays(i))
             .flatMap(d -> IntStream.range(0, 3).mapToObj(i -> new Tuple2<>(d, i)))
-            .map(t2 -> new CompactProductAggregationResult(
+            .map(t2 -> new CompactProductsAggregationByDateResult(
                     t2._1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
                     t2._2,
                     100 * Math.random()))
@@ -136,13 +136,13 @@ public class SyntheticProductsAggregationApi implements ProductsAggregationApi {
   }
 
   @Override
-  public List<CompactChecksAggregationResult> aggregateUsing(final String aggregationFunction) {
+  public List<CompactProductsAggregationByDateResult> aggregateUsingByDate(final String aggregationFunction) {
     final int sampleSize = 30;
     final java.time.LocalDate startOfReport = java.time.LocalDate.now().minusDays(sampleSize);
     return IntStream.range(0, sampleSize)
             .mapToObj(startOfReport::plusDays)
             .flatMap(d -> IntStream.range(0, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
-            .map(t2 -> new CompactChecksAggregationResult(
+            .map(t2 -> new CompactProductsAggregationByDateResult(
                     t2._1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
                     t2._2,
                     100 * Math.random()))

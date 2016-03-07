@@ -1,13 +1,13 @@
 package com.kspt.it.services.products;
 
-public class CompactProductAggregationResult {
+public class CompactProductsAggregationByDateResult {
     private final long origin;
 
     private final int productId;
 
     private final double value;
 
-    public CompactProductAggregationResult(final long origin, final int productId, final double value) {
+    public CompactProductsAggregationByDateResult(final long origin, final int productId, final double value) {
         this.origin = origin;
         this.productId = productId;
         this.value = value;

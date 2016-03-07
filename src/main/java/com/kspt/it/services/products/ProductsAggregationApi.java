@@ -11,7 +11,7 @@ public interface ProductsAggregationApi {
 
   List<ProductsAggregationByStoreAndDateResult> aggregateByStoreAndDateAndProduct();
 
-  List<CompactProductAggregationResult> forecastForProducts(final String aggregationFunction);
+  List<CompactProductsAggregationByDateResult> forecastForProductsByDate(final String aggregationFunction);
 
-  List<CompactChecksAggregationResult> aggregateUsing(final String aggregationFunction);
+  List<CompactProductsAggregationByDateResult> aggregateUsingByDate(final String aggregationFunction);
 }

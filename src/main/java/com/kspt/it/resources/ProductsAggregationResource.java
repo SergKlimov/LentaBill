@@ -1,5 +1,6 @@
 package com.kspt.it.resources;
 
+import com.kspt.it.services.products.CompactProductsAggregationByDateResult;
 import com.kspt.it.services.products.ProductsAggregationApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -104,7 +105,48 @@ public class ProductsAggregationResource {
             ).collect(toList());
     return list;
   }
+
+  @GET
+  @Path("/forecast/byDateAndProduct/{aggregationFunction}")
+  @ApiOperation(
+          value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
+          notes = "Available functions are: min, avg, max, sum, count.")
+  public List<CompactProductsAggregationResultRepresentationByDate> forecastAggregationByDateAndProductByDate(
+          final @QueryParam("aggregationFunction") String aggregationFunction) {
+    final List<CompactProductsAggregationResultRepresentationByDate> list = service
+            .forecastForProductsByDate(aggregationFunction)
+            .stream()
+            .map(ar -> new CompactProductsAggregationResultRepresentationByDate(
+                    ar.getOrigin(),
+                    ar.getProductId(),
+                    ar.getValue())
+            ).collect(toList());
+    return list;
+  }
 }
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+class CompactProductsAggregationResultRepresentationByDate {
+  private Long timestamp;
+
+  private Integer productId;
+
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double value;
+
+  public CompactProductsAggregationResultRepresentationByDate(
+          final Long timestamp,
+          final Integer productId,
+          final Double value) {
+    this.timestamp = timestamp;
+    this.productId = productId;
+    this.value = value;
+  }
+
+  public CompactProductsAggregationResultRepresentationByDate() {
+  }
+}
+
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
