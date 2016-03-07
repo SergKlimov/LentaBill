@@ -1,6 +1,5 @@
 package com.kspt.it.persist.data;
 
-import com.kspt.it.persist.olap.dimensions.StoreEntry;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;

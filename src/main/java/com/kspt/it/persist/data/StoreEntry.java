@@ -1,4 +1,4 @@
-package com.kspt.it.persist.olap.dimensions;
+package com.kspt.it.persist.data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,6 +1,6 @@
 package com.kspt.it.services.checks.real;
 
-import com.kspt.it.dao.aggregation.checks.ChecksAggregationDAO;
+import com.kspt.it.dao.aggregation.ByDateAndStoreAggregationDAO;
 import com.kspt.it.services.checks.ChecksAggregationApi;
 import com.kspt.it.services.checks.ChecksAggregationResult;
 import com.kspt.it.services.checks.CompactChecksAggregationResult;
@@ -16,17 +16,17 @@ import java.util.stream.IntStream;
 
 public class ChecksAggregationService implements ChecksAggregationApi {
 
-  private final ChecksAggregationDAO dao;
+  private final ByDateAndStoreAggregationDAO dao;
 
   @Inject
-  public ChecksAggregationService(final ChecksAggregationDAO dao) {
+  public ChecksAggregationService(final ByDateAndStoreAggregationDAO dao) {
     this.dao = dao;
   }
 
   @Override
   public List<ChecksAggregationResult> aggregateByDateAndStore(final long since, final int limit) {
 
-    return dao.aggregateByDateAndStore(since, limit).stream()
+    return dao.aggregate(since, limit).stream()
         .map(are -> new ChecksAggregationResult(
             LocalDate.of(are.getYear(), are.getMonth(), are.getDay())
                 .atStartOfDay()

@@ -1,7 +1,7 @@
 package com.kspt.it.dao.meta.stores;
 
 import com.avaje.ebean.EbeanServer;
-import com.kspt.it.persist.olap.dimensions.StoreEntry;
+import com.kspt.it.persist.data.StoreEntry;
 import javax.inject.Inject;
 import java.util.List;
 

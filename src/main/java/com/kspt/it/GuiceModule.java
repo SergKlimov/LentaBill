@@ -8,8 +8,10 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-import com.kspt.it.dao.aggregation.checks.ChecksAggregationDAO;
-import com.kspt.it.dao.aggregation.products.ProductsAggregationDAO;
+import com.kspt.it.dao.aggregation.ByDateAndProductAggregationDAO;
+import com.kspt.it.dao.aggregation.ByDateAndStoreAggregationDAO;
+import com.kspt.it.dao.aggregation.ByDateAndStoreAndProductAggregationDAO;
+import com.kspt.it.dao.aggregation.ByStoreAndProductAggregationDAO;
 import com.kspt.it.dao.meta.checks.ChecksMetaDAO;
 import com.kspt.it.dao.meta.stores.StoresMetaDAO;
 import com.kspt.it.services.checks.ChecksAggregationApi;
@@ -38,7 +40,7 @@ public class GuiceModule extends AbstractModule {
   public ChecksAggregationApi provideChecksAggregationApi(final Config c, final Injector i) {
     final String type = c.getString("services.checks.type");
     if (type.equals("real")) {
-      return new ChecksAggregationService(i.getInstance(ChecksAggregationDAO.class));
+      return new ChecksAggregationService(i.getInstance(ByDateAndStoreAggregationDAO.class));
     } else {
       final Config serviceConfig = c.getConfig("services_types." + type);
       final int storesCount = serviceConfig.getInt("stores_count");
@@ -51,7 +53,10 @@ public class GuiceModule extends AbstractModule {
   public ProductsAggregationApi provideProductsAggregationApi(final Config c, final Injector i) {
     final String type = c.getString("services.products.type");
     if (type.equals("real")) {
-      return new ProductsAggregationService(i.getInstance(ProductsAggregationDAO.class));
+      return new ProductsAggregationService(
+          i.getInstance(ByDateAndStoreAndProductAggregationDAO.class),
+          i.getInstance(ByDateAndProductAggregationDAO.class),
+          i.getInstance(ByStoreAndProductAggregationDAO.class));
     } else {
       final Config serviceConfig = c.getConfig("services_types." + type);
       final int daysCount = serviceConfig.getInt("days_count");

@@ -1,6 +1,7 @@
-package com.kspt.it.persist.data;
+package com.kspt.it.persist.olap.dimensions;
 
-import com.kspt.it.persist.olap.dimensions.StoreEntry;
+import com.kspt.it.persist.data.CashMachineEntry;
+import com.kspt.it.persist.data.StoreEntry;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;

@@ -1,8 +1,8 @@
 package com.kspt.it.persist.olap.facts;
 
 import com.kspt.it.persist.data.ProductEntry;
-import com.kspt.it.persist.data.SupplierDimensions;
 import com.kspt.it.persist.olap.dimensions.DateDimensions;
+import com.kspt.it.persist.olap.dimensions.SupplierDimensions;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;

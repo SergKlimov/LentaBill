@@ -3,7 +3,9 @@ package com.kspt.it.services.products.real;
 import com.google.inject.Inject;
 import com.kspt.it.Tuple2;
 import com.kspt.it.Tuple3;
-import com.kspt.it.dao.aggregation.products.ProductsAggregationDAO;
+import com.kspt.it.dao.aggregation.ByDateAndProductAggregationDAO;
+import com.kspt.it.dao.aggregation.ByDateAndStoreAndProductAggregationDAO;
+import com.kspt.it.dao.aggregation.ByStoreAndProductAggregationDAO;
 import com.kspt.it.services.forecast.real.ForecastStatisticsExtrapolationService;
 import com.kspt.it.services.products.CompactProductsAggregationByDateResult;
 import com.kspt.it.services.products.CompactProductsAggregationByStoreAndDateResult;
@@ -22,16 +24,25 @@ import java.util.stream.IntStream;
 
 public class ProductsAggregationService implements ProductsAggregationApi {
 
-  private final ProductsAggregationDAO dao;
+  private final ByDateAndStoreAndProductAggregationDAO dao;
+
+  private final ByDateAndProductAggregationDAO byDateAndProductDAO;
+
+  private final ByStoreAndProductAggregationDAO byStoreAndProductDAO;
 
   @Inject
-  public ProductsAggregationService(final ProductsAggregationDAO dao) {
+  public ProductsAggregationService(
+      final ByDateAndStoreAndProductAggregationDAO dao,
+      final ByDateAndProductAggregationDAO byDateAndProductDAO,
+      final ByStoreAndProductAggregationDAO byStoreAndProductDAO) {
     this.dao = dao;
+    this.byDateAndProductDAO = byDateAndProductDAO;
+    this.byStoreAndProductDAO = byStoreAndProductDAO;
   }
 
   @Override
   public List<ProductsAggregationByDateResult> aggregateByDateAndProduct() {
-    return dao.aggregateByDateAndProduct().stream()
+    return byDateAndProductDAO.aggregateByDateAndProduct().stream()
         .map(are -> new ProductsAggregationByDateResult(
             LocalDate.of(are.getYear(), are.getMonth(), are.getDay())
                 .atStartOfDay()
@@ -51,7 +62,7 @@ public class ProductsAggregationService implements ProductsAggregationApi {
 
   @Override
   public List<ProductsAggregationByStoreResult> aggregateByStoreAndProduct() {
-    return dao.aggregateByStoreAndProduct().stream()
+    return byStoreAndProductDAO.aggregateByStoreAndProduct().stream()
         .map(are -> new ProductsAggregationByStoreResult(
             are.getStoreId(),
             are.getProductId(),
@@ -134,7 +145,7 @@ public class ProductsAggregationService implements ProductsAggregationApi {
   @Override
   public List<CompactProductsAggregationByDateResult> aggregateUsingByDate(
       final String aggregationFunction) {
-    return dao.aggregateValueByDateUsing(aggregationFunction).stream()
+    return byDateAndProductDAO.aggregateValueByDateUsing(aggregationFunction).stream()
         .map(care -> new CompactProductsAggregationByDateResult(
             LocalDate.of(care.getYear(), care.getMonth(), care.getDay())
                 .atStartOfDay()

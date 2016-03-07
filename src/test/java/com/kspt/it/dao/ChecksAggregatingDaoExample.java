@@ -5,14 +5,14 @@ import com.google.common.collect.Lists;
 import com.google.inject.Guice;
 import com.kspt.it.GuiceModule;
 import com.kspt.it.Tuple2;
-import com.kspt.it.dao.aggregation.checks.ChecksAggregationDAO;
-import com.kspt.it.dao.aggregation.checks.ChecksAggregationResultEntry;
+import com.kspt.it.dao.aggregation.ByDateAndStoreAggregationDAO;
+import com.kspt.it.dao.aggregation.ByDateAndStoreAggregationDAO.ByDateAndStoreAggregationEntry;
 import com.kspt.it.persist.data.CashMachineEntry;
 import com.kspt.it.persist.data.CheckEntry;
 import com.kspt.it.persist.data.ProductEntry;
-import com.kspt.it.persist.data.SupplierDimensions;
+import com.kspt.it.persist.data.StoreEntry;
 import com.kspt.it.persist.olap.dimensions.DateDimensions;
-import com.kspt.it.persist.olap.dimensions.StoreEntry;
+import com.kspt.it.persist.olap.dimensions.SupplierDimensions;
 import com.kspt.it.persist.olap.facts.CheckFactEntry;
 import com.kspt.it.persist.olap.facts.ProductFactEntry;
 import static java.lang.System.currentTimeMillis;
@@ -158,9 +158,9 @@ public class ChecksAggregatingDaoExample {
 
   @Test
   public void byDateAndStore() {
-    final ChecksAggregationDAO dao = new ChecksAggregationDAO(ebean);
-    final List<ChecksAggregationResultEntry> r = dao
-        .aggregateByDateAndStore(currentTimeMillis() - 24 * 60 * 60 * 1000, 2);
+    final ByDateAndStoreAggregationDAO dao = new ByDateAndStoreAggregationDAO(ebean);
+    final List<ByDateAndStoreAggregationEntry> r = dao
+        .aggregate(currentTimeMillis() - 24 * 60 * 60 * 1000, 2);
     final int a = 1;
   }
 }
