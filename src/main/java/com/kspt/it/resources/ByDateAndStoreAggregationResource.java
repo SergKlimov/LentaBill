@@ -81,70 +81,70 @@ public class ByDateAndStoreAggregationResource {
         ).collect(toList());
     return list;
   }
+}
 
-  @XmlRootElement
-  @XmlAccessorType(XmlAccessType.FIELD)
-  static class CompactByDateAndStoreAggregationRepresentation {
-    private Long timestamp;
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+class CompactByDateAndStoreAggregationRepresentation {
+  private Long timestamp;
 
-    private Integer storeId;
+  private Integer storeId;
 
-    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-    private Double value;
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double value;
 
-    public CompactByDateAndStoreAggregationRepresentation(
-        final Long timestamp,
-        final Integer storeId,
-        final Double value) {
-      this.timestamp = timestamp;
-      this.storeId = storeId;
-      this.value = value;
-    }
-
-    public CompactByDateAndStoreAggregationRepresentation() {
-    }
+  public CompactByDateAndStoreAggregationRepresentation(
+      final Long timestamp,
+      final Integer storeId,
+      final Double value) {
+    this.timestamp = timestamp;
+    this.storeId = storeId;
+    this.value = value;
   }
 
-  @XmlRootElement
-  @XmlAccessorType(XmlAccessType.FIELD)
-  static class ByDateAndStoreAggregationRepresentation {
+  public CompactByDateAndStoreAggregationRepresentation() {
+  }
+}
 
-    private Long timestamp;
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+class ByDateAndStoreAggregationRepresentation {
 
-    private Integer storeId;
+  private Long timestamp;
 
-    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-    private Double minCheckValue;
+  private Integer storeId;
 
-    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-    private Double avgCheckValue;
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double minCheckValue;
 
-    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-    private Double maxCheckValue;
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double avgCheckValue;
 
-    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-    private Double allChecksValueSum;
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double maxCheckValue;
 
-    private Integer checksCount;
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double allChecksValueSum;
 
-    public ByDateAndStoreAggregationRepresentation() {
-    }
+  private Integer checksCount;
 
-    public ByDateAndStoreAggregationRepresentation(
-        final long timestamp,
-        final int storeId,
-        final Double minCheckValue,
-        final Double avgCheckValue,
-        final Double maxCheckValue,
-        final Double allChecksValueSum,
-        final Integer checksCount) {
-      this.timestamp = timestamp;
-      this.storeId = storeId;
-      this.minCheckValue = minCheckValue;
-      this.avgCheckValue = avgCheckValue;
-      this.maxCheckValue = maxCheckValue;
-      this.allChecksValueSum = allChecksValueSum;
-      this.checksCount = checksCount;
-    }
+  public ByDateAndStoreAggregationRepresentation() {
+  }
+
+  public ByDateAndStoreAggregationRepresentation(
+      final long timestamp,
+      final int storeId,
+      final Double minCheckValue,
+      final Double avgCheckValue,
+      final Double maxCheckValue,
+      final Double allChecksValueSum,
+      final Integer checksCount) {
+    this.timestamp = timestamp;
+    this.storeId = storeId;
+    this.minCheckValue = minCheckValue;
+    this.avgCheckValue = avgCheckValue;
+    this.maxCheckValue = maxCheckValue;
+    this.allChecksValueSum = allChecksValueSum;
+    this.checksCount = checksCount;
   }
 }

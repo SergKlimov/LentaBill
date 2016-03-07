@@ -110,76 +110,76 @@ public class ByDateAndProductAggregationResource {
         .collect(toList());
     return list;
   }
+}
 
-  @XmlRootElement
-  @XmlAccessorType(XmlAccessType.FIELD)
-  static class ByDateAndProductAggregationRepresentation {
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+class ByDateAndProductAggregationRepresentation {
 
-    private long timestamp;
+  private long timestamp;
 
-    private int productId;
+  private int productId;
 
-    private double minCheckValue;
+  private double minCheckValue;
 
-    private double avgCheckValue;
+  private double avgCheckValue;
 
-    private double maxCheckValue;
+  private double maxCheckValue;
 
-    private double allChecksValueSum;
+  private double allChecksValueSum;
 
-    private double minProductQuantity;
+  private double minProductQuantity;
 
-    private double avgProductQuantity;
+  private double avgProductQuantity;
 
-    private double maxProductQuantity;
+  private double maxProductQuantity;
 
-    private double allProductsQuantitySum;
+  private double allProductsQuantitySum;
 
-    private int itemsCount;
+  private int itemsCount;
 
-    public ByDateAndProductAggregationRepresentation() {
-    }
-
-    public ByDateAndProductAggregationRepresentation(
-        final long timestamp,
-        final int productId,
-        final double minCheckValue,
-        final double avgCheckValue,
-        final double maxCheckValue,
-        final double allChecksValueSum,
-        final double minProductQuantity,
-        final double avgProductQuantity,
-        final double maxProductQuantity,
-        final double allProductsQuantitySum,
-        final int itemsCount) {
-      this.timestamp = timestamp;
-      this.productId = productId;
-      this.minCheckValue = minCheckValue;
-      this.avgCheckValue = avgCheckValue;
-      this.maxCheckValue = maxCheckValue;
-      this.allChecksValueSum = allChecksValueSum;
-      this.minProductQuantity = minProductQuantity;
-      this.avgProductQuantity = avgProductQuantity;
-      this.maxProductQuantity = maxProductQuantity;
-      this.allProductsQuantitySum = allProductsQuantitySum;
-      this.itemsCount = itemsCount;
-    }
+  public ByDateAndProductAggregationRepresentation() {
   }
 
-  @XmlRootElement
-  @XmlAccessorType(XmlAccessType.FIELD)
-  static class TimeDomainPoint {
-    private Long ts;
+  public ByDateAndProductAggregationRepresentation(
+      final long timestamp,
+      final int productId,
+      final double minCheckValue,
+      final double avgCheckValue,
+      final double maxCheckValue,
+      final double allChecksValueSum,
+      final double minProductQuantity,
+      final double avgProductQuantity,
+      final double maxProductQuantity,
+      final double allProductsQuantitySum,
+      final int itemsCount) {
+    this.timestamp = timestamp;
+    this.productId = productId;
+    this.minCheckValue = minCheckValue;
+    this.avgCheckValue = avgCheckValue;
+    this.maxCheckValue = maxCheckValue;
+    this.allChecksValueSum = allChecksValueSum;
+    this.minProductQuantity = minProductQuantity;
+    this.avgProductQuantity = avgProductQuantity;
+    this.maxProductQuantity = maxProductQuantity;
+    this.allProductsQuantitySum = allProductsQuantitySum;
+    this.itemsCount = itemsCount;
+  }
+}
 
-    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-    private Double v;
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+class TimeDomainPoint {
+  private Long ts;
 
-    public TimeDomainPoint(final Long ts, final Double v) {
-      this.ts = ts;
-      this.v = v;
-    }
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double v;
 
-    public TimeDomainPoint() {
-    }
+  public TimeDomainPoint(final Long ts, final Double v) {
+    this.ts = ts;
+    this.v = v;
+  }
+
+  public TimeDomainPoint() {
   }
 }

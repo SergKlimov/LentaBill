@@ -65,90 +65,90 @@ public class ByDateAndStoreAndProductAggregationResource {
         ).collect(toList());
     return list;
   }
+}
 
-  @XmlRootElement
-  @XmlAccessorType(XmlAccessType.FIELD)
-  static class ByDateAndStoreAndProductAggregationRepresentation {
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+class ByDateAndStoreAndProductAggregationRepresentation {
 
-    private long timestamp;
+  private long timestamp;
 
-    private int storeId;
+  private int storeId;
 
-    private int productId;
+  private int productId;
 
-    private double minCheckValue;
+  private double minCheckValue;
 
-    private double avgCheckValue;
+  private double avgCheckValue;
 
-    private double maxCheckValue;
+  private double maxCheckValue;
 
-    private double allChecksValueSum;
+  private double allChecksValueSum;
 
-    private double minProductQuantity;
+  private double minProductQuantity;
 
-    private double avgProductQuantity;
+  private double avgProductQuantity;
 
-    private double maxProductQuantity;
+  private double maxProductQuantity;
 
-    private double allProductsQuantitySum;
+  private double allProductsQuantitySum;
 
-    private int itemsCount;
+  private int itemsCount;
 
-    public ByDateAndStoreAndProductAggregationRepresentation() {
-    }
-
-    public ByDateAndStoreAndProductAggregationRepresentation(
-        final long timestamp,
-        final int storeId,
-        final int productId,
-        final double minCheckValue,
-        final double avgCheckValue,
-        final double maxCheckValue,
-        final double allChecksValueSum,
-        final double minProductQuantity,
-        final double avgProductQuantity,
-        final double maxProductQuantity,
-        final double allProductsQuantitySum,
-        final int itemsCount) {
-      this.timestamp = timestamp;
-      this.storeId = storeId;
-      this.productId = productId;
-      this.minCheckValue = minCheckValue;
-      this.avgCheckValue = avgCheckValue;
-      this.maxCheckValue = maxCheckValue;
-      this.allChecksValueSum = allChecksValueSum;
-      this.minProductQuantity = minProductQuantity;
-      this.avgProductQuantity = avgProductQuantity;
-      this.maxProductQuantity = maxProductQuantity;
-      this.allProductsQuantitySum = allProductsQuantitySum;
-      this.itemsCount = itemsCount;
-    }
+  public ByDateAndStoreAndProductAggregationRepresentation() {
   }
 
-  @XmlRootElement
-  @XmlAccessorType(XmlAccessType.FIELD)
-  static class CompactByDateAndStoreAndProductAggregationRepresentation {
-    private Long timestamp;
+  public ByDateAndStoreAndProductAggregationRepresentation(
+      final long timestamp,
+      final int storeId,
+      final int productId,
+      final double minCheckValue,
+      final double avgCheckValue,
+      final double maxCheckValue,
+      final double allChecksValueSum,
+      final double minProductQuantity,
+      final double avgProductQuantity,
+      final double maxProductQuantity,
+      final double allProductsQuantitySum,
+      final int itemsCount) {
+    this.timestamp = timestamp;
+    this.storeId = storeId;
+    this.productId = productId;
+    this.minCheckValue = minCheckValue;
+    this.avgCheckValue = avgCheckValue;
+    this.maxCheckValue = maxCheckValue;
+    this.allChecksValueSum = allChecksValueSum;
+    this.minProductQuantity = minProductQuantity;
+    this.avgProductQuantity = avgProductQuantity;
+    this.maxProductQuantity = maxProductQuantity;
+    this.allProductsQuantitySum = allProductsQuantitySum;
+    this.itemsCount = itemsCount;
+  }
+}
 
-    private Integer storeId;
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+class CompactByDateAndStoreAndProductAggregationRepresentation {
+  private Long timestamp;
 
-    private Integer productId;
+  private Integer storeId;
 
-    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-    private Double value;
+  private Integer productId;
 
-    public CompactByDateAndStoreAndProductAggregationRepresentation(
-            final Long timestamp,
-            final Integer storeId,
-            final Integer productId,
-            final Double value) {
-      this.timestamp = timestamp;
-      this.storeId = storeId;
-      this.productId = productId;
-      this.value = value;
-    }
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double value;
 
-    public CompactByDateAndStoreAndProductAggregationRepresentation() {
-    }
+  public CompactByDateAndStoreAndProductAggregationRepresentation(
+      final Long timestamp,
+      final Integer storeId,
+      final Integer productId,
+      final Double value) {
+    this.timestamp = timestamp;
+    this.storeId = storeId;
+    this.productId = productId;
+    this.value = value;
+  }
+
+  public CompactByDateAndStoreAndProductAggregationRepresentation() {
   }
 }
