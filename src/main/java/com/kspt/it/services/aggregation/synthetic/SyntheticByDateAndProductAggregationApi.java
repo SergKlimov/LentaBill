@@ -4,7 +4,6 @@ import com.kspt.it.Tuple2;
 import com.kspt.it.services.aggregation.ByDateAndProductAggregationApi;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
-import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -36,35 +35,45 @@ public class SyntheticByDateAndProductAggregationApi implements ByDateAndProduct
   }
 
   @Override
-  public List<CompactByDateAndProductAggregation> forecastForProductsByDate(
+  public List<CompactByDateAndProductAggregation> forecastAggregatedValues(
+      final int productId,
       final String aggregationFunction) {
-    final int forecastHorizon = 15;
-    return range(0, forecastHorizon)
-        .mapToObj(i -> java.time.LocalDate.now().plusDays(i))
-        .flatMap(d -> range(0, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
-        .map(t2 -> new CompactByDateAndProductAggregation(
-            t2._1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
-            t2._2,
+    return listOfCompactAggregations(productId, 15);
+  }
+
+  private List<CompactByDateAndProductAggregation> listOfCompactAggregations(
+      final int productId,
+      final int size) {
+    return range(0, size)
+        .mapToObj(i -> LocalDate.now().plusDays(i))
+        .map(d -> new CompactByDateAndProductAggregation(
+            d.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
+            productId,
             100 * Math.random()))
         .collect(toList());
   }
 
   @Override
-  public List<CompactByDateAndProductAggregation> aggregateUsingByDate(
+  public List<CompactByDateAndProductAggregation> forecastAggregatedQuantity(
+      final int productId,
       final String aggregationFunction) {
-    final int sampleSize = 30;
-    final java.time.LocalDate startOfReport = java.time.LocalDate.now().minusDays(sampleSize);
-    return range(0, sampleSize)
-        .mapToObj(startOfReport::plusDays)
-        .flatMap(d -> range(productsCount, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
-        .map(t2 -> new CompactByDateAndProductAggregation(
-            t2._1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
-            t2._2,
-            100 * Math.random()))
-        .collect(toList());
+    return listOfCompactAggregations(productId, 15);
   }
 
-  @NotNull
+  @Override
+  public List<CompactByDateAndProductAggregation> aggregateValues(
+      final int productId,
+      final String aggregationFunction) {
+    return listOfCompactAggregations(productId, 30);
+  }
+
+  @Override
+  public List<CompactByDateAndProductAggregation> aggregateQuantityUsing(
+      int productId,
+      String aggregationFunction) {
+    return listOfCompactAggregations(productId, 30);
+  }
+
   private ByDateAndProductAggregation generateProductsAggregationByDateResult(
       final Tuple2<LocalDate, Integer> t2) {
     final double minCheckValue = 10 * Math.random();

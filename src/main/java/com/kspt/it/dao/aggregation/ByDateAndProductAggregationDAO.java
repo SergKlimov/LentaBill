@@ -48,13 +48,16 @@ public class ByDateAndProductAggregationDAO {
   }
 
   public List<CompactByDateAndProductAggregationEntry> aggregateValueByDateUsing(
+      final int productId,
       final String aggregationFunction) {
     return aggregateByDateUsing(
+        productId,
         aggregationFunction,
         "product_facts.value * product_facts.quantity");
   }
 
   private List<CompactByDateAndProductAggregationEntry> aggregateByDateUsing(
+      final int productId,
       final String aggregationFunction,
       final String aggregationSubject) {
     final String query = "SELECT "
@@ -64,8 +67,8 @@ public class ByDateAndProductAggregationDAO {
         + "product_facts.product_id AS productId, "
         + aggregationFunction + "(" + aggregationSubject + ") AS value "
         + "FROM "
-        + "product_facts "
-        + "JOIN date_dimensions "
+        + "(SELECT * FROM product_facts WHERE product_facts.id = " + productId + ") "
+        + "LEFT JOIN date_dimensions "
         + "ON product_facts.date_id = date_dimensions.id "
         + "GROUP BY "
         + "product_facts.product_id, "
@@ -79,8 +82,9 @@ public class ByDateAndProductAggregationDAO {
   }
 
   public List<CompactByDateAndProductAggregationEntry> aggregateQuantityByDateUsing(
+      final int productId,
       final String aggregationFunction) {
-    return aggregateByDateUsing(aggregationFunction, "product_facts.quantity");
+    return aggregateByDateUsing(productId, aggregationFunction, "product_facts.quantity");
   }
 
   @Entity

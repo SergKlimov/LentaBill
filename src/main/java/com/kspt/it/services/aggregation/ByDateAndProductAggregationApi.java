@@ -5,9 +5,21 @@ import java.util.List;
 public interface ByDateAndProductAggregationApi {
   List<ByDateAndProductAggregation> aggregateByDateAndProduct();
 
-  List<CompactByDateAndProductAggregation> forecastForProductsByDate(final String aggregationFunction);
+  List<CompactByDateAndProductAggregation> forecastAggregatedValues(
+      final int productId,
+      final String aggregationFunction);
 
-  List<CompactByDateAndProductAggregation> aggregateUsingByDate(final String aggregationFunction);
+  List<CompactByDateAndProductAggregation> forecastAggregatedQuantity(
+      final int productId,
+      final String aggregationFunction);
+
+  List<CompactByDateAndProductAggregation> aggregateValues(
+      final int productId,
+      final String aggregationFunction);
+
+  List<CompactByDateAndProductAggregation> aggregateQuantityUsing(
+      int productId,
+      String aggregationFunction);
 
   class ByDateAndProductAggregation {
 

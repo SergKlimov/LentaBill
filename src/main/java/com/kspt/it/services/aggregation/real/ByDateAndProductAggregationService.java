@@ -42,9 +42,10 @@ public class ByDateAndProductAggregationService implements ByDateAndProductAggre
   }
 
   @Override
-  public List<CompactByDateAndProductAggregation> forecastForProductsByDate(
+  public List<CompactByDateAndProductAggregation> forecastAggregatedValues(
+      final int productId,
       final String aggregationFunction) {
-    return buildForecastForAllProductsByDate(aggregateUsingByDate(aggregationFunction));
+    return buildForecastForAllProductsByDate(aggregateValues(productId, aggregationFunction));
   }
 
   private List<CompactByDateAndProductAggregation> buildForecastForAllProductsByDate(
@@ -85,8 +86,32 @@ public class ByDateAndProductAggregationService implements ByDateAndProductAggre
   }
 
   @Override
-  public List<CompactByDateAndProductAggregation> aggregateUsingByDate(final String aggregationFunction) {
-    return dao.aggregateValueByDateUsing(aggregationFunction).stream()
+  public List<CompactByDateAndProductAggregation> aggregateValues(
+      final int productId,
+      final String aggregationFunction) {
+    return dao.aggregateValueByDateUsing(productId, aggregationFunction).stream()
+        .map(care -> new CompactByDateAndProductAggregation(
+            LocalDate.of(care.getYear(), care.getMonth(), care.getDay())
+                .atStartOfDay()
+                .toInstant(ZoneOffset.UTC)
+                .toEpochMilli(),
+            care.getProductId(),
+            care.getValue()))
+        .collect(toList());
+  }
+
+  @Override
+  public List<CompactByDateAndProductAggregation> forecastAggregatedQuantity(
+      final int productId,
+      final String aggregationFunction) {
+    return buildForecastForAllProductsByDate(aggregateValues(productId, aggregationFunction));
+  }
+
+  @Override
+  public List<CompactByDateAndProductAggregation> aggregateQuantityUsing(
+      final int productId,
+      final String aggregationFunction) {
+    return dao.aggregateQuantityByDateUsing(productId, aggregationFunction).stream()
         .map(care -> new CompactByDateAndProductAggregation(
             LocalDate.of(care.getYear(), care.getMonth(), care.getDay())
                 .atStartOfDay()
