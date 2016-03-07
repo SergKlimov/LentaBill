@@ -51,7 +51,7 @@ public class ProductsAggregationService implements ProductsAggregationApi {
 
   @Override
   public List<ProductsAggregationByStoreResult> aggregateByStoreAndProduct() {
-    return dao.aggregateByStoreAndDateAndProduct().stream()
+    return dao.aggregateByStoreAndProduct().stream()
         .map(are -> new ProductsAggregationByStoreResult(
             are.getStoreId(),
             are.getProductId(),

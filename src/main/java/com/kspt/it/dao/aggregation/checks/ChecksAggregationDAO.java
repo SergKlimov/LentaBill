@@ -84,33 +84,5 @@ public class ChecksAggregationDAO {
         .setRawSql(sql)
         .findList();
   }
-
-  public List<ChecksAggregationResultEntry> aggregateByDateAndStore() {
-    final String query = "SELECT "
-        + "dates.year AS year, "
-        + "dates.month AS month, "
-        + "dates.day AS day, "
-        + "supplier_dimensions.store_id AS storeId, "
-        + "MIN(check_facts.value) AS minCheckValue, "
-        + "AVG(check_facts.value) AS avgCheckValue, "
-        + "MAX(check_facts.value) AS maxCheckValue, "
-        + "SUM(check_facts.value) AS allChecksValueSum, "
-        + "COUNT(*) AS checksCount "
-        + "FROM "
-        + "check_facts "
-        + "JOIN supplier_dimensions "
-        + "ON check_facts.supplier_id = supplier_dimensions.id "
-        + "RIGHT JOIN date_dimensions "
-        + "ON check_facts.date_id = date_dimensions.id "
-        + "GROUP BY "
-        + "supplier_dimensions.store_id, "
-        + "date_dimensions.year, "
-        + "date_dimensions.month, "
-        + "date_dimensions.day";
-    final RawSql sql = RawSqlBuilder.parse(query).create();
-    return ebean.find(ChecksAggregationResultEntry.class)
-        .setRawSql(sql)
-        .findList();
-  }
 }
 
