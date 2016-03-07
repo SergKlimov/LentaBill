@@ -5,23 +5,21 @@ function buildSwitcher() {
   //return wrapByTag(tableViewIndicator + graphViewIndicator, "div", "");
 }
 
-function switchView(btn) {
-  if ($(btn).hasClass("primary")) {
-    return ;
-  }
-  var aggregationView = $(btn).parents(".aggregation-view-content")
-  var currentMode = $(aggregationView).attr("mode");
-  if (currentMode == "table") {
-    $(aggregationView).find(".aggregation-table-view").hide();
-    $(aggregationView).find(".aggregation-graph-view").show();
-    $(aggregationView).attr("mode", "graph");
-  } else if (currentMode == "graph") {
-    $(aggregationView).find(".aggregation-table-view").show();
-    $(aggregationView).find(".aggregation-graph-view").hide();
-    $(aggregationView).attr("mode", "table");
-  }
-  $(btn).addClass("primary");
-  $(btn).siblings(".button").removeClass("primary");
+function showTable(btn) {
+      $("#tableBlock").show();
+      $("#chart_div").hide();
+
+      $(btn).addClass("active");
+      $("#chartButton").removeClass("active");
+}
+
+function showChart(btn) {
+        $("#chart_div").show();
+        $("#tableBlock").hide();
+
+        $(btn).addClass("active");
+        $("#tableButton").removeClass("active");
+        chart.draw(data, chart_options);
 }
 
 function buildController() {

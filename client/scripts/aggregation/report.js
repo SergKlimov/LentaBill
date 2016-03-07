@@ -38,14 +38,10 @@ function fetchAggregationXML(url, callback) {
 }
 
 function drawPlot(dataList) {
-    google.charts.setOnLoadCallback(drawBasic);
+        data = new google.visualization.DataTable();
 
-    function drawBasic() {
-
-        var data = new google.visualization.DataTable();
         data.addColumn('date', 'Date');
-        data.addColumn('number', 'X');
-
+        data.addColumn('number', 'Check value');
 
         var dataForStore = $(dataList).filter(function() {
             return Number($(this).find("storeId").text()) == 0;
@@ -57,19 +53,7 @@ function drawPlot(dataList) {
             data.addRow([new Date(timestamp), value])
         });
 
-        var options = {
-            hAxis: {
-                title: 'Time'
-            },
-            vAxis: {
-                title: 'Popularity'
-            }
-        };
-
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-
-        chart.draw(data, options);
-    }
+        chart.draw(data, chart_options);
 }
 
 function createDateStoreReport() {
