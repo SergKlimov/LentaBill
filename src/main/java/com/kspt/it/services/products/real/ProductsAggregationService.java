@@ -1,15 +1,15 @@
 package com.kspt.it.services.products.real;
 
 import com.google.inject.Inject;
-import com.kspt.it.dao.aggregation.products.CompactProductsAggregationByDateResultEntry;
 import com.kspt.it.dao.aggregation.products.ProductsAggregationDAO;
-import com.kspt.it.services.checks.CompactChecksAggregationResult;
 import com.kspt.it.services.forecast.real.ForecastStatisticsExtrapolationService;
-import com.kspt.it.services.products.*;
+import com.kspt.it.services.products.CompactProductsAggregationByDateResult;
+import com.kspt.it.services.products.ProductsAggregationApi;
+import com.kspt.it.services.products.ProductsAggregationByDateResult;
+import com.kspt.it.services.products.ProductsAggregationByStoreAndDateResult;
+import com.kspt.it.services.products.ProductsAggregationByStoreResult;
+import static java.util.stream.Collectors.*;
 import javafx.util.Pair;
-
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -127,13 +127,13 @@ public class ProductsAggregationService implements ProductsAggregationApi {
 
   @Override
   public List<CompactProductsAggregationByDateResult> aggregateUsingByDate(final String aggregationFunction) {
-    return dao.aggregateUsingByDate(aggregationFunction).stream()
+    return dao.aggregateValueByDateUsing(aggregationFunction).stream()
             .map(care -> new CompactProductsAggregationByDateResult(
                     LocalDate.of(care.getYear(), care.getMonth(), care.getDay())
                             .atStartOfDay()
                             .toInstant(ZoneOffset.UTC)
                             .toEpochMilli(),
-                    care.getStoreId(),
+                    care.getProductId(),
                     care.getValue()))
             .collect(toList());
   }
