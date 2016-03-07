@@ -1,6 +1,5 @@
 package com.kspt.it.resources;
 
-import com.kspt.it.services.products.CompactProductsAggregationByDateResult;
 import com.kspt.it.services.products.ProductsAggregationApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -125,24 +124,6 @@ public class ProductsAggregationResource {
   }
 
   @GET
-  @Path("/forecast/byStore/{aggregationFunction}")
-  @ApiOperation(
-          value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
-          notes = "Available functions are: min, avg, max, sum, count.")
-  public List<CompactProductsAggregationResultRepresentationByStore> forecastAggregationByStore(
-          final @QueryParam("aggregationFunction") String aggregationFunction) {
-    final List<CompactProductsAggregationResultRepresentationByStore> list = service
-            .forecastForProductsByDate(aggregationFunction)
-            .stream()
-            .map(ar -> new CompactProductsAggregationResultRepresentationByStore(
-                    ar.getOrigin(),
-                    ar.getStoreId(),
-                    ar.getValue())
-            ).collect(toList());
-    return list;
-  }
-
-  @GET
   @Path("/forecast/byStoreAndDate/{aggregationFunction}")
   @ApiOperation(
           value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
@@ -150,7 +131,7 @@ public class ProductsAggregationResource {
   public List<CompactProductsAggregationResultRepresentationByStoreAndDate> forecastAggregationByStoreAndDate(
           final @QueryParam("aggregationFunction") String aggregationFunction) {
     final List<CompactProductsAggregationResultRepresentationByStoreAndDate> list = service
-            .forecastForProductsByDate(aggregationFunction)
+            .forecastForProductsByStoreAndDate(aggregationFunction)
             .stream()
             .map(ar -> new CompactProductsAggregationResultRepresentationByStoreAndDate(
                     ar.getOrigin(),
@@ -209,29 +190,6 @@ class CompactProductsAggregationResultRepresentationByStoreAndDate {
   }
 
   public CompactProductsAggregationResultRepresentationByStoreAndDate() {
-  }
-}
-
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-class CompactProductsAggregationResultRepresentationByStore {
-  private Integer storeId;
-
-  private Integer productId;
-
-  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-  private Double value;
-
-  public CompactProductsAggregationResultRepresentationByStore(
-          final Integer storeId,
-          final Integer productId,
-          final Double value) {
-    this.storeId = storeId;
-    this.productId = productId;
-    this.value = value;
-  }
-
-  public CompactProductsAggregationResultRepresentationByStore() {
   }
 }
 

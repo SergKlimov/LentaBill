@@ -1,7 +1,5 @@
 package com.kspt.it.services.products;
 
-import com.kspt.it.services.checks.CompactChecksAggregationResult;
-
 import java.util.List;
 
 public interface ProductsAggregationApi {
@@ -14,8 +12,6 @@ public interface ProductsAggregationApi {
   List<CompactProductsAggregationByDateResult> forecastForProductsByDate(final String aggregationFunction);
 
   List<CompactProductsAggregationByDateResult> aggregateUsingByDate(final String aggregationFunction);
-
-  List<CompactProductsAggregationByStoreResult> forecastForProductsByStore(final String aggregationFunction);
 
   List<CompactProductsAggregationByStoreResult> aggregateUsingByStore(final String aggregationFunction);
 

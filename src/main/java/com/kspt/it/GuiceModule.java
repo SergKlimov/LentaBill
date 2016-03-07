@@ -10,7 +10,6 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.kspt.it.dao.aggregation.checks.ChecksAggregationDAO;
 import com.kspt.it.dao.aggregation.products.ProductsAggregationDAO;
-import com.kspt.it.dao.aggregation.receipts.ReceiptsExtrapolationDAO;
 import com.kspt.it.dao.meta.checks.ChecksMetaDAO;
 import com.kspt.it.dao.meta.stores.StoresMetaDAO;
 import com.kspt.it.services.checks.ChecksAggregationApi;
@@ -22,9 +21,6 @@ import com.kspt.it.services.meta.synthetic.SyntheticMetaRetrievingApi;
 import com.kspt.it.services.products.ProductsAggregationApi;
 import com.kspt.it.services.products.real.ProductsAggregationService;
 import com.kspt.it.services.products.synthetic.SyntheticProductsAggregationApi;
-import com.kspt.it.services.receipts.ReceiptsExtrapolationApi;
-import com.kspt.it.services.receipts.real.ReceiptsExtrapolationService;
-import com.kspt.it.services.receipts.synthetic.SyntheticReceiptsExtrapolationApi;
 import com.typesafe.config.Config;
 import static com.typesafe.config.ConfigFactory.parseResources;
 import com.typesafe.config.ConfigParseOptions;
@@ -77,17 +73,6 @@ public class GuiceModule extends AbstractModule {
       final Config serviceConfig = c.getConfig("services_types." + type);
       final int storesCount = serviceConfig.getInt("stores_count");
       return new SyntheticMetaRetrievingApi(storesCount);
-    }
-  }
-
-  @Provides
-  @Singleton
-  public ReceiptsExtrapolationApi provideReceiptsExtrapolationApi(final Config c, final Injector i) {
-    final String type = c.getString("services.products.type");
-    if (type.equals("real")) {
-      return new ReceiptsExtrapolationService(i.getInstance(ReceiptsExtrapolationDAO.class));
-    } else {
-      return new SyntheticReceiptsExtrapolationApi();
     }
   }
 
