@@ -1,62 +1,131 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="scripts/jquery.js"></script>
+    <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="scripts/list.js"></script>
 
-    <script src="scripts/metro.js"></script>
-    <link href="css/metro.css" rel="stylesheet">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <link href="css/main.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+    <link href="css/awesome-bootstrap-checkbox.css" rel="stylesheet">
+
+    <script src="scripts/listgroup.min.js"></script>
 
     <script src="scripts/Chart.js"></script>
     <script src="scripts/randomColor.js"></script>
 
-    <!--<script src="scripts/aggregating.js"></script>-->
     <script src="scripts/aggregation/meta.js"></script>
     <script src="scripts/aggregation/utils.js"></script>
     <script src="scripts/aggregation/views.js"></script>
-    <script src="scripts/aggregation/injector.js"></script>
+    <script src="scripts/aggregation/report.js"></script>
     <script src="scripts/aggregation/control.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.1.1/bootstrap-slider.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.1.1/css/bootstrap-slider.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script type="application/javascript">
+        $(document).ready(function () {
+            var userList = new List('users', {valueNames: ['name', 'born']});
+            google.charts.load('current', {packages: ['corechart', 'line']});
+        })
+    </script>
 </head>
 <body>
-<div class="app-bar">
-    <a class="app-bar-element" href="...">Home</a>
-    <span class="app-bar-divider"></span>
-</div>
-<div class="grid">
-    <div class="row cells5">
-        <div class="cell padding20">
-            <label class="input-control checkbox">
-                <input type="checkbox" id="byDate">
-                <span class="check"></span>
-                <span class="caption">aggregate by date</span>
-            </label>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 checkbox">
+            <div style="border: 2px solid; border-radius: 20px; padding: 20px;">
+                <form role="form">
+                    Aggregate by
+                    <div class="checkbox">
+                        <input type="checkbox" id="byDate">
+                        <label for="byDate">
+                            Date
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="byStore">
+                        <label for="byStore">
+                            Store
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="byProduct">
+                        <label for="byProduct">
+                            Product
+                        </label>
+                    </div>
+                </form>
+                <br/>
+                <button id="createReportButton"
+                        style="width:150px"
+                        class="btn btn-primary">
+                    Create Report
+                </button>
+            </div>
             <br/>
-            <label class="input-control checkbox">
-                <input type="checkbox" id="byStore">
-                <span class="check"></span>
-                <span class="caption">aggregate by store</span>
-            </label>
-            <br/>
-            <label class="input-control checkbox">
-                <input type="checkbox" id="byProduct">
-                <span class="check"></span>
-                <span class="caption">aggregate by product</span>
-            </label>
-            <br/>
-            <br/>
-            <button id="createReportButton"
-                    style="width:150px"
-                    class="button primary block-shadow-success">
-                Create Report
-            </button>
-            <br/>
-            <button id="downloadReportButton"
-                    style="width:150px"
-                    class="button primary">
-                Download Report
-            </button>
+
+            <div id="products" style="display: none; border: 2px solid; border-radius: 20px; padding: 20px;">
+                <input class="search" placeholder="Search"/>
+
+                <ul class="list list-group" data-toggle="items">
+                    <li class="list-group-item active">
+                        <p class="name">Product 1</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p class="name">Product 2</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p class="name">Product 3</p>
+                    </li>
+                    <li class="list-group-item">
+                        <p class="name">Product 4</p>
+                    </li>
+                </ul>
+
+            </div>
         </div>
-        <div class="cell colspan4 padding20">
+        <div class="col-md-8">
             <div id="reportView" class="listview" data-role="listview">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default active">Min</button>
+                    <button type="button" class="btn btn-default">Max</button>
+                    <button type="button" class="btn btn-default">Average</button>
+                    <button type="button" class="btn btn-default">Count</button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default active" onclick="switchView(this)"><i class="fa fa-list"></i></button>
+                    <button type="button" class="btn btn-default" onclick="switchView(this)"><i class="fa fa-line-chart"></i></button>
+                </div>
+                <div
+                        class="aggregation-view-content"
+                        selector=""
+                        mode="table"
+                        from=""
+                        to="">
+                    <table id="reportTable" class="table table-striped">
+
+                    </table>
+                </div>
+                <div id="chart_div">
+                </div>
+                <div id="controller2">
+                    <input id="ex2" type="text" class="span2" value=""
+                           data-slider-min="10" data-slider-max="1000"
+                           data-slider-step="5" data-slider-value="[250,450]"/>
+                </div>
             </div>
         </div>
     </div>
