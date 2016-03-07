@@ -32,7 +32,7 @@ function fetchAggregationXML(url, callback) {
     url: address + "/api/checks/aggregation/byDateAndStore",
     method: "GET",
     contentType: "application/xml",
-    data: {since: dataDomain.lb, limit: 7},
+    data: {since: from , limit: limit},
     success: callback
   });
 }
