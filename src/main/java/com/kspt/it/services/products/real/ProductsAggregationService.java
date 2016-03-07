@@ -1,13 +1,11 @@
 package com.kspt.it.services.products.real;
 
+import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 import com.kspt.it.dao.aggregation.products.ProductsAggregationDAO;
 import com.kspt.it.services.forecast.real.ForecastStatisticsExtrapolationService;
-import com.kspt.it.services.products.CompactProductsAggregationByDateResult;
-import com.kspt.it.services.products.ProductsAggregationApi;
-import com.kspt.it.services.products.ProductsAggregationByDateResult;
-import com.kspt.it.services.products.ProductsAggregationByStoreAndDateResult;
-import com.kspt.it.services.products.ProductsAggregationByStoreResult;
+import com.kspt.it.services.products.*;
+
 import static java.util.stream.Collectors.*;
 import javafx.util.Pair;
 import java.time.LocalDate;
@@ -89,6 +87,16 @@ public class ProductsAggregationService implements ProductsAggregationApi {
     return buildForecastForAllProductsByDate(aggregateUsingByDate(aggregationFunction));
   }
 
+  @Override
+  public List<CompactProductsAggregationByStoreResult> forecastForProductsByStore(String aggregationFunction) {
+    return buildForecastForAllProductsByStore(aggregateUsingByStore(aggregationFunction));
+  }
+
+  @Override
+  public List<CompactProductsAggregationByStoreAndDateResult> forecastForProductsByStoreAndDate(String aggregationFunction) {
+    return buildForecastForAllProductsByStoreAndDate(aggregateUsingByStoreAndDate(aggregationFunction));
+  }
+
   private List<CompactProductsAggregationByDateResult> buildForecastForAllProductsByDate(
           final List<CompactProductsAggregationByDateResult> entries) {
     final Map<Integer, List<CompactProductsAggregationByDateResult>> aggregationsForProduct = entries
@@ -96,6 +104,29 @@ public class ProductsAggregationService implements ProductsAggregationApi {
             .collect(groupingBy(CompactProductsAggregationByDateResult::getProductId));
     return aggregationsForProduct.entrySet().stream()
             .map(e -> buildForecastForProductByDate(e.getKey(), e.getValue()))
+            .flatMap(List::stream)
+            .collect(toList());
+  }
+
+  private List<CompactProductsAggregationByStoreResult> buildForecastForAllProductsByStore(
+          final List<CompactProductsAggregationByStoreResult> entries) {
+    final Map<Integer, List<CompactProductsAggregationByStoreResult>> aggregationsForProduct = entries
+            .stream()
+            .collect(groupingBy(CompactProductsAggregationByStoreResult::getProductId));
+    return aggregationsForProduct.entrySet().stream()
+            .map(e -> buildForecastForProductByStore(e.getKey(), e.getValue()))
+            .flatMap(List::stream)
+            .collect(toList());
+  }
+
+  private List<CompactProductsAggregationByStoreAndDateResult> buildForecastForAllProductsByStoreAndDate(
+          final List<CompactProductsAggregationByStoreAndDateResult> entries) {
+    //TODO
+    final Map<Integer, List<CompactProductsAggregationByStoreAndDateResult>> aggregationsForProduct = entries
+            .stream()
+            .collect(groupingBy(CompactProductsAggregationByStoreAndDateResult::getProductId));
+    return aggregationsForProduct.entrySet().stream()
+            .map(e -> buildForecastForProductByStoreAndDate(e.getKey(), e.getValue()))
             .flatMap(List::stream)
             .collect(toList());
   }
@@ -108,6 +139,34 @@ public class ProductsAggregationService implements ProductsAggregationApi {
     return IntStream.range(0, forecastHorizon)
             .mapToObj(i -> new CompactProductsAggregationByDateResult(
                     forecast.get(i).getValue(),
+                    productId,
+                    forecast.get(i).getKey()))
+            .collect(toList());
+  }
+
+  private List<CompactProductsAggregationByStoreResult> buildForecastForProductByStore(
+          final int productId,
+          final List<CompactProductsAggregationByStoreResult> entries) {
+    final int forecastHorizon = 15;
+    //TODO
+    final List<Pair<Double, Long>> forecast = buildForecastFor(entries, forecastHorizon);
+    return IntStream.range(0, forecastHorizon)
+            .mapToObj(i -> new CompactProductsAggregationByStoreResult(
+                    Ints.checkedCast(forecast.get(i).getValue()),
+                    productId,
+                    forecast.get(i).getKey()))
+            .collect(toList());
+  }
+
+  private List<CompactProductsAggregationByStoreAndDateResult> buildForecastForProductByStoreAndDate(
+          final int productId, final int storeId,
+          final List<CompactProductsAggregationByStoreAndDateResult> entries) {
+    final int forecastHorizon = 15;
+    final List<Pair<Double, Long>> forecast = buildForecastFor(entries, forecastHorizon);
+    return IntStream.range(0, forecastHorizon)
+            .mapToObj(i -> new CompactProductsAggregationByStoreAndDateResult(
+                    forecast.get(i).getValue(),
+                    storeId,
                     productId,
                     forecast.get(i).getKey()))
             .collect(toList());
@@ -136,5 +195,15 @@ public class ProductsAggregationService implements ProductsAggregationApi {
                     care.getProductId(),
                     care.getValue()))
             .collect(toList());
+  }
+
+  @Override
+  public List<CompactProductsAggregationByStoreResult> aggregateUsingByStore(String aggregationFunction) {
+    return null;
+  }
+
+  @Override
+  public List<CompactProductsAggregationByStoreAndDateResult> aggregateUsingByStoreAndDate(String aggregationFunction) {
+    return null;
   }
 }

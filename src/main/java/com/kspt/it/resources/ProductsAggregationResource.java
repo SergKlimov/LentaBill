@@ -107,11 +107,11 @@ public class ProductsAggregationResource {
   }
 
   @GET
-  @Path("/forecast/byDateAndProduct/{aggregationFunction}")
+  @Path("/forecast/byDate/{aggregationFunction}")
   @ApiOperation(
           value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
           notes = "Available functions are: min, avg, max, sum, count.")
-  public List<CompactProductsAggregationResultRepresentationByDate> forecastAggregationByDateAndProductByDate(
+  public List<CompactProductsAggregationResultRepresentationByDate> forecastAggregationByDate(
           final @QueryParam("aggregationFunction") String aggregationFunction) {
     final List<CompactProductsAggregationResultRepresentationByDate> list = service
             .forecastForProductsByDate(aggregationFunction)
@@ -123,7 +123,45 @@ public class ProductsAggregationResource {
             ).collect(toList());
     return list;
   }
+
+  @GET
+  @Path("/forecast/byStore/{aggregationFunction}")
+  @ApiOperation(
+          value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
+          notes = "Available functions are: min, avg, max, sum, count.")
+  public List<CompactProductsAggregationResultRepresentationByStore> forecastAggregationByStore(
+          final @QueryParam("aggregationFunction") String aggregationFunction) {
+    final List<CompactProductsAggregationResultRepresentationByStore> list = service
+            .forecastForProductsByDate(aggregationFunction)
+            .stream()
+            .map(ar -> new CompactProductsAggregationResultRepresentationByStore(
+                    ar.getOrigin(),
+                    ar.getStoreId(),
+                    ar.getValue())
+            ).collect(toList());
+    return list;
+  }
+
+  @GET
+  @Path("/forecast/byStoreAndDate/{aggregationFunction}")
+  @ApiOperation(
+          value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
+          notes = "Available functions are: min, avg, max, sum, count.")
+  public List<CompactProductsAggregationResultRepresentationByStoreAndDate> forecastAggregationByStoreAndDate(
+          final @QueryParam("aggregationFunction") String aggregationFunction) {
+    final List<CompactProductsAggregationResultRepresentationByStoreAndDate> list = service
+            .forecastForProductsByDate(aggregationFunction)
+            .stream()
+            .map(ar -> new CompactProductsAggregationResultRepresentationByStoreAndDate(
+                    ar.getOrigin(),
+                    ar.getStoreId(),
+                    ar.getProductId(),
+                    ar.getValue())
+            ).collect(toList());
+    return list;
+  }
 }
+
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 class CompactProductsAggregationResultRepresentationByDate {
@@ -144,6 +182,56 @@ class CompactProductsAggregationResultRepresentationByDate {
   }
 
   public CompactProductsAggregationResultRepresentationByDate() {
+  }
+}
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+class CompactProductsAggregationResultRepresentationByStoreAndDate {
+  private Long timestamp;
+
+  private Integer storeId;
+
+  private Integer productId;
+
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double value;
+
+  public CompactProductsAggregationResultRepresentationByStoreAndDate(
+          final Long timestamp,
+          final Integer storeId,
+          final Integer productId,
+          final Double value) {
+    this.timestamp = timestamp;
+    this.storeId = storeId;
+    this.productId = productId;
+    this.value = value;
+  }
+
+  public CompactProductsAggregationResultRepresentationByStoreAndDate() {
+  }
+}
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+class CompactProductsAggregationResultRepresentationByStore {
+  private Integer storeId;
+
+  private Integer productId;
+
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double value;
+
+  public CompactProductsAggregationResultRepresentationByStore(
+          final Integer storeId,
+          final Integer productId,
+          final Double value) {
+    this.storeId = storeId;
+    this.productId = productId;
+    this.value = value;
+  }
+
+  public CompactProductsAggregationResultRepresentationByStore() {
   }
 }
 

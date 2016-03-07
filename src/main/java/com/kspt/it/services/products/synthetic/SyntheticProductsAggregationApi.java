@@ -62,13 +62,42 @@ public class SyntheticProductsAggregationApi implements ProductsAggregationApi {
     final int forecastHorizon = 15;
     return IntStream.range(0, forecastHorizon)
             .mapToObj(i -> java.time.LocalDate.now().plusDays(i))
-            .flatMap(d -> IntStream.range(0, 3).mapToObj(i -> new Tuple2<>(d, i)))
+            .flatMap(d -> IntStream.range(0, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
             .map(t2 -> new CompactProductsAggregationByDateResult(
                     t2._1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
                     t2._2,
                     100 * Math.random()))
             .collect(toList());
   }
+
+  @Override
+  public List<CompactProductsAggregationByStoreResult> forecastForProductsByStore(String aggregationFunction) {
+    final int forecastHorizon = 15;
+    //TODO
+    return IntStream.range(0, forecastHorizon)
+            .mapToObj(i -> java.time.LocalDate.now().plusDays(i))
+            .flatMap(d -> IntStream.range(0, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
+            .map(t2 -> new CompactProductsAggregationByStoreResult(
+                    t2._1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
+                    t2._2,
+                    100 * Math.random()))
+            .collect(toList());
+  }
+
+  @Override
+  public List<CompactProductsAggregationByStoreAndDateResult> forecastForProductsByStoreAndDate(String aggregationFunction) {
+    final int forecastHorizon = 15;
+    //TODO
+    return IntStream.range(0, forecastHorizon)
+            .mapToObj(i -> java.time.LocalDate.now().plusDays(i))
+            .flatMap(d -> IntStream.range(0, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
+            .map(t2 -> new CompactProductsAggregationByStoreAndDateResult(
+                    t2._1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
+                    t2._2,
+                    100 * Math.random()))
+            .collect(toList());
+  }
+
   @NotNull
   private ProductsAggregationByStoreAndDateResult generateProductsAggregationByStoreAndDateResult(
       final Tuple2<Tuple2<LocalDate, Integer>, Integer> t2) {
@@ -141,8 +170,38 @@ public class SyntheticProductsAggregationApi implements ProductsAggregationApi {
     final java.time.LocalDate startOfReport = java.time.LocalDate.now().minusDays(sampleSize);
     return IntStream.range(0, sampleSize)
             .mapToObj(startOfReport::plusDays)
-            .flatMap(d -> IntStream.range(0, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
+            .flatMap(d -> IntStream.range(productsCount, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
             .map(t2 -> new CompactProductsAggregationByDateResult(
+                    t2._1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
+                    t2._2,
+                    100 * Math.random()))
+            .collect(toList());
+  }
+
+  @Override
+  public List<CompactProductsAggregationByStoreResult> aggregateUsingByStore(String aggregationFunction) {
+    final int sampleSize = 30;
+    //TODO
+    //final java.time.LocalDate startOfReport = java.time.LocalDate.now().minusDays(sampleSize);
+    return IntStream.range(0, sampleSize)
+            .mapToObj(storesCount)
+            .flatMap(d -> IntStream.range(storesCount,productsCount).mapToObj(i -> new Tuple2<>(d, i)))
+            .map(t2 -> new CompactProductsAggregationByStoreResult(
+                    t2._1,
+                    t2._2,
+                    100 * Math.random()))
+            .collect(toList());
+  }
+
+  @Override
+  public List<CompactProductsAggregationByStoreAndDateResult> aggregateUsingByStoreAndDate(String aggregationFunction) {
+    final int sampleSize = 30;
+    //TODO
+    final java.time.LocalDate startOfReport = java.time.LocalDate.now().minusDays(sampleSize);
+    return IntStream.range(0, sampleSize)
+            .mapToObj(startOfReport::plusDays)
+            .flatMap(d -> IntStream.range(storesCount,productsCount).mapToObj(i -> new Tuple2<>(d, i)))
+            .map(t2 -> new CompactProductsAggregationByStoreAndDateResult(
                     t2._1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
                     t2._2,
                     100 * Math.random()))
