@@ -85,8 +85,7 @@ public class ByDateAndProductAggregationService implements ByDateAndProductAggre
   }
 
   @Override
-  public List<CompactByDateAndProductAggregation> aggregateUsingByDate(
-      final String aggregationFunction) {
+  public List<CompactByDateAndProductAggregation> aggregateUsingByDate(final String aggregationFunction) {
     return dao.aggregateValueByDateUsing(aggregationFunction).stream()
         .map(care -> new CompactByDateAndProductAggregation(
             LocalDate.of(care.getYear(), care.getMonth(), care.getDay())

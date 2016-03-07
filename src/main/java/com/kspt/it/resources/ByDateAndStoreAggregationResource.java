@@ -7,6 +7,7 @@ import static java.util.stream.Collectors.toList;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -51,7 +52,7 @@ public class ByDateAndStoreAggregationResource {
       value = "Aggregate checks info by date and sore using arbitrary function as a parameter.",
       notes = "Available functions are: min, avg, max, sum, count.")
   public List<CompactByDateAndStoreAggregationRepresentation> aggregateByDateAndStore(
-      final @QueryParam("aggregationFunction") String aggregationFunction) {
+      final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<CompactByDateAndStoreAggregationRepresentation> list = service
         .aggregateUsing(aggregationFunction)
         .stream()
@@ -69,7 +70,7 @@ public class ByDateAndStoreAggregationResource {
       value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
       notes = "Available functions are: min, avg, max, sum, count.")
   public List<CompactByDateAndStoreAggregationRepresentation> forecastAggregationByDateAndStore(
-      final @QueryParam("aggregationFunction") String aggregationFunction) {
+      final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<CompactByDateAndStoreAggregationRepresentation> list = service
         .forecastForStores(aggregationFunction)
         .stream()
@@ -81,70 +82,69 @@ public class ByDateAndStoreAggregationResource {
     return list;
   }
 
-}
+  @XmlRootElement
+  @XmlAccessorType(XmlAccessType.FIELD)
+  static class CompactByDateAndStoreAggregationRepresentation {
+    private Long timestamp;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-class CompactByDateAndStoreAggregationRepresentation {
-  private Long timestamp;
+    private Integer storeId;
 
-  private Integer storeId;
+    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+    private Double value;
 
-  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-  private Double value;
+    public CompactByDateAndStoreAggregationRepresentation(
+        final Long timestamp,
+        final Integer storeId,
+        final Double value) {
+      this.timestamp = timestamp;
+      this.storeId = storeId;
+      this.value = value;
+    }
 
-  public CompactByDateAndStoreAggregationRepresentation(
-      final Long timestamp,
-      final Integer storeId,
-      final Double value) {
-    this.timestamp = timestamp;
-    this.storeId = storeId;
-    this.value = value;
+    public CompactByDateAndStoreAggregationRepresentation() {
+    }
   }
 
-  public CompactByDateAndStoreAggregationRepresentation() {
-  }
-}
+  @XmlRootElement
+  @XmlAccessorType(XmlAccessType.FIELD)
+  static class ByDateAndStoreAggregationRepresentation {
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-class ByDateAndStoreAggregationRepresentation {
+    private Long timestamp;
 
-  private Long timestamp;
+    private Integer storeId;
 
-  private Integer storeId;
+    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+    private Double minCheckValue;
 
-  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-  private Double minCheckValue;
+    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+    private Double avgCheckValue;
 
-  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-  private Double avgCheckValue;
+    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+    private Double maxCheckValue;
 
-  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-  private Double maxCheckValue;
+    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+    private Double allChecksValueSum;
 
-  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-  private Double allChecksValueSum;
+    private Integer checksCount;
 
-  private Integer checksCount;
+    public ByDateAndStoreAggregationRepresentation() {
+    }
 
-  public ByDateAndStoreAggregationRepresentation() {
-  }
-
-  public ByDateAndStoreAggregationRepresentation(
-      final long timestamp,
-      final int storeId,
-      final Double minCheckValue,
-      final Double avgCheckValue,
-      final Double maxCheckValue,
-      final Double allChecksValueSum,
-      final Integer checksCount) {
-    this.timestamp = timestamp;
-    this.storeId = storeId;
-    this.minCheckValue = minCheckValue;
-    this.avgCheckValue = avgCheckValue;
-    this.maxCheckValue = maxCheckValue;
-    this.allChecksValueSum = allChecksValueSum;
-    this.checksCount = checksCount;
+    public ByDateAndStoreAggregationRepresentation(
+        final long timestamp,
+        final int storeId,
+        final Double minCheckValue,
+        final Double avgCheckValue,
+        final Double maxCheckValue,
+        final Double allChecksValueSum,
+        final Integer checksCount) {
+      this.timestamp = timestamp;
+      this.storeId = storeId;
+      this.minCheckValue = minCheckValue;
+      this.avgCheckValue = avgCheckValue;
+      this.maxCheckValue = maxCheckValue;
+      this.allChecksValueSum = allChecksValueSum;
+      this.checksCount = checksCount;
+    }
   }
 }

@@ -45,7 +45,7 @@ public class GuiceModule extends AbstractModule {
   @Singleton
   public ByDateAndStoreAggregationApi provideChecksAggregationApi(final Config c,
       final Injector i) {
-    final String type = c.getString("services.checks.type");
+    final String type = c.getString("services.aggregation.type");
     if (type.equals("real")) {
       return new ByDateAndStoreAggregationService(
           i.getInstance(ByDateAndStoreAggregationDAO.class));
