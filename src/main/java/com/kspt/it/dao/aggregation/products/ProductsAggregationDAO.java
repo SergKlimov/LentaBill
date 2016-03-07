@@ -112,7 +112,7 @@ public class ProductsAggregationDAO {
         "product_facts.value * product_facts.quantity");
   }
 
-  public List<CompactProductsAggregationByDateResultEntry> aggregateByDateUsing(
+  private List<CompactProductsAggregationByDateResultEntry> aggregateByDateUsing(
       final String aggregationFunction,
       final String aggregationSubject) {
     final String query = "SELECT "
@@ -139,5 +139,37 @@ public class ProductsAggregationDAO {
   public List<CompactProductsAggregationByDateResultEntry> aggregateQuantityByDateUsing(
       final String aggregationFunction) {
     return aggregateByDateUsing(aggregationFunction, "product_facts.quantity");
+  }
+
+  public List<CompactProductsAggregationByStoreResultEntry> aggregateValueByStoreUsing(
+      final String aggregationFunction) {
+    return aggregateByStoreUsing(
+        aggregationFunction,
+        "product_facts.value * product_facts.quantity");
+  }
+
+  private List<CompactProductsAggregationByStoreResultEntry> aggregateByStoreUsing(
+      final String aggregationFunction,
+      final String aggregationSubject) {
+    final String query = "SELECT "
+        + "supplier_dimensions.store_id AS storeId, "
+        + "product_facts.product_id AS productId, "
+        + aggregationFunction + "(" + aggregationSubject + ") AS value "
+        + "FROM "
+        + "product_facts "
+        + "JOIN supplier_dimensions "
+        + "ON product_facts.supplier_id = supplier_dimensions.id "
+        + "GROUP BY "
+        + "product_facts.product_id, "
+        + "supplier_dimensions.store_id";
+    final RawSql sql = RawSqlBuilder.parse(query).create();
+    return ebean.find(CompactProductsAggregationByStoreResultEntry.class)
+        .setRawSql(sql)
+        .findList();
+  }
+
+  public List<CompactProductsAggregationByStoreResultEntry> aggregateQuantityByStoreUsing(
+      final String aggregationFunction) {
+    return aggregateByStoreUsing(aggregationFunction, "product_facts.quantity");
   }
 }
