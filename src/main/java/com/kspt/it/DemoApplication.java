@@ -4,6 +4,7 @@ import com.google.inject.Stage;
 import com.hubspot.dropwizard.guice.GuiceBundle;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
@@ -24,6 +25,7 @@ public class DemoApplication extends Application<DemoApplicationConfig> {
 
   @Override
   public void initialize(final Bootstrap<DemoApplicationConfig> bootstrap) {
+    bootstrap.addBundle(new AssetsBundle("/assets/", "/", "main.html"));
     GuiceBundle<DemoApplicationConfig> bundle = GuiceBundle.<DemoApplicationConfig>newBuilder()
         .addModule(new GuiceModule())
         .build(Stage.PRODUCTION);

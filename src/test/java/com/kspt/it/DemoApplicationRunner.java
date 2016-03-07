@@ -4,6 +4,7 @@ import com.google.common.io.Resources;
 import com.google.inject.Stage;
 import com.google.inject.util.Modules;
 import com.hubspot.dropwizard.guice.GuiceBundle;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.swagger.jaxrs.config.BeanConfig;
@@ -31,6 +32,7 @@ public class DemoApplicationRunner {
 
   private static void setupSwagger() {
     BeanConfig beanConfig = new BeanConfig();
+    beanConfig.setBasePath("/api");
     beanConfig.setVersion("1.0");
     beanConfig.setSchemes(new String[]{"http"});
     beanConfig.setHost("localhost:8080");
@@ -42,6 +44,7 @@ public class DemoApplicationRunner {
 class TestDemoApplication extends DemoApplication {
   @Override
   public void initialize(final Bootstrap<DemoApplicationConfig> bootstrap) {
+    bootstrap.addBundle(new AssetsBundle("/assets/", "/", "main.html"));
     GuiceBundle<DemoApplicationConfig> bundle = GuiceBundle.<DemoApplicationConfig>newBuilder()
         .addModule(Modules.override(new GuiceModule()).with(new TestGuiceModule()))
         .build(Stage.DEVELOPMENT);

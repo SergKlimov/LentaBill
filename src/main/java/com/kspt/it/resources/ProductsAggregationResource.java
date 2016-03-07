@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
-@Path("api/products/")
+@Path("/products/aggregation")
 @Produces(MediaType.APPLICATION_XML)
 @Api(value = "products_aggregation", description = "Aggregation for products")
 public class ProductsAggregationResource {
@@ -30,25 +30,25 @@ public class ProductsAggregationResource {
   @Path("/aggregation/byDate")
   @ApiOperation(value = "Aggregate products info by date", notes = "Anything Else?")
   @ApiResponses(value = {
-          @ApiResponse(code = 200, message = "OK"),
-          @ApiResponse(code = 500, message = "Something wrong in Server")
+      @ApiResponse(code = 200, message = "OK"),
+      @ApiResponse(code = 500, message = "Something wrong in Server")
   })
   public List<ProductsAggregationByDateResultRepresentation> aggregateByDate() {
     final List<ProductsAggregationByDateResultRepresentation> list = service
-            .aggregateByDateAndProduct().stream()
-            .map(ar -> new ProductsAggregationByDateResultRepresentation(
-                    ar.getTimestamp(),
-                    ar.getProductId(),
-                    ar.getMinCheckValue(),
-                    ar.getAvgCheckValue(),
-                    ar.getMaxCheckValue(),
-                    ar.getAllChecksValueSum(),
-                    ar.getMinProductQuantity(),
-                    ar.getAvgProductQuantity(),
-                    ar.getMaxProductQuantity(),
-                    ar.getAllProductsQuantitySum(),
-                    ar.getItemsCount())
-            ).collect(toList());
+        .aggregateByDateAndProduct().stream()
+        .map(ar -> new ProductsAggregationByDateResultRepresentation(
+            ar.getTimestamp(),
+            ar.getProductId(),
+            ar.getMinCheckValue(),
+            ar.getAvgCheckValue(),
+            ar.getMaxCheckValue(),
+            ar.getAllChecksValueSum(),
+            ar.getMinProductQuantity(),
+            ar.getAvgProductQuantity(),
+            ar.getMaxProductQuantity(),
+            ar.getAllProductsQuantitySum(),
+            ar.getItemsCount())
+        ).collect(toList());
     return list;
   }
 
@@ -56,25 +56,25 @@ public class ProductsAggregationResource {
   @Path("/aggregation/byStore")
   @ApiOperation(value = "Aggregate products info by sore", notes = "Anything Else?")
   @ApiResponses(value = {
-          @ApiResponse(code = 200, message = "OK"),
-          @ApiResponse(code = 500, message = "Something wrong in Server")
+      @ApiResponse(code = 200, message = "OK"),
+      @ApiResponse(code = 500, message = "Something wrong in Server")
   })
   public List<ProductsAggregationByStoreResultRepresentation> aggregateByStore() {
     final List<ProductsAggregationByStoreResultRepresentation> list = service
-            .aggregateByStoreAndProduct().stream()
-            .map(ar -> new ProductsAggregationByStoreResultRepresentation(
-                    ar.getStoreId(),
-                    ar.getProductId(),
-                    ar.getMinCheckValue(),
-                    ar.getAvgCheckValue(),
-                    ar.getMaxCheckValue(),
-                    ar.getAllChecksValueSum(),
-                    ar.getMinProductQuantity(),
-                    ar.getAvgProductQuantity(),
-                    ar.getMaxProductQuantity(),
-                    ar.getAllProductsQuantitySum(),
-                    ar.getItemsCount())
-            ).collect(toList());
+        .aggregateByStoreAndProduct().stream()
+        .map(ar -> new ProductsAggregationByStoreResultRepresentation(
+            ar.getStoreId(),
+            ar.getProductId(),
+            ar.getMinCheckValue(),
+            ar.getAvgCheckValue(),
+            ar.getMaxCheckValue(),
+            ar.getAllChecksValueSum(),
+            ar.getMinProductQuantity(),
+            ar.getAvgProductQuantity(),
+            ar.getMaxProductQuantity(),
+            ar.getAllProductsQuantitySum(),
+            ar.getItemsCount())
+        ).collect(toList());
     return list;
   }
 
@@ -82,26 +82,26 @@ public class ProductsAggregationResource {
   @Path("/aggregation/byDateAndStore")
   @ApiOperation(value = "Aggregate products info by date and sore", notes = "Anything Else?")
   @ApiResponses(value = {
-          @ApiResponse(code = 200, message = "OK"),
-          @ApiResponse(code = 500, message = "Something wrong in Server")
+      @ApiResponse(code = 200, message = "OK"),
+      @ApiResponse(code = 500, message = "Something wrong in Server")
   })
   public List<ProductsAggregationByStoreAndDateResultRepresentation> aggregateByDateAndStore() {
     final List<ProductsAggregationByStoreAndDateResultRepresentation> list = service
-            .aggregateByStoreAndDateAndProduct().stream()
-            .map(ar -> new ProductsAggregationByStoreAndDateResultRepresentation(
-                    ar.getTimestamp(),
-                    ar.getStoreId(),
-                    ar.getProductId(),
-                    ar.getMinCheckValue(),
-                    ar.getAvgCheckValue(),
-                    ar.getMaxCheckValue(),
-                    ar.getAllChecksValueSum(),
-                    ar.getMinProductQuantity(),
-                    ar.getAvgProductQuantity(),
-                    ar.getMaxProductQuantity(),
-                    ar.getAllProductsQuantitySum(),
-                    ar.getItemsCount())
-            ).collect(toList());
+        .aggregateByStoreAndDateAndProduct().stream()
+        .map(ar -> new ProductsAggregationByStoreAndDateResultRepresentation(
+            ar.getTimestamp(),
+            ar.getStoreId(),
+            ar.getProductId(),
+            ar.getMinCheckValue(),
+            ar.getAvgCheckValue(),
+            ar.getMaxCheckValue(),
+            ar.getAllChecksValueSum(),
+            ar.getMinProductQuantity(),
+            ar.getAvgProductQuantity(),
+            ar.getMaxProductQuantity(),
+            ar.getAllProductsQuantitySum(),
+            ar.getItemsCount())
+        ).collect(toList());
     return list;
   }
 
