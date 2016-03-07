@@ -17,6 +17,40 @@ public class ByDateAndStoreAndProductAggregationDAO {
     this.ebean = ebean;
   }
 
+  public List<ByDateAndStoreAndProductAggregationEntry> aggregateByStoreAndDateAndProduct() {
+    final String query = "SELECT "
+        + "date_dimensions.year AS year, "
+        + "date_dimensions.month AS month, "
+        + "date_dimensions.day AS day, "
+        + "supplier_dimensions.store_id AS storeId, "
+        + "product_facts.product_id AS productId, "
+        + "MIN(product_facts.value * product_facts.quantity) AS minCheckValue, "
+        + "AVG(product_facts.value * product_facts.quantity) AS avgCheckValue, "
+        + "MAX(product_facts.value * product_facts.quantity) AS maxCheckValue, "
+        + "SUM(product_facts.value * product_facts.quantity) AS allChecksValueSum, "
+        + "MIN(product_facts.quantity) AS minProductQuantity, "
+        + "AVG(product_facts.quantity) AS avgProductQuantity, "
+        + "MAX(product_facts.quantity) AS maxProductQuantity, "
+        + "SUM(product_facts.quantity) AS allProductsQuantitySum, "
+        + "COUNT(*) AS itemsCount "
+        + "FROM "
+        + "product_facts "
+        + "JOIN supplier_dimensions "
+        + "ON product_facts.supplier_id = supplier_dimensions.id "
+        + "JOIN date_dimensions "
+        + "ON product_facts.date_id = date_dimensions.id "
+        + "GROUP BY "
+        + "date_dimensions.year,"
+        + "date_dimensions.month,"
+        + "date_dimensions.day, "
+        + "product_facts.product_id, "
+        + "supplier_dimensions.store_id";
+    final RawSql sql = RawSqlBuilder.parse(query).create();
+    return ebean.find(ByDateAndStoreAndProductAggregationEntry.class)
+        .setRawSql(sql)
+        .findList();
+  }
+
   public List<CompactByDateAndStoreAndProductAggregationEntry> aggregateValueByDateAndStoreUsing(
       final String aggregationFunction) {
     return aggregateByDateAndStoreUsing(

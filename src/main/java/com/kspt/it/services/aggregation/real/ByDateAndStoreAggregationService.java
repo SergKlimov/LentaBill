@@ -1,10 +1,8 @@
-package com.kspt.it.services.checks.real;
+package com.kspt.it.services.aggregation.real;
 
 import com.kspt.it.dao.aggregation.ByDateAndStoreAggregationDAO;
-import com.kspt.it.services.checks.ChecksAggregationApi;
-import com.kspt.it.services.checks.ChecksAggregationResult;
-import com.kspt.it.services.checks.CompactChecksAggregationResult;
-import com.kspt.it.services.forecast.real.ForecastStatisticsExtrapolationService;
+import com.kspt.it.services.aggregation.ByDateAndStoreAggregationApi;
+import com.kspt.it.services.forecast.ForecastStatisticsExtrapolationService;
 import static java.util.stream.Collectors.*;
 import javafx.util.Pair;
 import javax.inject.Inject;
@@ -14,20 +12,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public class ChecksAggregationService implements ChecksAggregationApi {
+public class ByDateAndStoreAggregationService implements ByDateAndStoreAggregationApi {
 
   private final ByDateAndStoreAggregationDAO dao;
 
   @Inject
-  public ChecksAggregationService(final ByDateAndStoreAggregationDAO dao) {
+  public ByDateAndStoreAggregationService(final ByDateAndStoreAggregationDAO dao) {
     this.dao = dao;
   }
 
   @Override
-  public List<ChecksAggregationResult> aggregateByDateAndStore(final long since, final int limit) {
+  public List<ByDateAndStoreAggregation> aggregateByDateAndStore(final long since, final int limit) {
 
     return dao.aggregate(since, limit).stream()
-        .map(are -> new ChecksAggregationResult(
+        .map(are -> new ByDateAndStoreAggregation(
             LocalDate.of(are.getYear(), are.getMonth(), are.getDay())
                 .atStartOfDay()
                 .toInstant(ZoneOffset.UTC)
@@ -42,28 +40,28 @@ public class ChecksAggregationService implements ChecksAggregationApi {
   }
 
   @Override
-  public List<CompactChecksAggregationResult> forecastForStores(final String aggregationFunction) {
+  public List<CompactByDateAndStoreAggregation> forecastForStores(final String aggregationFunction) {
     return buildForecastForAllStores(aggregateUsing(aggregationFunction));
   }
 
-  private List<CompactChecksAggregationResult> buildForecastForAllStores(
-      final List<CompactChecksAggregationResult> entries) {
-    final Map<Integer, List<CompactChecksAggregationResult>> aggregationsForStore = entries
+  private List<CompactByDateAndStoreAggregation> buildForecastForAllStores(
+      final List<CompactByDateAndStoreAggregation> entries) {
+    final Map<Integer, List<CompactByDateAndStoreAggregation>> aggregationsForStore = entries
         .stream()
-        .collect(groupingBy(CompactChecksAggregationResult::getStoreId));
+        .collect(groupingBy(CompactByDateAndStoreAggregation::getStoreId));
     return aggregationsForStore.entrySet().stream()
         .map(e -> buildForecastForStore(e.getKey(), e.getValue()))
         .flatMap(List::stream)
         .collect(toList());
   }
 
-  private List<CompactChecksAggregationResult> buildForecastForStore(
+  private List<CompactByDateAndStoreAggregation> buildForecastForStore(
       final int storeId,
-      final List<CompactChecksAggregationResult> entries) {
+      final List<CompactByDateAndStoreAggregation> entries) {
     final int forecastHorizon = 15;
     final List<Pair<Double, Long>> forecast = buildForecastFor(entries, forecastHorizon);
     return IntStream.range(0, forecastHorizon)
-        .mapToObj(i -> new CompactChecksAggregationResult(
+        .mapToObj(i -> new CompactByDateAndStoreAggregation(
             forecast.get(i).getValue(),
             storeId,
             forecast.get(i).getKey()))
@@ -71,7 +69,7 @@ public class ChecksAggregationService implements ChecksAggregationApi {
   }
 
   private List<Pair<Double, Long>> buildForecastFor(
-      final List<CompactChecksAggregationResult> entries,
+      final List<CompactByDateAndStoreAggregation> entries,
       final int forecastHorizon) {
     final List<Pair<Double, Long>> valueToOrigin = entries.stream()
         .map(are -> new Pair<>(
@@ -83,9 +81,9 @@ public class ChecksAggregationService implements ChecksAggregationApi {
   }
 
   @Override
-  public List<CompactChecksAggregationResult> aggregateUsing(final String aggregationFunction) {
+  public List<CompactByDateAndStoreAggregation> aggregateUsing(final String aggregationFunction) {
     return dao.aggregateUsing(aggregationFunction).stream()
-        .map(care -> new CompactChecksAggregationResult(
+        .map(care -> new CompactByDateAndStoreAggregation(
             LocalDate.of(care.getYear(), care.getMonth(), care.getDay())
                 .atStartOfDay()
                 .toInstant(ZoneOffset.UTC)

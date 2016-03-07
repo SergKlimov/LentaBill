@@ -14,15 +14,21 @@ import com.kspt.it.dao.aggregation.ByDateAndStoreAndProductAggregationDAO;
 import com.kspt.it.dao.aggregation.ByStoreAndProductAggregationDAO;
 import com.kspt.it.dao.meta.checks.ChecksMetaDAO;
 import com.kspt.it.dao.meta.stores.StoresMetaDAO;
-import com.kspt.it.services.checks.ChecksAggregationApi;
-import com.kspt.it.services.checks.real.ChecksAggregationService;
-import com.kspt.it.services.checks.synthetic.SyntheticChecksAggregationApi;
+import com.kspt.it.services.aggregation.ByDateAndProductAggregationApi;
+import com.kspt.it.services.aggregation.ByDateAndStoreAggregationApi;
+import com.kspt.it.services.aggregation.ByDateAndStoreAndProductAggregationApi;
+import com.kspt.it.services.aggregation.ByStoreAndProductAggregationApi;
+import com.kspt.it.services.aggregation.real.ByDateAndProductAggregationService;
+import com.kspt.it.services.aggregation.real.ByDateAndStoreAggregationService;
+import com.kspt.it.services.aggregation.real.ByDateAndStoreAndProductAggregationService;
+import com.kspt.it.services.aggregation.real.ByStoreAndProductAggregationService;
+import com.kspt.it.services.aggregation.synthetic.SyntheticByDateAndProductAggregationApi;
+import com.kspt.it.services.aggregation.synthetic.SyntheticByDateAndStoreAggregationApi;
+import com.kspt.it.services.aggregation.synthetic.SyntheticByDateAndStoreAndProductAggregationApi;
+import com.kspt.it.services.aggregation.synthetic.SyntheticByStoreAndProductAggregationApi;
 import com.kspt.it.services.meta.MetaRetrievingApi;
 import com.kspt.it.services.meta.real.MetaRetrievingService;
 import com.kspt.it.services.meta.synthetic.SyntheticMetaRetrievingApi;
-import com.kspt.it.services.products.ProductsAggregationApi;
-import com.kspt.it.services.products.real.ProductsAggregationService;
-import com.kspt.it.services.products.synthetic.SyntheticProductsAggregationApi;
 import com.typesafe.config.Config;
 import static com.typesafe.config.ConfigFactory.parseResources;
 import com.typesafe.config.ConfigParseOptions;
@@ -37,32 +43,71 @@ public class GuiceModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public ChecksAggregationApi provideChecksAggregationApi(final Config c, final Injector i) {
+  public ByDateAndStoreAggregationApi provideChecksAggregationApi(final Config c,
+      final Injector i) {
     final String type = c.getString("services.checks.type");
     if (type.equals("real")) {
-      return new ChecksAggregationService(i.getInstance(ByDateAndStoreAggregationDAO.class));
+      return new ByDateAndStoreAggregationService(
+          i.getInstance(ByDateAndStoreAggregationDAO.class));
     } else {
       final Config serviceConfig = c.getConfig("services_types." + type);
       final int storesCount = serviceConfig.getInt("stores_count");
-      return new SyntheticChecksAggregationApi(storesCount);
+      return new SyntheticByDateAndStoreAggregationApi(storesCount);
     }
   }
 
   @Provides
   @Singleton
-  public ProductsAggregationApi provideProductsAggregationApi(final Config c, final Injector i) {
-    final String type = c.getString("services.products.type");
+  public ByDateAndProductAggregationApi provideByDateAndProductAggregationApi(
+      final Config c,
+      final Injector i) {
+    final String type = c.getString("services.aggregation.type");
     if (type.equals("real")) {
-      return new ProductsAggregationService(
-          i.getInstance(ByDateAndStoreAndProductAggregationDAO.class),
-          i.getInstance(ByDateAndProductAggregationDAO.class),
+      return new ByDateAndProductAggregationService(
+          i.getInstance(ByDateAndProductAggregationDAO.class));
+    } else {
+      final Config serviceConfig = c.getConfig("services_types." + type);
+      final int daysCount = serviceConfig.getInt("days_count");
+      final int storesCount = serviceConfig.getInt("stores_count");
+      final int productsCount = serviceConfig.getInt("products_count");
+      return new SyntheticByDateAndProductAggregationApi(daysCount, storesCount, productsCount);
+    }
+  }
+
+  @Provides
+  @Singleton
+  public ByDateAndStoreAndProductAggregationApi provideByDateAndStoreAndProductAggregationApi(
+      final Config c,
+      final Injector i) {
+    final String type = c.getString("services.aggregation.type");
+    if (type.equals("real")) {
+      return new ByDateAndStoreAndProductAggregationService(
+          i.getInstance(ByDateAndStoreAndProductAggregationDAO.class));
+    } else {
+      final Config serviceConfig = c.getConfig("services_types." + type);
+      final int daysCount = serviceConfig.getInt("days_count");
+      final int storesCount = serviceConfig.getInt("stores_count");
+      final int productsCount = serviceConfig.getInt("products_count");
+      return new SyntheticByDateAndStoreAndProductAggregationApi(
+          daysCount, storesCount, productsCount);
+    }
+  }
+
+  @Provides
+  @Singleton
+  public ByStoreAndProductAggregationApi provideByStoreAndProductAggregationApi(
+      final Config c,
+      final Injector i) {
+    final String type = c.getString("services.aggregation.type");
+    if (type.equals("real")) {
+      return new ByStoreAndProductAggregationService(
           i.getInstance(ByStoreAndProductAggregationDAO.class));
     } else {
       final Config serviceConfig = c.getConfig("services_types." + type);
       final int daysCount = serviceConfig.getInt("days_count");
       final int storesCount = serviceConfig.getInt("stores_count");
       final int productsCount = serviceConfig.getInt("products_count");
-      return new SyntheticProductsAggregationApi(daysCount, storesCount, productsCount);
+      return new SyntheticByStoreAndProductAggregationApi(daysCount, storesCount, productsCount);
     }
   }
 

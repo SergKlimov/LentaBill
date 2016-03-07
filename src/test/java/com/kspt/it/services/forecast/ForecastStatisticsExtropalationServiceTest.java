@@ -1,11 +1,12 @@
 package com.kspt.it.services.forecast;
 
-import com.kspt.it.services.forecast.real.ForecastStatisticsExtrapolationService;
 import javafx.util.Pair;
 import org.junit.Test;
-
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class ForecastStatisticsExtropalationServiceTest {
 

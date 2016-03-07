@@ -1,4 +1,4 @@
-package com.kspt.it.services.forecast.real;
+package com.kspt.it.services.forecast;
 
 import javafx.util.Pair;
 import net.sourceforge.openforecast.DataPoint;
