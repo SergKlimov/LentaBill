@@ -50,12 +50,12 @@ public class ChecksAggregationResource {
   @ApiOperation(
       value = "Aggregate checks info by date and sore using arbitrary function as a parameter.",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<CompactChecksAggregationResultRepresentation> aggregateByDateAndStore(
+  public List<CompactChecksAggregationResultRepresentationForStores> aggregateByDateAndStore(
       final @QueryParam("aggregationFunction") String aggregationFunction) {
-    final List<CompactChecksAggregationResultRepresentation> list = service
+    final List<CompactChecksAggregationResultRepresentationForStores> list = service
         .aggregateUsing(aggregationFunction)
         .stream()
-        .map(ar -> new CompactChecksAggregationResultRepresentation(
+        .map(ar -> new CompactChecksAggregationResultRepresentationForStores(
             ar.getOrigin(),
             ar.getStoreId(),
             ar.getValue())
@@ -68,12 +68,12 @@ public class ChecksAggregationResource {
   @ApiOperation(
       value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<CompactChecksAggregationResultRepresentation> forecastAggregationByDateAndStore(
+  public List<CompactChecksAggregationResultRepresentationForStores> forecastAggregationByDateAndStore(
       final @QueryParam("aggregationFunction") String aggregationFunction) {
-    final List<CompactChecksAggregationResultRepresentation> list = service
-        .forecastFor(aggregationFunction)
+    final List<CompactChecksAggregationResultRepresentationForStores> list = service
+        .forecastForStores(aggregationFunction)
         .stream()
-        .map(ar -> new CompactChecksAggregationResultRepresentation(
+        .map(ar -> new CompactChecksAggregationResultRepresentationForStores(
             ar.getOrigin(),
             ar.getStoreId(),
             ar.getValue())
@@ -81,11 +81,29 @@ public class ChecksAggregationResource {
     return list;
   }
 
+  @GET
+  @Path("/forecast/byDateAndProduct/{aggregationFunction}")
+  @ApiOperation(
+          value = "Build forecast for checks info aggregated by date and product using arbitrary function",
+          notes = "Available functions are: min, avg, max, sum, count.")
+  public List<CompactChecksAggregationResultRepresentationForProduct> forecastAggregationByDateAndProduct(
+          final @QueryParam("aggregationFunction") String aggregationFunction) {
+    final List<CompactChecksAggregationResultRepresentationForProduct> list = service
+            .forecastForProducts(aggregationFunction)
+            .stream()
+            .map(ar -> new CompactChecksAggregationResultRepresentationForProduct(
+                    ar.getOrigin(),
+                    ar.getProductId(),
+                    ar.getValue())
+            ).collect(toList());
+    return list;
+  }
+
 }
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-class CompactChecksAggregationResultRepresentation {
+class CompactChecksAggregationResultRepresentationForStores {
   private Long timestamp;
 
   private Integer storeId;
@@ -93,7 +111,7 @@ class CompactChecksAggregationResultRepresentation {
   @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
   private Double value;
 
-  public CompactChecksAggregationResultRepresentation(
+  public CompactChecksAggregationResultRepresentationForStores(
       final Long timestamp,
       final Integer storeId,
       final Double value) {
@@ -102,8 +120,31 @@ class CompactChecksAggregationResultRepresentation {
     this.value = value;
   }
 
-  public CompactChecksAggregationResultRepresentation() {
+  public CompactChecksAggregationResultRepresentationForStores() {
   }
+}
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+class CompactChecksAggregationResultRepresentationForProduct {
+    private Long timestamp;
+
+    private Integer productId;
+
+    @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+    private Double value;
+
+    public CompactChecksAggregationResultRepresentationForProduct(
+            final Long timestamp,
+            final Integer productId,
+            final Double value) {
+        this.timestamp = timestamp;
+        this.productId = productId;
+        this.value = value;
+    }
+
+    public CompactChecksAggregationResultRepresentationForProduct() {
+    }
 }
 
 @XmlRootElement

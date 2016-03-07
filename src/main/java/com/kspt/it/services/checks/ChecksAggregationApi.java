@@ -5,7 +5,9 @@ import java.util.List;
 public interface ChecksAggregationApi {
   List<ChecksAggregationResult> aggregateByDateAndStore(final long since, final int limit);
 
-  List<CompactChecksAggregationResult> forecastFor(final String aggregationFunction);
+  List<CompactChecksAggregationResult> forecastForStores(final String aggregationFunction);
+
+  List<CompactChecksAggregationResultForProduct> forecastForProducts(final String aggregationFunction);
 
   List<CompactChecksAggregationResult> aggregateUsing(final String aggregationFunction);
 }
