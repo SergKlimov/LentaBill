@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@Path("/api/meta")
+@Path("/meta")
 @Produces(MediaType.APPLICATION_XML)
 @Api(value = "meta_retrieving", description = "Metadata retrieving endpoint")
 public class MetaRetrievingResource {

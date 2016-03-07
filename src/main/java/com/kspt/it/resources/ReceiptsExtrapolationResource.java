@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@Path("api/receipts/extrapolation")
+@Path("/receipts/extrapolation")
 @Produces(MediaType.APPLICATION_XML)
 @Api(value = "receipts_extrapolation", description = "Extrapolation for receipts")
 public class ReceiptsExtrapolationResource {

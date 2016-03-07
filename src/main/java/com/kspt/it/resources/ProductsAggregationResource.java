@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@Path("api/products/aggregation")
+@Path("/products/aggregation")
 @Produces(MediaType.APPLICATION_XML)
 @Api(value = "products_aggregation", description = "Aggregation for products")
 public class ProductsAggregationResource {

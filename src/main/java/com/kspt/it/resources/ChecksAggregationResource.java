@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
-@Path("/api/checks/aggregation")
+@Path("/checks/aggregation")
 @Produces(MediaType.APPLICATION_XML)
 @Api(value = "checks_aggregation", description = "Aggregation for checks")
 public class ChecksAggregationResource {
