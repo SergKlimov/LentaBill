@@ -1,7 +1,7 @@
-function buildTable(dataList, selector) {
-  var timestamps = $(dataList).map(function() {return $(this).find("timestamp").text()});
-  var tableHeader = buildTableHeader($.unique(timestamps));
-  var tableBody = buildTableBody(dataList, selector);
+function buildTable(dataList, selector, typeTime, typeSid) {
+  var timestamps = $(dataList).map(function() {return $(this).find(typeTime).text()});
+  var tableHeader = buildTableHeader($.unique(timestamps))
+  var tableBody = buildTableBody(dataList, selector, typeSid);
   var table = "<table class=\"table striped hovered cell-hovered bordered\">" +
     wrapByTag(wrapByTag(tableHeader, "tr", ""), "thead", "") +
     wrapByTag(tableBody, "tbody", "") +
@@ -33,11 +33,11 @@ function buildRow(rowTitle, dataList, selector) {
     return wrapByTag(rowTitle, "td", "") + concatArray(tableCellsWithValues, "");
 }
 
-function buildTableBody(dataList, selector) {
+function buildTableBody(dataList, selector, typeSid) {
   var tableRows = $(storesMeta).map(function() {
     var storeId = this.id;
     var dataForStore = $(dataList).filter(function(idx) {
-      return Number($(this).find("storeId").text()) == storeId;
+      return Number($(this).find(typeSid).text()) == storeId;
     })
     return buildRow(this.name, dataForStore, selector);
   }).map(function() {
