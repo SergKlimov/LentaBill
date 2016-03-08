@@ -64,19 +64,18 @@ function createDateStoreReport() {
         var reportContent = buildChecksAggregationViews(fullDataSet);
         $("#reportTable").html(reportContent);
 
-        var st = stores;
         drawPlot(data, stores);
     });
 }
 
 function createDateProductReport() {
     fetchXML(address + "/api/products/aggregation/byDateAndStore", {}, function (d) {
-        var fullDataSet = $(this).find("productsAggregationByStoreAndDateResultRepresentation");
+        var fullDataSet = $(d).find("productsAggregationByStoreAndDateResultRepresentation");
+        var data = prepareDataByDateProduct(fullDataSet, "minCheckValue", productIds.toArray());
         var reportContent = buildChecksAggregationViews(fullDataSet);
         $("#reportTable").html(reportContent);
-        drawPlot(fullDataSet);
 
-        $("#ex2").slider({});
+        drawPlot(data, products);
     });
 }
 
@@ -91,6 +90,29 @@ function prepareDataByDateStore(dataList, value, stores) {
     var list = stores.map(function (store) {
         var dataByStore = $(dataList).filter(function () {
             return Number($(this).find("storeId").text()) == store;
+        });
+        var res = dataByStore.map(function() {
+            return Number($(this).find(value).text())
+        });
+        return res;
+    });
+    list.unshift(timestamps); // Prepend
+    var table = transpose(list);
+    return table;
+}
+
+// TODO: Merge
+function prepareDataByDateProduct(dataList, value, products) {
+    var rawTs = $(dataList).map(function() {
+        return Number($(this).find("timestamp").text())
+    });
+    var timestamps = $.unique(rawTs).map(function() {
+        return new Date(this)
+    });
+
+    var list = products.map(function (product) {
+        var dataByStore = $(dataList).filter(function () {
+            return Number($(this).find("productId").text()) == product;
         });
         var res = dataByStore.map(function() {
             return Number($(this).find(value).text())

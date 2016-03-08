@@ -23,11 +23,15 @@ $(document).ready(function () {
 $(document).ready(function() {
     $("#createReportButton").click(reportButtonPressed);
     fetchStoreList();
+    fetchProductList();
 });
 
 var reportType = "minCheckValue";
 var stores;
 var storeIds;
+
+var products;
+var productIds;
 
 function fetchStoreList() {
     fetchXML("http://localhost:8080/api/meta/storesMeta", {}, function(d) {
@@ -36,6 +40,18 @@ function fetchStoreList() {
             return $(this).find("name").text();
         });
         storeIds = $(records).map(function() {
+            return Number($(this).find("id").text());
+        });
+    });
+}
+
+function fetchProductList() {
+    fetchXML("http://localhost:8080/api/meta/products/all", {}, function(d) {
+        var records = $(d).find("productRepresentation");
+        products = $(records).map(function() {
+            return $(this).find("name").text();
+        });
+        productIds = $(records).map(function() {
             return Number($(this).find("id").text());
         });
     });

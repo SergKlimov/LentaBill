@@ -29,7 +29,7 @@ function showSlider () {
   var changeSlider = function (data) {
     from = data.from;
     limit = moment(data.to, "X").diff(moment(data.from, "X"), 'days');
-    createDateStoreReport()
+    createReport()
   };
   $("#range").ionRangeSlider({
     type: 'double',
