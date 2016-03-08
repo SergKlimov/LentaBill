@@ -1,3 +1,4 @@
+var from = 0, limit = 0;
 function buildSwitcher() {
   var tableViewIndicator = "<button class=\"button primary\" onclick=\"switchView(this)\">table</button>";
   var graphViewIndicator = "<button class=\"button\" onclick=\"switchView(this)\">graph</button>";
@@ -5,23 +6,46 @@ function buildSwitcher() {
   //return wrapByTag(tableViewIndicator + graphViewIndicator, "div", "");
 }
 
-function switchView(btn) {
-  if ($(btn).hasClass("primary")) {
-    return ;
-  }
-  var aggregationView = $(btn).parents(".aggregation-view-content")
-  var currentMode = $(aggregationView).attr("mode");
-  if (currentMode == "table") {
-    $(aggregationView).find(".aggregation-table-view").hide();
-    $(aggregationView).find(".aggregation-graph-view").show();
-    $(aggregationView).attr("mode", "graph");
-  } else if (currentMode == "graph") {
-    $(aggregationView).find(".aggregation-table-view").show();
-    $(aggregationView).find(".aggregation-graph-view").hide();
-    $(aggregationView).attr("mode", "table");
-  }
-  $(btn).addClass("primary");
-  $(btn).siblings(".button").removeClass("primary");
+function showTable() {
+      $("#tableBlock").show();
+      $("#chart_div").hide();
+
+      $("#tableButton").addClass("active");
+      $("#chartButton").removeClass("active");
+      showSlider();
+}
+
+function showChart() {
+        $("#chart_div").show();
+        $("#tableBlock").hide();
+
+        $("#chartButton").addClass("active");
+        $("#tableButton").removeClass("active");
+        chart.draw(data, chart_options);
+        showSlider();
+}
+
+function showSlider () {
+  var changeSlider = function (data) {
+    from = data.from;
+    limit = moment(data.to, "X").diff(moment(data.from, "X"), 'days');
+    createDateStoreReport()
+  };
+  $("#range").ionRangeSlider({
+    type: 'double',
+    grid: true,
+    force_edges: true,
+    dragRange: false,
+    min: +moment().subtract(1, "months").format("X"),
+    max: +moment().format("X"),
+    from: +moment().subtract(1, "months").format("X"),
+    to: +moment().subtract(1, "months").add(6, "days").format("X"),
+    prettify: function (num) {
+      return moment(num, "X").format("Do MMMM");
+    },
+    onStart: changeSlider,
+    onChange: changeSlider,
+  });
 }
 
 function buildController() {
@@ -42,7 +66,7 @@ function updateAggregationView(v, slider) {
   var currentDisplayValue = $(controlDisplay).val();
   var updateDisplayValue = toHumanReadableDate(v)
   if (currentDisplayValue == updateDisplayValue) {
-    return ;
+    return;
   }
   $(controlDisplay).val(updateDisplayValue)
   var d = new Date(v);
@@ -66,3 +90,4 @@ function updateAggregationView(v, slider) {
     }
   });
 }
+
