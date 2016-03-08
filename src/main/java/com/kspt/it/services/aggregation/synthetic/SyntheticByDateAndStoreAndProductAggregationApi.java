@@ -47,6 +47,18 @@ public class SyntheticByDateAndStoreAndProductAggregationApi
     return generateCompactAggregationResultsList(storeId, productId, forecastHorizon);
   }
 
+  private List<CompactByDateAndStoreAndProductAggregation> generateCompactAggregationResultsList(
+      final int storeId, final int productId, final int sampleSize) {
+    return range(0, sampleSize)
+        .mapToObj(i -> LocalDate.now().plusDays(i))
+        .map(d -> new CompactByDateAndStoreAndProductAggregation(
+            d.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
+            storeId,
+            productId,
+            100 * Math.random()))
+        .collect(toList());
+  }
+
   @Override
   public List<CompactByDateAndStoreAndProductAggregation> aggregateUsingByStoreAndDate(
       final String aggregationFunction) {
@@ -78,25 +90,6 @@ public class SyntheticByDateAndStoreAndProductAggregationApi
       final String aggregationFunction) {
     final int sampleSize = 30;
     return generateCompactAggregationResultsList(storeId, productId, sampleSize);
-  }
-
-  @Override
-  public List<CompactByDateAndStoreAndProductAggregation> aggregateValues(
-      final int storeId,
-      final int productId,
-      final String aggregationFunction) {
-    final int sampleSize = 30;
-    return generateCompactAggregationResultsList(storeId, productId, sampleSize);
-  }  private List<CompactByDateAndStoreAndProductAggregation> generateCompactAggregationResultsList(
-      final int storeId, final int productId, final int sampleSize) {
-    return range(0, sampleSize)
-        .mapToObj(i -> LocalDate.now().plusDays(i))
-        .map(d -> new CompactByDateAndStoreAndProductAggregation(
-            d.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
-            storeId,
-            productId,
-            100 * Math.random()))
-        .collect(toList());
   }
 
   @Override
