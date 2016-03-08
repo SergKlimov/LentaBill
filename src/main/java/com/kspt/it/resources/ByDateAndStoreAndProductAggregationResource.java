@@ -9,11 +9,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
 @Path("/products/")
@@ -48,21 +48,70 @@ public class ByDateAndStoreAndProductAggregationResource {
   }
 
   @GET
-  @Path("/forecast/byStoreAndDate/{aggregationFunction}")
+  @Path("/{productId}/aggregate/value/byStoreAndDate/{aggregationFunction}")
   @ApiOperation(
       value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<CompactByDateAndStoreAndProductAggregationRepresentation> forecastAggregationByStoreAndDate(
+  public List<TimeDomainPoint> aggregateValues(
+      final @QueryParam("storeId") Integer storeId,
+      final @PathParam("productId") Integer productId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
-    final List<CompactByDateAndStoreAndProductAggregationRepresentation> list = service
-        .forecastForProductsByStoreAndDate(aggregationFunction)
+    final List<TimeDomainPoint> list = service
+        .aggregateValues(storeId, productId, aggregationFunction).stream()
+        .map(car -> new TimeDomainPoint(car.getOrigin(), car.getValue()))
+        .collect(toList());
+    return list;
+  }
+
+  @GET
+  @Path("/{productId}/aggregate/quantity/byStoreAndDate/{aggregationFunction}")
+  @ApiOperation(
+      value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
+      notes = "Available functions are: min, avg, max, sum, count.")
+  public List<TimeDomainPoint> aggregateQuantity(
+      final @QueryParam("storeId") Integer storeId,
+      final @PathParam("productId") Integer productId,
+      final @PathParam("aggregationFunction") String aggregationFunction) {
+    final List<TimeDomainPoint> list = service
+        .aggregateQuantity(storeId, productId, aggregationFunction).stream()
+        .map(car -> new TimeDomainPoint(car.getOrigin(), car.getValue()))
+        .collect(toList());
+    return list;
+  }
+
+
+
+  @GET
+  @Path("/{productId}/forecast/value/byStoreAndDate/{aggregationFunction}")
+  @ApiOperation(
+      value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
+      notes = "Available functions are: min, avg, max, sum, count.")
+  public List<TimeDomainPoint> forecastValues(
+      final @PathParam("productId") Integer productId,
+      final @QueryParam("storeId") Integer storeId,
+      final @PathParam("aggregationFunction") String aggregationFunction) {
+    final List<TimeDomainPoint> list = service
+        .forecastValues(storeId, productId, aggregationFunction)
         .stream()
-        .map(ar -> new CompactByDateAndStoreAndProductAggregationRepresentation(
-            ar.getOrigin(),
-            ar.getStoreId(),
-            ar.getProductId(),
-            ar.getValue())
-        ).collect(toList());
+        .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue()))
+        .collect(toList());
+    return list;
+  }
+
+  @GET
+  @Path("/{productId}/forecast/quantity/byStoreAndDate/{aggregationFunction}")
+  @ApiOperation(
+      value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
+      notes = "Available functions are: min, avg, max, sum, count.")
+  public List<TimeDomainPoint> forecastQuantity(
+      final @PathParam("productId") Integer productId,
+      final @QueryParam("storeId") Integer storeId,
+      final @PathParam("aggregationFunction") String aggregationFunction) {
+    final List<TimeDomainPoint> list = service
+        .forecastQuantity(storeId, productId, aggregationFunction)
+        .stream()
+        .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue()))
+        .collect(toList());
     return list;
   }
 }
@@ -123,32 +172,5 @@ class ByDateAndStoreAndProductAggregationRepresentation {
     this.maxProductQuantity = maxProductQuantity;
     this.allProductsQuantitySum = allProductsQuantitySum;
     this.itemsCount = itemsCount;
-  }
-}
-
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-class CompactByDateAndStoreAndProductAggregationRepresentation {
-  private Long timestamp;
-
-  private Integer storeId;
-
-  private Integer productId;
-
-  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-  private Double value;
-
-  public CompactByDateAndStoreAndProductAggregationRepresentation(
-      final Long timestamp,
-      final Integer storeId,
-      final Integer productId,
-      final Double value) {
-    this.timestamp = timestamp;
-    this.storeId = storeId;
-    this.productId = productId;
-    this.value = value;
-  }
-
-  public CompactByDateAndStoreAndProductAggregationRepresentation() {
   }
 }

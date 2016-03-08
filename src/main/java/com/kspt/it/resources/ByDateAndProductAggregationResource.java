@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
 @Path("/products/")
@@ -171,19 +170,3 @@ class ByDateAndProductAggregationRepresentation {
   }
 }
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-class TimeDomainPoint {
-  private Long ts;
-
-  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
-  private Double v;
-
-  public TimeDomainPoint(final Long ts, final Double v) {
-    this.ts = ts;
-    this.v = v;
-  }
-
-  public TimeDomainPoint() {
-  }
-}

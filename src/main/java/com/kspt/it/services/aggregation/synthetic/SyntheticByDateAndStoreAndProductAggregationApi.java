@@ -39,7 +39,7 @@ public class SyntheticByDateAndStoreAndProductAggregationApi
   }
 
   @Override
-  public List<CompactByDateAndStoreAndProductAggregation> forecastForProductsByStoreAndDate(
+  public List<CompactByDateAndStoreAndProductAggregation> forecastValues(
       final String aggregationFunction) {
     final int forecastHorizon = 15;
     return range(0, forecastHorizon)

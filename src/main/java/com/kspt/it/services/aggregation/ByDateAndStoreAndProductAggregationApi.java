@@ -6,9 +6,27 @@ public interface ByDateAndStoreAndProductAggregationApi {
 
   List<ByDateAndStoreAndProductAggregation> aggregateByStoreAndDateAndProduct();
 
-  List<CompactByDateAndStoreAndProductAggregation> forecastForProductsByStoreAndDate(final String aggregationFunction);
+  List<CompactByDateAndStoreAndProductAggregation> forecastValues(
+      final int storeId,
+      final int productId,
+      final String aggregationFunction);
 
   List<CompactByDateAndStoreAndProductAggregation> aggregateUsingByStoreAndDate(final String aggregationFunction);
+
+  List<CompactByDateAndStoreAndProductAggregation> forecastQuantity(
+      int storeId,
+      int productId,
+      String aggregationFunction);
+
+  List<CompactByDateAndStoreAndProductAggregation> aggregateValues(
+      final int storeId,
+      final int productId,
+      final String aggregationFunction);
+
+  List<CompactByDateAndStoreAndProductAggregation> aggregateQuantity(
+      int storeId,
+      int productId,
+      String aggregationFunction);
 
   class ByDateAndStoreAndProductAggregation {
 
