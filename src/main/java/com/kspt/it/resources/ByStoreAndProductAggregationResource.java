@@ -12,6 +12,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
@@ -52,7 +54,7 @@ public class ByStoreAndProductAggregationResource {
       value = "Aggregate value of a particular product aggregated by store using arbitrary "
           + "aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<CompactByStoreAndProductAggregationRepresentation> aggregateValues(
+  public CompactByStoreAndProductAggregationRepresentations aggregateValues(
       final @PathParam("productId") Integer productId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<CompactByStoreAndProductAggregationRepresentation> list = service
@@ -61,7 +63,7 @@ public class ByStoreAndProductAggregationResource {
             car.getStoreId(),
             car.getValue()))
         .collect(toList());
-    return list;
+    return new CompactByStoreAndProductAggregationRepresentations(list);
   }
 
   @GET
@@ -70,7 +72,7 @@ public class ByStoreAndProductAggregationResource {
       value = "Aggregate quantity of a particular product aggregated by store using arbitrary "
           + "aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<CompactByStoreAndProductAggregationRepresentation> aggregateQuantity(
+  public CompactByStoreAndProductAggregationRepresentations aggregateQuantity(
       final @PathParam("productId") Integer productId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<CompactByStoreAndProductAggregationRepresentation> list = service
@@ -79,7 +81,7 @@ public class ByStoreAndProductAggregationResource {
             car.getStoreId(),
             car.getValue()))
         .collect(toList());
-    return list;
+    return new CompactByStoreAndProductAggregationRepresentations(list);
   }
 }
 
@@ -138,12 +140,13 @@ class ByStoreAndProductAggregationRepresentation {
   }
 }
 
-@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 class CompactByStoreAndProductAggregationRepresentation {
 
+  @XmlElement(name = "sid")
   private Integer storeId;
 
+  @XmlElement(name = "v")
   @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
   private Double value;
 
@@ -155,5 +158,21 @@ class CompactByStoreAndProductAggregationRepresentation {
   }
 
   public CompactByStoreAndProductAggregationRepresentation() {
+  }
+}
+
+@XmlRootElement(name = "results")
+@XmlAccessorType(XmlAccessType.FIELD)
+class CompactByStoreAndProductAggregationRepresentations {
+  @XmlElement(name = "r")
+  @XmlElementWrapper(name = "list")
+  private List<CompactByStoreAndProductAggregationRepresentation> results;
+
+  public CompactByStoreAndProductAggregationRepresentations(
+      final List<CompactByStoreAndProductAggregationRepresentation> results) {
+    this.results = results;
+  }
+
+  public CompactByStoreAndProductAggregationRepresentations() {
   }
 }
