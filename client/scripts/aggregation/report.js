@@ -42,20 +42,16 @@ function fetchAggregationXML(url, callback) {
     });
 }
 
-function drawPlot(dataList) {
+function drawPlot(table, plotName) {
     data = new google.visualization.DataTable();
 
     data.addColumn('date', 'Date');
-    data.addColumn('number', 'Check value');
-
-    var dataForStore = $(dataList).filter(function () {
-        return Number($(this).find("storeId").text()) == 0;
+    plotName.forEach(function(val, i) {
+        data.addColumn('number', plotName[i]);
     });
 
-    dataForStore.each(function () {
-        var timestamp = Number($(this).find("timestamp").text());
-        var value = Number($(this).find("minCheckValue").text());
-        data.addRow([new Date(timestamp), value])
+    table.forEach(function (value) {
+        data.addRow(value)
     });
 
     chart.draw(data, chart_options);
@@ -64,10 +60,10 @@ function drawPlot(dataList) {
 function createDateStoreReport() {
     fetchAggregationXML(address + "/api/checks/aggregation/byDateAndStore", function (d) {
         var fullDataSet = $(d).find("checksAggregationResultRepresentation");
-        prepareDataByDateStore(fullDataSet, "minCheckValue", [0, 1, 2, 3]);
+        var data = prepareDataByDateStore(fullDataSet, "minCheckValue", [0, 1, 2, 3]);
         var reportContent = buildChecksAggregationViews(fullDataSet);
         $("#reportTable").html(reportContent);
-        drawPlot(fullDataSet);
+        drawPlot(data, ["0", "1", "2", "3"]);
     });
 }
 
@@ -86,7 +82,9 @@ function prepareDataByDateStore(dataList, value, stores) {
     var rawTs = $(dataList).map(function() {
         return Number($(this).find("timestamp").text())
     });
-    var timestamps = $.unique(rawTs);
+    var timestamps = $.unique(rawTs).map(function() {
+        new Date(this)
+    });
 
     var list = stores.map(function (store) {
         var dataByStore = $(dataList).filter(function () {
