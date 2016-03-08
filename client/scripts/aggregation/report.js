@@ -83,7 +83,7 @@ function prepareDataByDateStore(dataList, value, stores) {
         return Number($(this).find("timestamp").text())
     });
     var timestamps = $.unique(rawTs).map(function() {
-        new Date(this)
+        return new Date(this)
     });
 
     var list = stores.map(function (store) {
