@@ -21,10 +21,10 @@ public class ChecksMetaDAO {
         + "date_dimensions";
     final RawSql sql = RawSqlBuilder.parse(query).create();
     System.out.println("sql: "+sql.toString());
-    //return ebean.find(CheckOriginEntry.class)
-        //.setRawSql(sql)
-        //.findUnique();
-    return new CheckOriginEntry(new Long(1456790422));
+    return ebean.find(CheckOriginEntry.class)
+        .setRawSql(sql)
+        .findUnique();
+    //return new CheckOriginEntry(new Long(1456790422));
   }
 
   public CheckOriginEntry getLastCheckOrigin() {
@@ -33,9 +33,9 @@ public class ChecksMetaDAO {
         + "FROM "
         + "date_dimensions";
     final RawSql sql = RawSqlBuilder.parse(query).create();
-    //return ebean.find(CheckOriginEntry.class)
-        //.setRawSql(sql)
-        //.findUnique();
-    return new CheckOriginEntry(new Long(1459468508));
+    return ebean.find(CheckOriginEntry.class)
+        .setRawSql(sql)
+        .findUnique();
+    //return new CheckOriginEntry(new Long(1459468508));
   }
 }
