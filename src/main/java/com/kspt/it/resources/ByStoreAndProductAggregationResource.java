@@ -3,8 +3,6 @@ package com.kspt.it.resources;
 import com.kspt.it.services.aggregation.ByStoreAndProductAggregationApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import static java.util.stream.Collectors.toList;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -29,10 +27,6 @@ public class ByStoreAndProductAggregationResource {
   @GET
   @Path("/aggregation/byStore")
   @ApiOperation(value = "Aggregate products info by sore", notes = "Anything Else?")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "OK"),
-      @ApiResponse(code = 500, message = "Something wrong in Server")
-  })
   public List<ByStoreAndProductAggregationRepresentation> aggregateByStore() {
     final List<ByStoreAndProductAggregationRepresentation> list = service
         .aggregateByStoreAndProduct().stream()
@@ -55,8 +49,8 @@ public class ByStoreAndProductAggregationResource {
   @GET
   @Path("/{productId}/aggregate/value/byStore/{aggregationFunction}")
   @ApiOperation(
-      value = "Aggregate value of a particular product within a particular store aggregated by "
-          + "date using arbitrary aggregation function.",
+      value = "Aggregate value of a particular product aggregated by store using arbitrary "
+          + "aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
   public List<CompactByStoreAndProductAggregationRepresentation> aggregateValues(
       final @PathParam("productId") Integer productId,
@@ -73,8 +67,8 @@ public class ByStoreAndProductAggregationResource {
   @GET
   @Path("/{productId}/aggregate/quantity/byStore/{aggregationFunction}")
   @ApiOperation(
-      value = "Aggregate quantity of a particular product within a particular store aggregated by "
-          + "date using arbitrary aggregation function.",
+      value = "Aggregate quantity of a particular product aggregated by store using arbitrary "
+          + "aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
   public List<CompactByStoreAndProductAggregationRepresentation> aggregateQuantity(
       final @PathParam("productId") Integer productId,
