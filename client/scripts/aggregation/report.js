@@ -7,10 +7,14 @@ function createReport() {
   var byStore = $("#byStore");
   var byProduct = $("#byProduct");
 
+  if (isChecked(byDate)) {
+      chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+  } else {
+      chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+  }
   if (isChecked(byProduct)) {
       $("#products").show();
   }
-  
   if (isChecked(byDate) && isChecked(byStore)) {
     createDateStoreReport();
   } else {
@@ -38,22 +42,20 @@ function fetchAggregationXML(url, callback) {
 }
 
 function drawPlot(dataList) {
-        data = new google.visualization.DataTable();
+    data = new google.visualization.DataTable();
 
-        data.addColumn('date', 'Date');
-        data.addColumn('number', 'Check value');
+    data.addColumn('date', 'Date');
+    data.addColumn('number', 'Check value');
+    var dataForStore = $(dataList).filter(function () {
+        return Number($(this).find("storeId").text()) == 0;
+    });
 
-        var dataForStore = $(dataList).filter(function() {
-            return Number($(this).find("storeId").text()) == 0;
-        });
-
-        dataForStore.each(function() {
-            var timestamp = Number($(this).find("timestamp").text());
-            var value = Number($(this).find("minCheckValue").text());
-            data.addRow([new Date(timestamp), value])
-        });
-
-        chart.draw(data, chart_options);
+    dataForStore.each(function () {
+        var timestamp = Number($(this).find("timestamp").text());
+        var value = Number($(this).find("minCheckValue").text());
+        data.addRow([new Date(timestamp), value])
+    });
+    chart.draw(data, chart_options);
 }
 
 function createDateStoreReport() {
@@ -62,8 +64,6 @@ function createDateStoreReport() {
         var reportContent = buildChecksAggregationViews(fullDataSet);
         $("#reportTable").html(reportContent);
         drawPlot(fullDataSet);
-
-        $("#ex2").slider({});
     });
 }
 
