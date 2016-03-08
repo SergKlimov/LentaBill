@@ -13,6 +13,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
@@ -51,7 +53,7 @@ public class ByDateAndStoreAggregationResource {
   @ApiOperation(
       value = "Aggregate checks info by date and sore using arbitrary function as a parameter.",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<CompactByDateAndStoreAggregationRepresentation> aggregateByDateAndStore(
+  public CompactByDateAndStoreAggregationRepresentations aggregateByDateAndStore(
       final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<CompactByDateAndStoreAggregationRepresentation> list = service
         .aggregateOneValueStatistic(aggregationFunction)
@@ -61,7 +63,7 @@ public class ByDateAndStoreAggregationResource {
             ar.getStoreId(),
             ar.getValue())
         ).collect(toList());
-    return list;
+    return new CompactByDateAndStoreAggregationRepresentations(list);
   }
 
   @GET
@@ -69,7 +71,7 @@ public class ByDateAndStoreAggregationResource {
   @ApiOperation(
       value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<CompactByDateAndStoreAggregationRepresentation> forecastAggregationByDateAndStore(
+  public CompactByDateAndStoreAggregationRepresentations forecastAggregationByDateAndStore(
       final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<CompactByDateAndStoreAggregationRepresentation> list = service
         .forecastOneValueStatistic(aggregationFunction)
@@ -79,17 +81,19 @@ public class ByDateAndStoreAggregationResource {
             ar.getStoreId(),
             ar.getValue())
         ).collect(toList());
-    return list;
+    return new CompactByDateAndStoreAggregationRepresentations(list);
   }
 }
 
-@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 class CompactByDateAndStoreAggregationRepresentation {
+  @XmlElement(name = "ts")
   private Long timestamp;
 
+  @XmlElement(name = "sid")
   private Integer storeId;
 
+  @XmlElement(name = "v")
   @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
   private Double value;
 
@@ -103,6 +107,22 @@ class CompactByDateAndStoreAggregationRepresentation {
   }
 
   public CompactByDateAndStoreAggregationRepresentation() {
+  }
+}
+
+@XmlRootElement(name = "results")
+@XmlAccessorType(XmlAccessType.FIELD)
+class CompactByDateAndStoreAggregationRepresentations {
+  @XmlElement(name = "r")
+  @XmlElementWrapper(name = "list")
+  private List<CompactByDateAndStoreAggregationRepresentation> results;
+
+  public CompactByDateAndStoreAggregationRepresentations(
+      final List<CompactByDateAndStoreAggregationRepresentation> results) {
+    this.results = results;
+  }
+
+  public CompactByDateAndStoreAggregationRepresentations() {
   }
 }
 

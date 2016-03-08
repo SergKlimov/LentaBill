@@ -32,7 +32,7 @@ class TimeDomainPoint {
 class TimeDomainPoints {
 
   @XmlElement(name = "p")
-  @XmlElementWrapper(name = "ps")
+  @XmlElementWrapper(name = "list")
   private List<TimeDomainPoint> points;
 
   public TimeDomainPoints(final List<TimeDomainPoint> points) {
