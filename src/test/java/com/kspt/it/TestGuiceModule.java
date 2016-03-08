@@ -2,6 +2,7 @@ package com.kspt.it;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
+import com.avaje.ebean.RawSqlBuilder;
 import com.avaje.ebean.config.DataSourceConfig;
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.config.dbplatform.H2Platform;
@@ -24,6 +25,7 @@ import org.junit.Before;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -36,7 +38,28 @@ public class TestGuiceModule extends AbstractModule {
   private EbeanServer ebean;
 
   public TestGuiceModule() {
-    this.ebean = provideFakeEbeanServer();
+    this.ebean = ProvideRealMySqlEbeanServer();
+    //read products from db
+    /*List<ProductEntry> peList = new ArrayList<>();
+    peList.addAll(ebean.find(ProductEntry.class).setRawSql(RawSqlBuilder.parse("SELECT "
+            + "products.id AS id, "
+            + "products.name AS name, "
+            + "products.value AS value FROM products"
+    ).create()).findList());
+    for(ProductEntry pe : peList){
+      System.out.println("product " + pe.getId().toString() + " : " + pe.getName() + " value: " + pe.getValue());
+    }*/
+
+    List<StoreEntry> seList = new ArrayList<>();
+    seList.addAll(ebean.find(StoreEntry.class).setRawSql(RawSqlBuilder.parse("SELECT "
+            + "stores.id AS id, "
+            + "stores.alias AS alias "
+            + "FROM products"
+    ).create()).findList());
+    for(StoreEntry se : seList){
+      System.out.println("product " + se.getId().toString() + " : " + se.getAlias());
+    }
+
     /*createSupplierDimensions();
     createProducts();
     createChecks();
@@ -168,7 +191,34 @@ public class TestGuiceModule extends AbstractModule {
                     ).stream()
             ).forEach(ebean::save);
   }
+  @Provides
+  @Singleton
+  static EbeanServer ProvideRealMySqlEbeanServer() {
+    final String databaseName = "adler1_lenta2";
+    final ServerConfig config = new ServerConfig();
+    config.setName(databaseName);
+    // Define DataSource parameters
+    DataSourceConfig h2DataSourceConfig = new DataSourceConfig();
+    h2DataSourceConfig.setDriver("com.mysql.jdbc.Driver");
+    h2DataSourceConfig.setUsername("adler1_lenta2");
+    h2DataSourceConfig.setPassword("lenta2pass");
+    h2DataSourceConfig.setUrl(String.format("jdbc:mysql://jacket.beget.ru:3306/%s", databaseName));
 
+    System.out.println(String.format("server url: jdbc:mysql://jacket.beget.ru:3306/%s", databaseName));
+
+    config.setDataSourceConfig(h2DataSourceConfig);
+    // specify a JNDI DataSource
+    // config.setDataSourceJndiName("someJndiDataSourceName");
+    // set DDL options...
+    config.setDdlGenerate(false);
+    config.setDdlRun(false);
+    config.setDefaultServer(false);
+    config.setRegister(false);
+    // create the EbeanServer instance
+    final EbeanServer ebeanServer = EbeanServerFactory.create(config);
+    return ebeanServer;
+  }
+/*
   @Provides
   @Singleton
   public EbeanServer provideFakeEbeanServer() {
@@ -203,13 +253,13 @@ public class TestGuiceModule extends AbstractModule {
     ebeanServer.getServerCacheManager().clearAll();
     return ebeanServer;
   }
-
+*/
   @Override
   protected void configure() {
-    createSupplierDimensions();
+    /*createSupplierDimensions();
     createProducts();
     createChecks();
     createDateDimensions();
-    createFacts();
+    createFacts();*/
   }
 }
