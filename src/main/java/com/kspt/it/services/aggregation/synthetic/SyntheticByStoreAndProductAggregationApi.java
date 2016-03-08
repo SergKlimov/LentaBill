@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class SyntheticByStoreAndProductAggregationApi implements ByStoreAndProductAggregationApi {
 
@@ -35,12 +36,22 @@ public class SyntheticByStoreAndProductAggregationApi implements ByStoreAndProdu
 
   @Override
   public List<CompactByStoreAndProductAggregation> aggregateValues(
-      String aggregationFunction) {
-    return range(0, storesCount)
-        .boxed()
-        .flatMap(s -> range(0, productsCount).mapToObj(p -> new Tuple2<>(s, p)))
-        .map(t2 -> new CompactByStoreAndProductAggregation(t2._1, t2._2, 100 * Math.random()))
+      final int productId,
+      final String aggregationFunction) {
+    return generateCompactAggregationResult(productId);
+  }
+
+  private List<CompactByStoreAndProductAggregation> generateCompactAggregationResult(
+      final int productId) {
+    return IntStream.range(0, storesCount)
+        .mapToObj(s -> new CompactByStoreAndProductAggregation(s, productId, 100 * Math.random()))
         .collect(toList());
+  }
+
+  @Override
+  public List<CompactByStoreAndProductAggregation> aggregateQuantity(final int productId,
+      final String aggregationFunction) {
+    return generateCompactAggregationResult(productId);
   }
 
   @NotNull
