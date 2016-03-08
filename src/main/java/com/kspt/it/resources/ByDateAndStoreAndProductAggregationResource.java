@@ -26,7 +26,8 @@ public class ByDateAndStoreAndProductAggregationResource {
 
   @GET
   @Path("/aggregation/byDateAndStore")
-  @ApiOperation(value = "Aggregate products info by date and sore")
+  @ApiOperation(value = "Calculate all statistics aggregated by date and store and product for "
+      + "all products at once.")
   public List<ByDateAndStoreAndProductAggregationRepresentation> aggregateByDateAndStore() {
     final List<ByDateAndStoreAndProductAggregationRepresentation> list = service
         .aggregateByStoreAndDateAndProduct().stream()
@@ -50,7 +51,8 @@ public class ByDateAndStoreAndProductAggregationResource {
   @GET
   @Path("/{productId}/aggregate/value/byStoreAndDate/{aggregationFunction}")
   @ApiOperation(
-      value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
+      value = "Aggregate value of a particular product within a particular store aggregated by "
+          + "date using arbitrary aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
   public List<TimeDomainPoint> aggregateValues(
       final @QueryParam("storeId") Integer storeId,
@@ -66,7 +68,8 @@ public class ByDateAndStoreAndProductAggregationResource {
   @GET
   @Path("/{productId}/aggregate/quantity/byStoreAndDate/{aggregationFunction}")
   @ApiOperation(
-      value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
+      value = "Aggregate quantity of a particular product within a particular store aggregated by "
+          + "date using arbitrary aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
   public List<TimeDomainPoint> aggregateQuantity(
       final @QueryParam("storeId") Integer storeId,
@@ -79,12 +82,11 @@ public class ByDateAndStoreAndProductAggregationResource {
     return list;
   }
 
-
-
   @GET
   @Path("/{productId}/forecast/value/byStoreAndDate/{aggregationFunction}")
   @ApiOperation(
-      value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
+      value = "Forecast value of a particular product within a particular store aggregated by "
+          + "date using arbitrary aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
   public List<TimeDomainPoint> forecastValues(
       final @PathParam("productId") Integer productId,
@@ -101,7 +103,8 @@ public class ByDateAndStoreAndProductAggregationResource {
   @GET
   @Path("/{productId}/forecast/quantity/byStoreAndDate/{aggregationFunction}")
   @ApiOperation(
-      value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
+      value = "Aggregate quantity of a particular product within a particular store aggregated by "
+          + "date using arbitrary aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
   public List<TimeDomainPoint> forecastQuantity(
       final @PathParam("productId") Integer productId,

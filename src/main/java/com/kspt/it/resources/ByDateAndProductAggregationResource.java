@@ -26,7 +26,8 @@ public class ByDateAndProductAggregationResource {
 
   @GET
   @Path("/aggregation/byDate")
-  @ApiOperation(value = "Calculate all statistics by date and product for all products at once.")
+  @ApiOperation(value = "Calculate all statistics aggregated by date and product for all products "
+      + "at once.")
   public List<ByDateAndProductAggregationRepresentation> aggregateByDate() {
     final List<ByDateAndProductAggregationRepresentation> list = service
         .aggregateByDateAndProduct().stream()
