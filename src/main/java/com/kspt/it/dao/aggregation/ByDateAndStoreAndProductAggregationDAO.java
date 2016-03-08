@@ -17,7 +17,7 @@ public class ByDateAndStoreAndProductAggregationDAO {
     this.ebean = ebean;
   }
 
-  public List<ByDateAndStoreAndProductAggregationEntry> aggregateByStoreAndDateAndProduct() {
+  public List<ByDateAndStoreAndProductAggregationEntry> aggregateAllStatisticAtOnce() {
     final String query = "SELECT "
         + "date_dimensions.year AS year, "
         + "date_dimensions.month AS month, "
@@ -51,18 +51,20 @@ public class ByDateAndStoreAndProductAggregationDAO {
         .findList();
   }
 
-  public List<CompactByDateAndStoreAndProductAggregationEntry> aggregateValueByDateAndStoreUsing(
+  public List<CompactByDateAndStoreAndProductAggregationEntry>
+  aggregateOneValueStatisticForStoreAndProduct(
       final int storeId,
       final int productId,
       final String aggregationFunction) {
-    return aggregateByDateAndStoreUsing(
+    return aggregateOneStatisticForStoreAndProduct(
         storeId,
         productId,
         aggregationFunction,
         "product_facts.value * product_facts.quantity");
   }
 
-  private List<CompactByDateAndStoreAndProductAggregationEntry> aggregateByDateAndStoreUsing(
+  private List<CompactByDateAndStoreAndProductAggregationEntry>
+  aggregateOneStatisticForStoreAndProduct(
       final int storeId,
       final int productId,
       final String aggregationFunction,
@@ -92,11 +94,12 @@ public class ByDateAndStoreAndProductAggregationDAO {
         .findList();
   }
 
-  public List<CompactByDateAndStoreAndProductAggregationEntry> aggregateQuantityByDateAndStoreUsing(
+  public List<CompactByDateAndStoreAndProductAggregationEntry>
+  aggregateOneQuantityStatisticForStoreAndProduct(
       final int storeId,
       final int productId,
       final String aggregationFunction) {
-    return aggregateByDateAndStoreUsing(
+    return aggregateOneStatisticForStoreAndProduct(
         storeId,
         productId,
         aggregationFunction,

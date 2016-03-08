@@ -15,7 +15,7 @@ public class ByStoreAndProductAggregationService implements ByStoreAndProductAgg
 
   @Override
   public List<ByStoreAndProductAggregation> aggregateByStoreAndProduct() {
-    return dao.aggregateByStoreAndProduct().stream()
+    return dao.aggregateAllStatisticsAtOnce().stream()
         .map(are -> new ByStoreAndProductAggregation(
             are.getStoreId(),
             are.getProductId(),
@@ -35,7 +35,7 @@ public class ByStoreAndProductAggregationService implements ByStoreAndProductAgg
   public List<CompactByStoreAndProductAggregation> aggregateValues(
       final int productId,
       final String aggregationFunction) {
-    return dao.aggregateValues(productId, aggregationFunction).stream()
+    return dao.aggregateOneValueStatisticForProduct(productId, aggregationFunction).stream()
         .map(care -> new CompactByStoreAndProductAggregation(
             care.getStoreId(),
             care.getProductId(),
@@ -47,7 +47,7 @@ public class ByStoreAndProductAggregationService implements ByStoreAndProductAgg
   public List<CompactByStoreAndProductAggregation> aggregateQuantity(
       final int productId,
       final String aggregationFunction) {
-    return dao.aggregateQuantity(productId, aggregationFunction).stream()
+    return dao.aggregateOneQuantityStatisticForProduct(productId, aggregationFunction).stream()
         .map(care -> new CompactByStoreAndProductAggregation(
             care.getStoreId(),
             care.getProductId(),

@@ -60,7 +60,7 @@ public class ByDateAndStoreAggregationDAO {
         + "as_millisecond < " + (since + TimeUnit.DAYS.toMillis(limit));
   }
 
-  public List<CompactByDateAndStoreAggregationEntry> aggregateUsing(
+  public List<CompactByDateAndStoreAggregationEntry> aggregateOneValueStatistic(
       final String aggregationFunction) {
     final String aggregationFunctionArgument =
         aggregationFunction.equalsIgnoreCase("count") ? "*" : "check_facts.value";

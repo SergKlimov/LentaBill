@@ -17,7 +17,7 @@ public class ByDateAndProductAggregationDAO {
     this.ebean = ebean;
   }
 
-  public List<ByDateAndProductAggregationEntry> aggregateByDateAndProduct() {
+  public List<ByDateAndProductAggregationEntry> aggregateAllStatisticsAtOnce() {
     final String query = "SELECT "
         + "date_dimensions.year AS year, "
         + "date_dimensions.month AS month, "
@@ -47,16 +47,16 @@ public class ByDateAndProductAggregationDAO {
         .findList();
   }
 
-  public List<CompactByDateAndProductAggregationEntry> aggregateValueByDateUsing(
+  public List<CompactByDateAndProductAggregationEntry> aggregateOneValueStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
-    return aggregateByDateUsing(
+    return aggregateOneStatisticForProduct(
         productId,
         aggregationFunction,
         "product_facts.value * product_facts.quantity");
   }
 
-  private List<CompactByDateAndProductAggregationEntry> aggregateByDateUsing(
+  private List<CompactByDateAndProductAggregationEntry> aggregateOneStatisticForProduct(
       final int productId,
       final String aggregationFunction,
       final String aggregationSubject) {
@@ -81,10 +81,10 @@ public class ByDateAndProductAggregationDAO {
         .findList();
   }
 
-  public List<CompactByDateAndProductAggregationEntry> aggregateQuantityByDateUsing(
+  public List<CompactByDateAndProductAggregationEntry> aggregateOneQuantityStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
-    return aggregateByDateUsing(productId, aggregationFunction, "product_facts.quantity");
+    return aggregateOneStatisticForProduct(productId, aggregationFunction, "product_facts.quantity");
   }
 
   @Entity

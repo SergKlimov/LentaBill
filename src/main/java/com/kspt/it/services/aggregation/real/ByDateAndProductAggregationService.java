@@ -23,7 +23,7 @@ public class ByDateAndProductAggregationService implements ByDateAndProductAggre
 
   @Override
   public List<ByDateAndProductAggregation> aggregateByDateAndProduct() {
-    return dao.aggregateByDateAndProduct().stream()
+    return dao.aggregateAllStatisticsAtOnce().stream()
         .map(are -> new ByDateAndProductAggregation(
             LocalDate.of(are.getYear(), are.getMonth(), are.getDay())
                 .atStartOfDay()
@@ -89,7 +89,7 @@ public class ByDateAndProductAggregationService implements ByDateAndProductAggre
   public List<CompactByDateAndProductAggregation> aggregateValues(
       final int productId,
       final String aggregationFunction) {
-    return dao.aggregateValueByDateUsing(productId, aggregationFunction).stream()
+    return dao.aggregateOneValueStatisticForProduct(productId, aggregationFunction).stream()
         .map(care -> new CompactByDateAndProductAggregation(
             LocalDate.of(care.getYear(), care.getMonth(), care.getDay())
                 .atStartOfDay()
@@ -111,7 +111,7 @@ public class ByDateAndProductAggregationService implements ByDateAndProductAggre
   public List<CompactByDateAndProductAggregation> aggregateQuantityUsing(
       final int productId,
       final String aggregationFunction) {
-    return dao.aggregateQuantityByDateUsing(productId, aggregationFunction).stream()
+    return dao.aggregateOneQuantityStatisticForProduct(productId, aggregationFunction).stream()
         .map(care -> new CompactByDateAndProductAggregation(
             LocalDate.of(care.getYear(), care.getMonth(), care.getDay())
                 .atStartOfDay()

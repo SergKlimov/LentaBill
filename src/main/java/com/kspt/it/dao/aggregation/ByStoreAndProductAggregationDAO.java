@@ -17,7 +17,7 @@ public class ByStoreAndProductAggregationDAO {
     this.ebean = ebean;
   }
 
-  public List<ByStoreAndProductAggregationEntry> aggregateByStoreAndProduct() {
+  public List<ByStoreAndProductAggregationEntry> aggregateAllStatisticsAtOnce() {
     final String query = "SELECT "
         + "supplier_dimensions.store_id AS storeId, "
         + "product_facts.product_id AS productId, "
@@ -43,16 +43,16 @@ public class ByStoreAndProductAggregationDAO {
         .findList();
   }
 
-  public List<CompactByStoreAndProductAggregationEntry> aggregateValues(
+  public List<CompactByStoreAndProductAggregationEntry> aggregateOneValueStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
-    return aggregateByStoreUsing(
+    return aggregateOneStatisticForProduct(
         productId,
         aggregationFunction,
         "product_facts.value * product_facts.quantity");
   }
 
-  private List<CompactByStoreAndProductAggregationEntry> aggregateByStoreUsing(
+  private List<CompactByStoreAndProductAggregationEntry> aggregateOneStatisticForProduct(
       final int productId,
       final String aggregationFunction,
       final String aggregationSubject) {
@@ -73,10 +73,10 @@ public class ByStoreAndProductAggregationDAO {
         .findList();
   }
 
-  public List<CompactByStoreAndProductAggregationEntry> aggregateQuantity(
+  public List<CompactByStoreAndProductAggregationEntry> aggregateOneQuantityStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
-    return aggregateByStoreUsing(productId, aggregationFunction, "product_facts.quantity");
+    return aggregateOneStatisticForProduct(productId, aggregationFunction, "product_facts.quantity");
   }
 
   @Entity
