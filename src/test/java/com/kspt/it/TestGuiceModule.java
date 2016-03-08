@@ -54,7 +54,7 @@ public class TestGuiceModule extends AbstractModule {
     seList.addAll(ebean.find(StoreEntry.class).setRawSql(RawSqlBuilder.parse("SELECT "
             + "stores.id AS id, "
             + "stores.alias AS alias "
-            + "FROM products"
+            + "FROM stores"
     ).create()).findList());
     for(StoreEntry se : seList){
       System.out.println("product " + se.getId().toString() + " : " + se.getAlias());
