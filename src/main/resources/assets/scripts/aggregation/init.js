@@ -22,6 +22,21 @@ $(document).ready(function () {
 
 $(document).ready(function() {
     $("#createReportButton").click(reportButtonPressed);
+    fetchStoreList();
 });
 
 var reportType = "minCheckValue";
+var stores;
+var storeIds;
+
+function fetchStoreList() {
+    fetchXML("http://localhost:8080/api/meta/storesMeta", {}, function(d) {
+        var records = $(d).find("storeMetaRepresentation");
+        stores = $(records).map(function() {
+            return $(this).find("name").text();
+        });
+        storeIds = $(records).map(function() {
+            return Number($(this).find("id").text());
+        });
+    });
+}

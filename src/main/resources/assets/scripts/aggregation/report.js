@@ -32,12 +32,12 @@ function buildChecksAggregationViews(dataList) {
     return buildTable(dataList, reportType);
 }
 
-function fetchAggregationXML(url, callback) {
+function fetchXML(url, params, callback) {
     $.ajax({
         url: url,
         method: "GET",
         contentType: "application/xml",
-        data: {since: from, limit: limit},
+        data: params,
         success: callback
     });
 }
@@ -46,8 +46,8 @@ function drawPlot(table, plotName) {
     data = new google.visualization.DataTable();
 
     data.addColumn('date', 'Date');
-    plotName.forEach(function(val, i) {
-        data.addColumn('number', plotName[i]);
+    plotName.each(function() {
+        data.addColumn('number', this);
     });
 
     table.forEach(function (value) {
@@ -58,17 +58,19 @@ function drawPlot(table, plotName) {
 }
 
 function createDateStoreReport() {
-    fetchAggregationXML(address + "/api/checks/aggregation/byDateAndStore", function (d) {
+    fetchXML(address + "/api/checks/aggregation/byDateAndStore", {since: from, limit: limit}, function (d) {
         var fullDataSet = $(d).find("checksAggregationResultRepresentation");
-        var data = prepareDataByDateStore(fullDataSet, "minCheckValue", [0, 1, 2, 3]);
+        var data = prepareDataByDateStore(fullDataSet, "minCheckValue", storeIds.toArray());
         var reportContent = buildChecksAggregationViews(fullDataSet);
         $("#reportTable").html(reportContent);
-        drawPlot(data, ["0", "1", "2", "3"]);
+
+        var st = stores;
+        drawPlot(data, stores);
     });
 }
 
 function createDateProductReport() {
-    fetchAggregationXML(address + "/api/products/aggregation/byDateAndStore", function (d) {
+    fetchXML(address + "/api/products/aggregation/byDateAndStore", {}, function (d) {
         var fullDataSet = $(this).find("productsAggregationByStoreAndDateResultRepresentation");
         var reportContent = buildChecksAggregationViews(fullDataSet);
         $("#reportTable").html(reportContent);
