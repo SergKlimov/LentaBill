@@ -4,6 +4,7 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 import com.avaje.ebean.annotation.Sql;
+import static java.lang.String.format;
 import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import javax.persistence.Entity;
@@ -62,14 +63,14 @@ public class ByDateAndStoreAggregationDAO {
 
   public List<CompactByDateAndStoreAggregationEntry> aggregateOneValueStatistic(
       final String aggregationFunction) {
-    final String aggregationFunctionArgument =
+    final String aggregationSubject =
         aggregationFunction.equalsIgnoreCase("count") ? "*" : "check_facts.value";
     final String query = "SELECT "
         + "dates.year AS year, "
         + "dates.month AS month, "
         + "dates.day AS day, "
         + "supplier_dimensions.store_id AS storeId, "
-        + aggregationFunction + "(" + aggregationFunctionArgument + ") AS value "
+        + format("%s(%s) AS value ", aggregationFunction, aggregationSubject)
         + "FROM "
         + "check_facts "
         + "JOIN supplier_dimensions "

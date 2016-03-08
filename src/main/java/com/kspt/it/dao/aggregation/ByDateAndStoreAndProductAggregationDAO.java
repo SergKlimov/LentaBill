@@ -4,6 +4,7 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 import com.avaje.ebean.annotation.Sql;
+import static java.lang.String.format;
 import javax.inject.Inject;
 import javax.persistence.Entity;
 import java.util.List;
@@ -56,11 +57,13 @@ public class ByDateAndStoreAndProductAggregationDAO {
       final int storeId,
       final int productId,
       final String aggregationFunction) {
+    final String aggregationSubject = aggregationFunction.equalsIgnoreCase("count") ?
+        "*" : "product_facts.value * product_facts.quantity";
     return aggregateOneStatisticForStoreAndProduct(
         storeId,
         productId,
         aggregationFunction,
-        "product_facts.value * product_facts.quantity");
+        aggregationSubject);
   }
 
   private List<CompactByDateAndStoreAndProductAggregationEntry>
@@ -75,7 +78,7 @@ public class ByDateAndStoreAndProductAggregationDAO {
         + "date_dimensions.day AS day, "
         + "supplier_dimensions.store_id AS storeId, "
         + "product_facts.product_id AS productId, "
-        + aggregationFunction + "(" + aggregationSubject + ") AS value "
+        + format("%s(%s) AS value ", aggregationFunction, aggregationSubject)
         + "FROM "
         + "(SELECT * FROM product_facts WHERE product_id = " + productId + ") "
         + "RIGHT JOIN (SELECT * FROM supplier_dimensions WHERE store_id = " + storeId + ") "
@@ -99,11 +102,13 @@ public class ByDateAndStoreAndProductAggregationDAO {
       final int storeId,
       final int productId,
       final String aggregationFunction) {
+    final String aggregationSubject = aggregationFunction.equalsIgnoreCase("count") ?
+        "*" : "product_facts.quantity";
     return aggregateOneStatisticForStoreAndProduct(
         storeId,
         productId,
         aggregationFunction,
-        "product_facts.quantity");
+        aggregationSubject);
   }
 
   @Entity

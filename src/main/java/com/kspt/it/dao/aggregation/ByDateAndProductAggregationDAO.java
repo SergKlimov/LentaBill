@@ -4,6 +4,7 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 import com.avaje.ebean.annotation.Sql;
+import static java.lang.String.format;
 import javax.inject.Inject;
 import javax.persistence.Entity;
 import java.util.List;
@@ -50,10 +51,9 @@ public class ByDateAndProductAggregationDAO {
   public List<CompactByDateAndProductAggregationEntry> aggregateOneValueStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
-    return aggregateOneStatisticForProduct(
-        productId,
-        aggregationFunction,
-        "product_facts.value * product_facts.quantity");
+    final String aggregationSubject = aggregationFunction.equalsIgnoreCase("count") ?
+        "*" : "product_facts.value * product_facts.quantity";
+    return aggregateOneStatisticForProduct(productId, aggregationFunction, aggregationSubject);
   }
 
   private List<CompactByDateAndProductAggregationEntry> aggregateOneStatisticForProduct(
@@ -65,7 +65,7 @@ public class ByDateAndProductAggregationDAO {
         + "date_dimensions.month AS month, "
         + "date_dimensions.day AS day, "
         + "product_facts.product_id AS productId, "
-        + aggregationFunction + "(" + aggregationSubject + ") AS value "
+        + format("%s(%s) AS value ", aggregationFunction, aggregationSubject)
         + "FROM "
         + "(SELECT * FROM product_facts WHERE product_facts.id = " + productId + ") "
         + "LEFT JOIN date_dimensions "
@@ -84,7 +84,9 @@ public class ByDateAndProductAggregationDAO {
   public List<CompactByDateAndProductAggregationEntry> aggregateOneQuantityStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
-    return aggregateOneStatisticForProduct(productId, aggregationFunction, "product_facts.quantity");
+    final String aggregationSubject = aggregationFunction.equalsIgnoreCase("count") ?
+        "*" : "product_facts.quantity";
+    return aggregateOneStatisticForProduct(productId, aggregationFunction, aggregationSubject);
   }
 
   @Entity
