@@ -1,4 +1,4 @@
-var from = 0, limit = 0;
+var from = 0, limit = 0, fromForec = 0, limitForec = 0;
 function buildSwitcher() {
   var tableViewIndicator = "<button class=\"button primary\" onclick=\"switchView(this)\">table</button>";
   var graphViewIndicator = "<button class=\"button\" onclick=\"switchView(this)\">graph</button>";
@@ -7,28 +7,37 @@ function buildSwitcher() {
 }
 
 function showTable() {
-      $("#tableBlock").show();
-      $("#chart_div").hide();
+  $("#tableBlock").show();
+  $("#chart_div").hide();
+  $("#tableBlockForec").show();
+  $("#chart_divForec").hide();
 
-      $("#tableButton").addClass("active");
-      $("#chartButton").removeClass("active");
-      showSlider();
+  $("#tableButton").addClass("active");
+  $("#chartButton").removeClass("active");
+  showSlider();
 }
 
 function showChart() {
-        $("#chart_div").show();
-        $("#tableBlock").hide();
+  $("#chart_div").show();
+  $("#tableBlock").hide();
+  $("#chart_divForec").show();
+  $("#tableBlockForec").hide();
 
-        $("#chartButton").addClass("active");
-        $("#tableButton").removeClass("active");
-        chart.draw(data, chart_options);
-        showSlider();
+  $("#chartButton").addClass("active");
+  $("#tableButton").removeClass("active");
+  //chart.draw(data, chart_options);
+  showSlider();
 }
 
 function showSlider () {
   var changeSlider = function (data) {
     from = data.from;
     limit = moment(data.to, "X").diff(moment(data.from, "X"), 'days');
+    createReport()
+  };
+  var changeSliderForec = function (data) {
+    fromForec = data.from;
+    limitForec = moment(data.to, "X").diff(moment(data.from, "X"), 'days');
     createReport()
   };
   $("#range").ionRangeSlider({
@@ -46,20 +55,22 @@ function showSlider () {
     onStart: changeSlider,
     onChange: changeSlider,
   });
+  $("#rangeForec").ionRangeSlider({
+    type: 'double',
+    grid: true,
+    force_edges: true,
+    dragRange: false,
+    min: +moment().format("X"),
+    max: +moment().add(15, "days").format("X"),
+    from: +moment().format("X"),
+    to: +moment().add(15, "days").format("X"),
+    prettify: function (num) {
+      return moment(num, "X").format("Do MMMM");
+    },
+    onStart: changeSliderForec,
+    onChange: changeSliderForec,
+  });
 }
-
-function buildController() {
-  var input = "<input value=\"" + toHumanReadableDate(dataDomain.lb) + "\" readonly>";
-  var wrappedInput = wrapByTag(input, "div", ["input-control", "text"])
-  var slider = "<div class=\"slider large\" data-role=\"slider\" " +
-    "data-min-value=" + dataDomain.lb + " " +
-    "data-max-value=" + dataDomain.ub + " " +
-    "data-accuracy=" + (100 * (24 * 60 * 60 * 1000) / (dataDomain.ub - dataDomain.lb)) + " " +
-    "data-on-change=updateAggregationView " +
-    "></div>"
-  return wrappedInput + slider
-}
-
 function updateAggregationView(v, slider) {
   var aggregationView = $(slider).parent();
   var controlDisplay = $(aggregationView).find('input')[0];
@@ -90,4 +101,3 @@ function updateAggregationView(v, slider) {
     }
   });
 }
-

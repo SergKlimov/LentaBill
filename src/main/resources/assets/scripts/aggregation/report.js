@@ -18,6 +18,7 @@ function createReport() {
 
     if (isChecked(byDate) && isChecked(byStore)) {
         createDateStoreReport();
+        createDateStoreReportForecast();
     } else if (isChecked(byDate) && isChecked(byProduct)) {
         createDateProductReport();
     } else if (isChecked(byStore) && isChecked(byProduct)) {
@@ -28,8 +29,8 @@ function createReport() {
     }
 }
 
-function buildChecksAggregationViews(dataList) {
-    return buildTable(dataList, reportType);
+function buildChecksAggregationViews(dataList, type, typeTime, typeSid) {
+    return buildTable(dataList, type, typeTime, typeSid);
 }
 
 function fetchXML(url, params, callback) {
@@ -42,7 +43,7 @@ function fetchXML(url, params, callback) {
     });
 }
 
-function drawPlot(table, plotName) {
+function drawPlot(table, plotName, type) {
     data = new google.visualization.DataTable();
 
     data.addColumn('date', 'Date');
@@ -53,35 +54,55 @@ function drawPlot(table, plotName) {
     table.forEach(function (value) {
         data.addRow(value)
     });
-
-    chart.draw(data, chart_options);
+    switch(type) {
+        case 0:
+            chart.draw(data, chart_options);
+            break;
+        default:
+            chartForec.draw(data, chart_options);
+            break;
+    }
 }
 
 function createDateStoreReport() {
     fetchXML(address + "/api/checks/aggregation/byDateAndStore", {since: from, limit: limit}, function (d) {
         var fullDataSet = $(d).find("checksAggregationResultRepresentation");
-        var data = prepareDataByDateStore(fullDataSet, "minCheckValue", storeIds.toArray());
-        var reportContent = buildChecksAggregationViews(fullDataSet);
+        var data = prepareDataByDateStore(fullDataSet, "minCheckValue", storeIds.toArray(), 0);
+        var reportContent = buildChecksAggregationViews(fullDataSet, reportType[0], reportTypeTime[0], reportTypeSid[0]);
         $("#reportTable").html(reportContent);
 
-        drawPlot(data, stores);
+        drawPlot(data, stores, 0);
     });
 }
+function createDateStoreReportForecast() {
+    fetchXML(address + "/api/checks/forecast/byDateAndStore/min", {since: fromForec, limit: limitForec}, function (d) {
+        var fullDataSet = $(d).find("r");
+        var data = prepareDataByDateStore(fullDataSet, "v", storeIds.toArray(), 1);
+        var reportContent = buildChecksAggregationViews(fullDataSet, reportType[1], reportTypeTime[1], reportTypeSid[1]);
+        $("#reportTableForec").html(reportContent);
 
+        drawPlot(data, stores, 1);
+    });
+}
 function createDateProductReport() {
     fetchXML(address + "/api/products/aggregation/byDateAndStore", {}, function (d) {
         var fullDataSet = $(d).find("productsAggregationByStoreAndDateResultRepresentation");
         var data = prepareDataByDateProduct(fullDataSet, "minCheckValue", productIds.toArray());
-        var reportContent = buildChecksAggregationViews(fullDataSet);
+        var reportContent = buildChecksAggregationViews(fullDataSet, reportType[0], reportTypeTime[0], reportTypeSid[0]);
         $("#reportTable").html(reportContent);
 
-        drawPlot(data, products);
+        drawPlot(data, products, 0);
     });
 }
 
-function prepareDataByDateStore(dataList, value, stores) {
+function prepareDataByDateStore(dataList, value, stores, type) {
     var rawTs = $(dataList).map(function() {
-        return Number($(this).find("timestamp").text())
+        switch(type) {
+            case 0:
+                return Number($(this).find("timestamp").text())
+            default:
+                return Number($(this).find("ts").text())
+        }
     });
     var timestamps = $.unique(rawTs).map(function() {
         return new Date(this)
@@ -89,7 +110,12 @@ function prepareDataByDateStore(dataList, value, stores) {
 
     var list = stores.map(function (store) {
         var dataByStore = $(dataList).filter(function () {
-            return Number($(this).find("storeId").text()) == store;
+            switch(type) {
+                case 0:
+                    return Number($(this).find("storeId").text()) == store;
+                default:
+                    return Number($(this).find("sid").text()) == store;
+            }
         });
         var res = dataByStore.map(function() {
             return Number($(this).find(value).text())

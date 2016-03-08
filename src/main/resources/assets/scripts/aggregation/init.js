@@ -8,6 +8,7 @@ $(document).ready(function () {
     google.charts.setOnLoadCallback(drawBasic);
     function drawBasic() {
         chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chartForec = new google.visualization.LineChart(document.getElementById('chart_divForec'));
          chart_options = {
             hAxis: {
                 title: 'Time'
@@ -26,7 +27,9 @@ $(document).ready(function() {
     fetchProductList();
 });
 
-var reportType = "minCheckValue";
+var reportType = {0: "minCheckValue", 1:"v"};
+var reportTypeTime={0: "timestamp", 1: "ts"};
+var reportTypeSid={0: "storeId", 1: "sid"};
 var stores;
 var storeIds;
 
