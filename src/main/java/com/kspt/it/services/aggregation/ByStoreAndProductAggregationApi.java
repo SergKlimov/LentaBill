@@ -4,13 +4,13 @@ import java.util.List;
 
 public interface ByStoreAndProductAggregationApi {
 
-  List<ByStoreAndProductAggregation> aggregateByStoreAndProduct();
+  List<ByStoreAndProductAggregation> aggregateAllStatisticsAtOnce();
 
-  List<CompactByStoreAndProductAggregation> aggregateValues(
-      int productId,
-      String aggregationFunction);
+  List<CompactByStoreAndProductAggregation> aggregateOneValueStatisticForProduct(
+      final int productId,
+      final String aggregationFunction);
 
-  List<CompactByStoreAndProductAggregation> aggregateQuantity(
+  List<CompactByStoreAndProductAggregation> aggregateOneQuantityStatisticForProduct(
       int productId,
       String aggregationFunction);
 

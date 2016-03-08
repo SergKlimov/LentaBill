@@ -30,7 +30,7 @@ public class ByDateAndStoreAndProductAggregationResource {
       + "all products at once.")
   public List<ByDateAndStoreAndProductAggregationRepresentation> aggregateByDateAndStore() {
     final List<ByDateAndStoreAndProductAggregationRepresentation> list = service
-        .aggregateByStoreAndDateAndProduct().stream()
+        .aggregateAllStatisticsAtOnce().stream()
         .map(ar -> new ByDateAndStoreAndProductAggregationRepresentation(
             ar.getTimestamp(),
             ar.getStoreId(),
@@ -59,7 +59,7 @@ public class ByDateAndStoreAndProductAggregationResource {
       final @PathParam("productId") Integer productId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<TimeDomainPoint> list = service
-        .aggregateValues(storeId, productId, aggregationFunction).stream()
+        .aggregateOneValueStatisticForStoreAndProduct(storeId, productId, aggregationFunction).stream()
         .map(car -> new TimeDomainPoint(car.getOrigin(), car.getValue()))
         .collect(toList());
     return list;
@@ -76,7 +76,7 @@ public class ByDateAndStoreAndProductAggregationResource {
       final @PathParam("productId") Integer productId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<TimeDomainPoint> list = service
-        .aggregateQuantity(storeId, productId, aggregationFunction).stream()
+        .aggregateOneQuantityStatisticForStoreAndProduct(storeId, productId, aggregationFunction).stream()
         .map(car -> new TimeDomainPoint(car.getOrigin(), car.getValue()))
         .collect(toList());
     return list;
@@ -93,7 +93,7 @@ public class ByDateAndStoreAndProductAggregationResource {
       final @QueryParam("storeId") Integer storeId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<TimeDomainPoint> list = service
-        .forecastValues(storeId, productId, aggregationFunction)
+        .forecastOneValueStatisticForStoreAndProduct(storeId, productId, aggregationFunction)
         .stream()
         .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue()))
         .collect(toList());
@@ -111,7 +111,7 @@ public class ByDateAndStoreAndProductAggregationResource {
       final @QueryParam("storeId") Integer storeId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<TimeDomainPoint> list = service
-        .forecastQuantity(storeId, productId, aggregationFunction)
+        .forecastOneQuantityStatisticForStoreAndProduct(storeId, productId, aggregationFunction)
         .stream()
         .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue()))
         .collect(toList());

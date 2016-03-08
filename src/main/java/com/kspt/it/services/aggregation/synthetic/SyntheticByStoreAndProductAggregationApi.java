@@ -26,7 +26,7 @@ public class SyntheticByStoreAndProductAggregationApi implements ByStoreAndProdu
   }
 
   @Override
-  public List<ByStoreAndProductAggregation> aggregateByStoreAndProduct() {
+  public List<ByStoreAndProductAggregation> aggregateAllStatisticsAtOnce() {
     return range(0, storesCount)
         .boxed()
         .flatMap(i -> range(0, productsCount).mapToObj(j -> new Tuple2<>(i, j)))
@@ -35,7 +35,7 @@ public class SyntheticByStoreAndProductAggregationApi implements ByStoreAndProdu
   }
 
   @Override
-  public List<CompactByStoreAndProductAggregation> aggregateValues(
+  public List<CompactByStoreAndProductAggregation> aggregateOneValueStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
     return generateCompactAggregationResult(productId);
@@ -49,7 +49,7 @@ public class SyntheticByStoreAndProductAggregationApi implements ByStoreAndProdu
   }
 
   @Override
-  public List<CompactByStoreAndProductAggregation> aggregateQuantity(final int productId,
+  public List<CompactByStoreAndProductAggregation> aggregateOneQuantityStatisticForProduct(final int productId,
       final String aggregationFunction) {
     return generateCompactAggregationResult(productId);
   }

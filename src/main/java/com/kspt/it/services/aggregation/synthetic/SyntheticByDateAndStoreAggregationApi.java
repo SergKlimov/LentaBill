@@ -21,7 +21,7 @@ public class SyntheticByDateAndStoreAggregationApi implements ByDateAndStoreAggr
   }
 
   @Override
-  public List<ByDateAndStoreAggregation> aggregateByDateAndStore(final long since, final int limit) {
+  public List<ByDateAndStoreAggregation> aggregateAllStatisticsAtOnceForDateRange(final long since, final int limit) {
     return IntStream.range(0, limit)
         .mapToObj(i -> LocalDateTime
             .ofInstant(
@@ -35,7 +35,7 @@ public class SyntheticByDateAndStoreAggregationApi implements ByDateAndStoreAggr
   }
 
   @Override
-  public List<CompactByDateAndStoreAggregation> forecastForStores(final String aggregationFunction) {
+  public List<CompactByDateAndStoreAggregation> forecastOneValueStatistic(final String aggregationFunction) {
     final int forecastHorizon = 15;
     return IntStream.range(0, forecastHorizon)
         .mapToObj(i -> LocalDate.now().plusDays(i))
@@ -48,7 +48,7 @@ public class SyntheticByDateAndStoreAggregationApi implements ByDateAndStoreAggr
   }
 
   @Override
-  public List<CompactByDateAndStoreAggregation> aggregateUsing(final String aggregationFunction) {
+  public List<CompactByDateAndStoreAggregation> aggregateOneValueStatistic(final String aggregationFunction) {
     final int sampleSize = 30;
     final LocalDate startOfReport = LocalDate.now().minusDays(sampleSize);
     return IntStream.range(0, sampleSize)

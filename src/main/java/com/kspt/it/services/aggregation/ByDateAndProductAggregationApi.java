@@ -3,23 +3,23 @@ package com.kspt.it.services.aggregation;
 import java.util.List;
 
 public interface ByDateAndProductAggregationApi {
-  List<ByDateAndProductAggregation> aggregateByDateAndProduct();
+  List<ByDateAndProductAggregation> aggregateAllStatisticsAtOnce();
 
-  List<CompactByDateAndProductAggregation> forecastAggregatedValues(
+  List<CompactByDateAndProductAggregation> forecastOneValueStatisticForProduct(
       final int productId,
       final String aggregationFunction);
 
-  List<CompactByDateAndProductAggregation> forecastAggregatedQuantity(
+  List<CompactByDateAndProductAggregation> forecastOneQuantityStatisticForProduct(
       final int productId,
       final String aggregationFunction);
 
-  List<CompactByDateAndProductAggregation> aggregateValues(
+  List<CompactByDateAndProductAggregation> aggregateOneValueStatisticForProduct(
       final int productId,
       final String aggregationFunction);
 
-  List<CompactByDateAndProductAggregation> aggregateQuantityUsing(
-      int productId,
-      String aggregationFunction);
+  List<CompactByDateAndProductAggregation> aggregateOneQuantityStatisticForProduct(
+      final int productId,
+      final String aggregationFunction);
 
   class ByDateAndProductAggregation {
 

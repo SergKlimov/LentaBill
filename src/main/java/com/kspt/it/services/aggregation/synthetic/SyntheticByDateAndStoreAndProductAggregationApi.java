@@ -29,7 +29,7 @@ public class SyntheticByDateAndStoreAndProductAggregationApi
   }
 
   @Override
-  public List<ByDateAndStoreAndProductAggregation> aggregateByStoreAndDateAndProduct() {
+  public List<ByDateAndStoreAndProductAggregation> aggregateAllStatisticsAtOnce() {
     return range(0, daysCount)
         .mapToObj(i -> LocalDate.now().minusDays(i))
         .flatMap(d -> range(0, storesCount).mapToObj(i -> new Tuple2<>(d, i)))
@@ -39,7 +39,7 @@ public class SyntheticByDateAndStoreAndProductAggregationApi
   }
 
   @Override
-  public List<CompactByDateAndStoreAndProductAggregation> forecastValues(
+  public List<CompactByDateAndStoreAndProductAggregation> forecastOneValueStatisticForStoreAndProduct(
       final int storeId,
       final int productId,
       final String aggregationFunction) {
@@ -75,7 +75,7 @@ public class SyntheticByDateAndStoreAndProductAggregationApi
   }
 
   @Override
-  public List<CompactByDateAndStoreAndProductAggregation> forecastQuantity(
+  public List<CompactByDateAndStoreAndProductAggregation> forecastOneQuantityStatisticForStoreAndProduct(
       final int storeId,
       final int productId,
       final String aggregationFunction) {
@@ -84,7 +84,7 @@ public class SyntheticByDateAndStoreAndProductAggregationApi
   }
 
   @Override
-  public List<CompactByDateAndStoreAndProductAggregation> aggregateValues(
+  public List<CompactByDateAndStoreAndProductAggregation> aggregateOneValueStatisticForStoreAndProduct(
       final int storeId,
       final int productId,
       final String aggregationFunction) {
@@ -93,7 +93,7 @@ public class SyntheticByDateAndStoreAndProductAggregationApi
   }
 
   @Override
-  public List<CompactByDateAndStoreAndProductAggregation> aggregateQuantity(
+  public List<CompactByDateAndStoreAndProductAggregation> aggregateOneQuantityStatisticForStoreAndProduct(
       final int storeId,
       final int productId,
       final String aggregationFunction) {

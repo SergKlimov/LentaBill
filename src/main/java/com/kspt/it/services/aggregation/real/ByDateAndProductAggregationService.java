@@ -22,7 +22,7 @@ public class ByDateAndProductAggregationService implements ByDateAndProductAggre
   }
 
   @Override
-  public List<ByDateAndProductAggregation> aggregateByDateAndProduct() {
+  public List<ByDateAndProductAggregation> aggregateAllStatisticsAtOnce() {
     return dao.aggregateAllStatisticsAtOnce().stream()
         .map(are -> new ByDateAndProductAggregation(
             LocalDate.of(are.getYear(), are.getMonth(), are.getDay())
@@ -42,10 +42,11 @@ public class ByDateAndProductAggregationService implements ByDateAndProductAggre
   }
 
   @Override
-  public List<CompactByDateAndProductAggregation> forecastAggregatedValues(
+  public List<CompactByDateAndProductAggregation> forecastOneValueStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
-    return buildForecastForAllProductsByDate(aggregateValues(productId, aggregationFunction));
+    return buildForecastForAllProductsByDate(
+        aggregateOneValueStatisticForProduct(productId, aggregationFunction));
   }
 
   private List<CompactByDateAndProductAggregation> buildForecastForAllProductsByDate(
@@ -86,7 +87,7 @@ public class ByDateAndProductAggregationService implements ByDateAndProductAggre
   }
 
   @Override
-  public List<CompactByDateAndProductAggregation> aggregateValues(
+  public List<CompactByDateAndProductAggregation> aggregateOneValueStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
     return dao.aggregateOneValueStatisticForProduct(productId, aggregationFunction).stream()
@@ -101,14 +102,15 @@ public class ByDateAndProductAggregationService implements ByDateAndProductAggre
   }
 
   @Override
-  public List<CompactByDateAndProductAggregation> forecastAggregatedQuantity(
+  public List<CompactByDateAndProductAggregation> forecastOneQuantityStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
-    return buildForecastForAllProductsByDate(aggregateValues(productId, aggregationFunction));
+    return buildForecastForAllProductsByDate(
+        aggregateOneValueStatisticForProduct(productId, aggregationFunction));
   }
 
   @Override
-  public List<CompactByDateAndProductAggregation> aggregateQuantityUsing(
+  public List<CompactByDateAndProductAggregation> aggregateOneQuantityStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
     return dao.aggregateOneQuantityStatisticForProduct(productId, aggregationFunction).stream()

@@ -4,29 +4,27 @@ import java.util.List;
 
 public interface ByDateAndStoreAndProductAggregationApi {
 
-  List<ByDateAndStoreAndProductAggregation> aggregateByStoreAndDateAndProduct();
+  List<ByDateAndStoreAndProductAggregation> aggregateAllStatisticsAtOnce();
 
-  List<CompactByDateAndStoreAndProductAggregation> forecastValues(
+  List<CompactByDateAndStoreAndProductAggregation> forecastOneValueStatisticForStoreAndProduct(
       final int storeId,
       final int productId,
       final String aggregationFunction);
 
-  List<CompactByDateAndStoreAndProductAggregation> aggregateUsingByStoreAndDate(final String aggregationFunction);
-
-  List<CompactByDateAndStoreAndProductAggregation> forecastQuantity(
-      int storeId,
-      int productId,
-      String aggregationFunction);
-
-  List<CompactByDateAndStoreAndProductAggregation> aggregateValues(
+  List<CompactByDateAndStoreAndProductAggregation> forecastOneQuantityStatisticForStoreAndProduct(
       final int storeId,
       final int productId,
       final String aggregationFunction);
 
-  List<CompactByDateAndStoreAndProductAggregation> aggregateQuantity(
-      int storeId,
-      int productId,
-      String aggregationFunction);
+  List<CompactByDateAndStoreAndProductAggregation> aggregateOneValueStatisticForStoreAndProduct(
+      final int storeId,
+      final int productId,
+      final String aggregationFunction);
+
+  List<CompactByDateAndStoreAndProductAggregation> aggregateOneQuantityStatisticForStoreAndProduct(
+      final int storeId,
+      final int productId,
+      final String aggregationFunction);
 
   class ByDateAndStoreAndProductAggregation {
 

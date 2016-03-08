@@ -30,7 +30,7 @@ public class ByDateAndProductAggregationResource {
       + "at once.")
   public List<ByDateAndProductAggregationRepresentation> aggregateByDate() {
     final List<ByDateAndProductAggregationRepresentation> list = service
-        .aggregateByDateAndProduct().stream()
+        .aggregateAllStatisticsAtOnce().stream()
         .map(ar -> new ByDateAndProductAggregationRepresentation(
             ar.getTimestamp(),
             ar.getProductId(),
@@ -57,7 +57,7 @@ public class ByDateAndProductAggregationResource {
       final @PathParam("productId") @NotNull Integer productId,
       final @PathParam("aggregationFunction") @NotNull String aggregationFunction) {
     final List<TimeDomainPoint> list = service
-        .forecastAggregatedValues(productId, aggregationFunction)
+        .forecastOneValueStatisticForProduct(productId, aggregationFunction)
         .stream()
         .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue())
         ).collect(toList());
@@ -74,7 +74,7 @@ public class ByDateAndProductAggregationResource {
       final @PathParam("productId") @NotNull Integer productId,
       final @PathParam("aggregationFunction") @NotNull String aggregationFunction) {
     final List<TimeDomainPoint> list = service
-        .forecastAggregatedQuantity(productId, aggregationFunction)
+        .forecastOneQuantityStatisticForProduct(productId, aggregationFunction)
         .stream()
         .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue()))
         .collect(toList());
@@ -91,7 +91,7 @@ public class ByDateAndProductAggregationResource {
       final @PathParam("productId") @NotNull Integer productId,
       final @PathParam("aggregationFunction") @NotNull String aggregationFunction) {
     final List<TimeDomainPoint> list = service
-        .aggregateValues(productId, aggregationFunction)
+        .aggregateOneValueStatisticForProduct(productId, aggregationFunction)
         .stream()
         .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue()))
         .collect(toList());
@@ -108,7 +108,7 @@ public class ByDateAndProductAggregationResource {
       final @PathParam("productId") @NotNull Integer productId,
       final @PathParam("aggregationFunction") @NotNull String aggregationFunction) {
     final List<TimeDomainPoint> list = service
-        .aggregateQuantityUsing(productId, aggregationFunction)
+        .aggregateOneQuantityStatisticForProduct(productId, aggregationFunction)
         .stream()
         .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue()))
         .collect(toList());

@@ -32,7 +32,7 @@ public class ByDateAndStoreAggregationResource {
       final @QueryParam("since") long since,
       final @QueryParam("limit") int limit) {
     final List<ByDateAndStoreAggregationRepresentation> list = service
-        .aggregateByDateAndStore(since, limit)
+        .aggregateAllStatisticsAtOnceForDateRange(since, limit)
         .stream()
         .map(ar -> new ByDateAndStoreAggregationRepresentation(
             ar.getTimestamp(),
@@ -54,7 +54,7 @@ public class ByDateAndStoreAggregationResource {
   public List<CompactByDateAndStoreAggregationRepresentation> aggregateByDateAndStore(
       final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<CompactByDateAndStoreAggregationRepresentation> list = service
-        .aggregateUsing(aggregationFunction)
+        .aggregateOneValueStatistic(aggregationFunction)
         .stream()
         .map(ar -> new CompactByDateAndStoreAggregationRepresentation(
             ar.getOrigin(),
@@ -72,7 +72,7 @@ public class ByDateAndStoreAggregationResource {
   public List<CompactByDateAndStoreAggregationRepresentation> forecastAggregationByDateAndStore(
       final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<CompactByDateAndStoreAggregationRepresentation> list = service
-        .forecastForStores(aggregationFunction)
+        .forecastOneValueStatistic(aggregationFunction)
         .stream()
         .map(ar -> new CompactByDateAndStoreAggregationRepresentation(
             ar.getOrigin(),

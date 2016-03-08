@@ -29,7 +29,7 @@ public class ByStoreAndProductAggregationResource {
   @ApiOperation(value = "Aggregate products info by sore", notes = "Anything Else?")
   public List<ByStoreAndProductAggregationRepresentation> aggregateByStore() {
     final List<ByStoreAndProductAggregationRepresentation> list = service
-        .aggregateByStoreAndProduct().stream()
+        .aggregateAllStatisticsAtOnce().stream()
         .map(ar -> new ByStoreAndProductAggregationRepresentation(
             ar.getStoreId(),
             ar.getProductId(),
@@ -56,7 +56,7 @@ public class ByStoreAndProductAggregationResource {
       final @PathParam("productId") Integer productId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<CompactByStoreAndProductAggregationRepresentation> list = service
-        .aggregateValues(productId, aggregationFunction).stream()
+        .aggregateOneValueStatisticForProduct(productId, aggregationFunction).stream()
         .map(car -> new CompactByStoreAndProductAggregationRepresentation(
             car.getStoreId(),
             car.getValue()))
@@ -74,7 +74,7 @@ public class ByStoreAndProductAggregationResource {
       final @PathParam("productId") Integer productId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
     final List<CompactByStoreAndProductAggregationRepresentation> list = service
-        .aggregateQuantity(productId, aggregationFunction).stream()
+        .aggregateOneQuantityStatisticForProduct(productId, aggregationFunction).stream()
         .map(car -> new CompactByStoreAndProductAggregationRepresentation(
             car.getStoreId(),
             car.getValue()))

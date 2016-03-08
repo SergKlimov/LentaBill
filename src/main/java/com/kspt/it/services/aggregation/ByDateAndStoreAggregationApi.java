@@ -3,11 +3,14 @@ package com.kspt.it.services.aggregation;
 import java.util.List;
 
 public interface ByDateAndStoreAggregationApi {
-  List<ByDateAndStoreAggregation> aggregateByDateAndStore(final long since, final int limit);
+  List<ByDateAndStoreAggregation>
+  aggregateAllStatisticsAtOnceForDateRange(final long since, final int limit);
 
-  List<CompactByDateAndStoreAggregation> forecastForStores(final String aggregationFunction);
+  List<CompactByDateAndStoreAggregation>
+  forecastOneValueStatistic(final String aggregationFunction);
 
-  List<CompactByDateAndStoreAggregation> aggregateUsing(final String aggregationFunction);
+  List<CompactByDateAndStoreAggregation>
+  aggregateOneValueStatistic(final String aggregationFunction);
 
   class ByDateAndStoreAggregation {
 

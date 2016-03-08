@@ -26,7 +26,7 @@ public class SyntheticByDateAndProductAggregationApi implements ByDateAndProduct
   }
 
   @Override
-  public List<ByDateAndProductAggregation> aggregateByDateAndProduct() {
+  public List<ByDateAndProductAggregation> aggregateAllStatisticsAtOnce() {
     return range(0, daysCount)
         .mapToObj(i -> LocalDate.now().minusDays(i))
         .flatMap(d -> range(0, productsCount).mapToObj(i -> new Tuple2<>(d, i)))
@@ -35,7 +35,7 @@ public class SyntheticByDateAndProductAggregationApi implements ByDateAndProduct
   }
 
   @Override
-  public List<CompactByDateAndProductAggregation> forecastAggregatedValues(
+  public List<CompactByDateAndProductAggregation> forecastOneValueStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
     return listOfCompactAggregations(productId, 15);
@@ -54,21 +54,21 @@ public class SyntheticByDateAndProductAggregationApi implements ByDateAndProduct
   }
 
   @Override
-  public List<CompactByDateAndProductAggregation> forecastAggregatedQuantity(
+  public List<CompactByDateAndProductAggregation> forecastOneQuantityStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
     return listOfCompactAggregations(productId, 15);
   }
 
   @Override
-  public List<CompactByDateAndProductAggregation> aggregateValues(
+  public List<CompactByDateAndProductAggregation> aggregateOneValueStatisticForProduct(
       final int productId,
       final String aggregationFunction) {
     return listOfCompactAggregations(productId, 30);
   }
 
   @Override
-  public List<CompactByDateAndProductAggregation> aggregateQuantityUsing(
+  public List<CompactByDateAndProductAggregation> aggregateOneQuantityStatisticForProduct(
       int productId,
       String aggregationFunction) {
     return listOfCompactAggregations(productId, 30);

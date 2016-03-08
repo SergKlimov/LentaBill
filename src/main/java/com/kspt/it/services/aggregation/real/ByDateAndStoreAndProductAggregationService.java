@@ -22,7 +22,7 @@ public class ByDateAndStoreAndProductAggregationService
   }
 
   @Override
-  public List<ByDateAndStoreAndProductAggregation> aggregateByStoreAndDateAndProduct() {
+  public List<ByDateAndStoreAndProductAggregation> aggregateAllStatisticsAtOnce() {
     return dao.aggregateAllStatisticAtOnce().stream()
         .map(are -> new ByDateAndStoreAndProductAggregation(
             LocalDate.of(are.getYear(), are.getMonth(), are.getDay())
@@ -43,12 +43,12 @@ public class ByDateAndStoreAndProductAggregationService
   }
 
   @Override
-  public List<CompactByDateAndStoreAndProductAggregation> forecastValues(
+  public List<CompactByDateAndStoreAndProductAggregation> forecastOneValueStatisticForStoreAndProduct(
       final int storeId,
       final int productId,
       final String aggregationFunction) {
     final int forecastHorizon = 15;
-    final List<CompactByDateAndStoreAndProductAggregation> aggregated = aggregateValues(
+    final List<CompactByDateAndStoreAndProductAggregation> aggregated = aggregateOneValueStatisticForStoreAndProduct(
         storeId, productId, aggregationFunction);
     final List<Pair<Double, Long>> toForecast = aggregated.stream()
         .map(care -> new Pair<>(care.getValue(), care.getOrigin()))
@@ -65,7 +65,7 @@ public class ByDateAndStoreAndProductAggregationService
   }
 
   @Override
-  public List<CompactByDateAndStoreAndProductAggregation> aggregateValues(
+  public List<CompactByDateAndStoreAndProductAggregation> aggregateOneValueStatisticForStoreAndProduct(
       final int storeId,
       final int productId,
       final String aggregationFunction) {
@@ -83,12 +83,12 @@ public class ByDateAndStoreAndProductAggregationService
   }
 
   @Override
-  public List<CompactByDateAndStoreAndProductAggregation> forecastQuantity(
+  public List<CompactByDateAndStoreAndProductAggregation> forecastOneQuantityStatisticForStoreAndProduct(
       final int storeId,
       final int productId,
       final String aggregationFunction) {
     final int forecastHorizon = 15;
-    final List<CompactByDateAndStoreAndProductAggregation> aggregated = aggregateQuantity(
+    final List<CompactByDateAndStoreAndProductAggregation> aggregated = aggregateOneQuantityStatisticForStoreAndProduct(
         storeId, productId, aggregationFunction);
     final List<Pair<Double, Long>> toForecast = aggregated.stream()
         .map(care -> new Pair<>(care.getValue(), care.getOrigin()))
@@ -105,7 +105,7 @@ public class ByDateAndStoreAndProductAggregationService
   }
 
   @Override
-  public List<CompactByDateAndStoreAndProductAggregation> aggregateQuantity(
+  public List<CompactByDateAndStoreAndProductAggregation> aggregateOneQuantityStatisticForStoreAndProduct(
       final int storeId,
       final int productId,
       final String aggregationFunction) {

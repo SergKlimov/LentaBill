@@ -22,7 +22,7 @@ public class ByDateAndStoreAggregationService implements ByDateAndStoreAggregati
   }
 
   @Override
-  public List<ByDateAndStoreAggregation> aggregateByDateAndStore(final long since, final int limit) {
+  public List<ByDateAndStoreAggregation> aggregateAllStatisticsAtOnceForDateRange(final long since, final int limit) {
 
     return dao.aggregate(since, limit).stream()
         .map(are -> new ByDateAndStoreAggregation(
@@ -40,8 +40,8 @@ public class ByDateAndStoreAggregationService implements ByDateAndStoreAggregati
   }
 
   @Override
-  public List<CompactByDateAndStoreAggregation> forecastForStores(final String aggregationFunction) {
-    return buildForecastForAllStores(aggregateUsing(aggregationFunction));
+  public List<CompactByDateAndStoreAggregation> forecastOneValueStatistic(final String aggregationFunction) {
+    return buildForecastForAllStores(aggregateOneValueStatistic(aggregationFunction));
   }
 
   private List<CompactByDateAndStoreAggregation> buildForecastForAllStores(
@@ -81,7 +81,7 @@ public class ByDateAndStoreAggregationService implements ByDateAndStoreAggregati
   }
 
   @Override
-  public List<CompactByDateAndStoreAggregation> aggregateUsing(final String aggregationFunction) {
+  public List<CompactByDateAndStoreAggregation> aggregateOneValueStatistic(final String aggregationFunction) {
     return dao.aggregateOneValueStatistic(aggregationFunction).stream()
         .map(care -> new CompactByDateAndStoreAggregation(
             LocalDate.of(care.getYear(), care.getMonth(), care.getDay())
