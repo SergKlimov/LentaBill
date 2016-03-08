@@ -21,3 +21,9 @@ $(document).ready(function () {
         data = new google.visualization.DataTable();
     }
 });
+
+$(document).ready(function() {
+    $("#createReportButton").click(reportButtonPressed);
+});
+
+var reportType = "minCheckValue";

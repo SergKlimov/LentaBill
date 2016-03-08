@@ -6,21 +6,20 @@ function buildSwitcher() {
   //return wrapByTag(tableViewIndicator + graphViewIndicator, "div", "");
 }
 
-function showTable(btn) {
+function showTable() {
       $("#tableBlock").show();
       $("#chart_div").hide();
 
-      $(btn).addClass("active");
+      $("#tableButton").addClass("active");
       $("#chartButton").removeClass("active");
       showSlider();
-
 }
 
-function showChart(btn) {
+function showChart() {
         $("#chart_div").show();
         $("#tableBlock").hide();
 
-        $(btn).addClass("active");
+        $("#chartButton").addClass("active");
         $("#tableButton").removeClass("active");
         chart.draw(data, chart_options);
         showSlider();
