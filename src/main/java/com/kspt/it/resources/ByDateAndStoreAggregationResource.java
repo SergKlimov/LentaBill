@@ -19,7 +19,7 @@ import java.util.List;
 
 @Path("/checks/")
 @Produces(MediaType.APPLICATION_XML)
-@Api(value = "by date ans store aggregation")
+@Api(value = "by date and store aggregation")
 public class ByDateAndStoreAggregationResource {
 
   @Inject

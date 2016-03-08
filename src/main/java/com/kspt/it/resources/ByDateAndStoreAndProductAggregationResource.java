@@ -54,7 +54,7 @@ public class ByDateAndStoreAndProductAggregationResource {
       value = "Aggregate value of a particular product within a particular store aggregated by "
           + "date using arbitrary aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<TimeDomainPoint> aggregateValues(
+  public TimeDomainPoints aggregateValues(
       final @QueryParam("storeId") Integer storeId,
       final @PathParam("productId") Integer productId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
@@ -62,7 +62,7 @@ public class ByDateAndStoreAndProductAggregationResource {
         .aggregateOneValueStatisticForStoreAndProduct(storeId, productId, aggregationFunction).stream()
         .map(car -> new TimeDomainPoint(car.getOrigin(), car.getValue()))
         .collect(toList());
-    return list;
+    return new TimeDomainPoints(list);
   }
 
   @GET
@@ -71,7 +71,7 @@ public class ByDateAndStoreAndProductAggregationResource {
       value = "Aggregate quantity of a particular product within a particular store aggregated by "
           + "date using arbitrary aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<TimeDomainPoint> aggregateQuantity(
+  public TimeDomainPoints aggregateQuantity(
       final @QueryParam("storeId") Integer storeId,
       final @PathParam("productId") Integer productId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
@@ -79,7 +79,7 @@ public class ByDateAndStoreAndProductAggregationResource {
         .aggregateOneQuantityStatisticForStoreAndProduct(storeId, productId, aggregationFunction).stream()
         .map(car -> new TimeDomainPoint(car.getOrigin(), car.getValue()))
         .collect(toList());
-    return list;
+    return new TimeDomainPoints(list);
   }
 
   @GET
@@ -88,7 +88,7 @@ public class ByDateAndStoreAndProductAggregationResource {
       value = "Forecast value of a particular product within a particular store aggregated by "
           + "date using arbitrary aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<TimeDomainPoint> forecastValues(
+  public TimeDomainPoints forecastValues(
       final @PathParam("productId") Integer productId,
       final @QueryParam("storeId") Integer storeId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
@@ -97,7 +97,7 @@ public class ByDateAndStoreAndProductAggregationResource {
         .stream()
         .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue()))
         .collect(toList());
-    return list;
+    return new TimeDomainPoints(list);
   }
 
   @GET
@@ -106,7 +106,7 @@ public class ByDateAndStoreAndProductAggregationResource {
       value = "Aggregate quantity of a particular product within a particular store aggregated by "
           + "date using arbitrary aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<TimeDomainPoint> forecastQuantity(
+  public TimeDomainPoints forecastQuantity(
       final @PathParam("productId") Integer productId,
       final @QueryParam("storeId") Integer storeId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
@@ -115,7 +115,7 @@ public class ByDateAndStoreAndProductAggregationResource {
         .stream()
         .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue()))
         .collect(toList());
-    return list;
+    return new TimeDomainPoints(list);
   }
 }
 

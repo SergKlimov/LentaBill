@@ -53,7 +53,7 @@ public class ByDateAndProductAggregationResource {
       value = "Forecast value of a particular product aggregated by date using arbitrary "
           + "aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<TimeDomainPoint> forecastAggregatedValues(
+  public TimeDomainPoints forecastAggregatedValues(
       final @PathParam("productId") @NotNull Integer productId,
       final @PathParam("aggregationFunction") @NotNull String aggregationFunction) {
     final List<TimeDomainPoint> list = service
@@ -61,7 +61,7 @@ public class ByDateAndProductAggregationResource {
         .stream()
         .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue())
         ).collect(toList());
-    return list;
+    return new TimeDomainPoints(list);
   }
 
   @GET
@@ -70,7 +70,7 @@ public class ByDateAndProductAggregationResource {
       value = "Forecast quantity of a particular product aggregated by date using arbitrary "
           + "aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<TimeDomainPoint> forecastAggregatedQuantity(
+  public TimeDomainPoints forecastAggregatedQuantity(
       final @PathParam("productId") @NotNull Integer productId,
       final @PathParam("aggregationFunction") @NotNull String aggregationFunction) {
     final List<TimeDomainPoint> list = service
@@ -78,7 +78,7 @@ public class ByDateAndProductAggregationResource {
         .stream()
         .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue()))
         .collect(toList());
-    return list;
+    return new TimeDomainPoints(list);
   }
 
   @GET
@@ -87,7 +87,7 @@ public class ByDateAndProductAggregationResource {
       value = "Aggregate values of a particular product by date using arbitrary aggregation "
           + "function",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<TimeDomainPoint> aggregateValues(
+  public TimeDomainPoints aggregateValues(
       final @PathParam("productId") @NotNull Integer productId,
       final @PathParam("aggregationFunction") @NotNull String aggregationFunction) {
     final List<TimeDomainPoint> list = service
@@ -95,7 +95,7 @@ public class ByDateAndProductAggregationResource {
         .stream()
         .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue()))
         .collect(toList());
-    return list;
+    return new TimeDomainPoints(list);
   }
 
   @GET
@@ -104,7 +104,7 @@ public class ByDateAndProductAggregationResource {
       value = "Aggregate quantity of a particular product by date using arbitrary aggregation "
           + "function",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public List<TimeDomainPoint> aggregateQuantity(
+  public TimeDomainPoints aggregateQuantity(
       final @PathParam("productId") @NotNull Integer productId,
       final @PathParam("aggregationFunction") @NotNull String aggregationFunction) {
     final List<TimeDomainPoint> list = service
@@ -112,7 +112,7 @@ public class ByDateAndProductAggregationResource {
         .stream()
         .map(ar -> new TimeDomainPoint(ar.getOrigin(), ar.getValue()))
         .collect(toList());
-    return list;
+    return new TimeDomainPoints(list);
   }
 }
 
