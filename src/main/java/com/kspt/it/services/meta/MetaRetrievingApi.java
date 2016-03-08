@@ -8,4 +8,6 @@ public interface MetaRetrievingApi {
   Range<Long> getDataCollectionOrigin();
 
   List<StoreMeta> getStoresMeta();
+
+
 }

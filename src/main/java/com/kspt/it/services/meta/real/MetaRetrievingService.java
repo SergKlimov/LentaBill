@@ -1,8 +1,8 @@
 package com.kspt.it.services.meta.real;
 
 import com.google.common.collect.Range;
-import com.kspt.it.dao.meta.checks.ChecksMetaDAO;
-import com.kspt.it.dao.meta.stores.StoresMetaDAO;
+import com.kspt.it.dao.meta.ChecksMetaDAO;
+import com.kspt.it.dao.meta.StoresMetaDAO;
 import com.kspt.it.services.meta.MetaRetrievingApi;
 import com.kspt.it.services.meta.StoreMeta;
 import static java.util.stream.Collectors.toList;

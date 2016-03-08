@@ -1,4 +1,4 @@
-package com.kspt.it.dao.meta.stores;
+package com.kspt.it.dao.meta;
 
 import com.avaje.ebean.EbeanServer;
 import com.kspt.it.persist.data.StoreEntry;

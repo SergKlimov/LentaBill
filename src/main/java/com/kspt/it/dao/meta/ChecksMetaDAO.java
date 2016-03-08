@@ -1,9 +1,11 @@
-package com.kspt.it.dao.meta.checks;
+package com.kspt.it.dao.meta;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
+import com.avaje.ebean.annotation.Sql;
 import javax.inject.Inject;
+import javax.persistence.Entity;
 
 public class ChecksMetaDAO {
 
@@ -34,5 +36,20 @@ public class ChecksMetaDAO {
     return ebean.find(CheckOriginEntry.class)
         .setRawSql(sql)
         .findUnique();
+  }
+
+  @Entity
+  @Sql
+  public static class CheckOriginEntry {
+
+    private final Long origin;
+
+    public CheckOriginEntry(final Long origin) {
+      this.origin = origin;
+    }
+
+    public Long getOrigin() {
+      return origin;
+    }
   }
 }
