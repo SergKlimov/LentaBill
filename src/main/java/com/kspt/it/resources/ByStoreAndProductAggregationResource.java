@@ -29,10 +29,10 @@ public class ByStoreAndProductAggregationResource {
   @GET
   @Path("/aggregation/byStore")
   @ApiOperation(value = "Aggregate products info by sore", notes = "Anything Else?")
-  public List<ByStoreAndProductAggregationRepresentation> aggregateByStore() {
-    final List<ByStoreAndProductAggregationRepresentation> list = service
+  public List<ByStoreAndProductAggregationView> aggregateByStore() {
+    final List<ByStoreAndProductAggregationView> list = service
         .aggregateAllStatisticsAtOnce().stream()
-        .map(ar -> new ByStoreAndProductAggregationRepresentation(
+        .map(ar -> new ByStoreAndProductAggregationView(
             ar.getStoreId(),
             ar.getProductId(),
             ar.getMinCheckValue(),
@@ -54,16 +54,16 @@ public class ByStoreAndProductAggregationResource {
       value = "Aggregate value of a particular product aggregated by store using arbitrary "
           + "aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public CompactByStoreAndProductAggregationRepresentations aggregateValues(
+  public CompactByStoreAndProductAggregationViews aggregateValues(
       final @PathParam("productId") Integer productId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
-    final List<CompactByStoreAndProductAggregationRepresentation> list = service
+    final List<CompactByStoreAndProductAggregationView> list = service
         .aggregateOneValueStatisticForProduct(productId, aggregationFunction).stream()
-        .map(car -> new CompactByStoreAndProductAggregationRepresentation(
+        .map(car -> new CompactByStoreAndProductAggregationView(
             car.getStoreId(),
             car.getValue()))
         .collect(toList());
-    return new CompactByStoreAndProductAggregationRepresentations(list);
+    return new CompactByStoreAndProductAggregationViews(list);
   }
 
   @GET
@@ -72,22 +72,22 @@ public class ByStoreAndProductAggregationResource {
       value = "Aggregate quantity of a particular product aggregated by store using arbitrary "
           + "aggregation function.",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public CompactByStoreAndProductAggregationRepresentations aggregateQuantity(
+  public CompactByStoreAndProductAggregationViews aggregateQuantity(
       final @PathParam("productId") Integer productId,
       final @PathParam("aggregationFunction") String aggregationFunction) {
-    final List<CompactByStoreAndProductAggregationRepresentation> list = service
+    final List<CompactByStoreAndProductAggregationView> list = service
         .aggregateOneQuantityStatisticForProduct(productId, aggregationFunction).stream()
-        .map(car -> new CompactByStoreAndProductAggregationRepresentation(
+        .map(car -> new CompactByStoreAndProductAggregationView(
             car.getStoreId(),
             car.getValue()))
         .collect(toList());
-    return new CompactByStoreAndProductAggregationRepresentations(list);
+    return new CompactByStoreAndProductAggregationViews(list);
   }
 }
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-class ByStoreAndProductAggregationRepresentation {
+class ByStoreAndProductAggregationView {
 
   private int storeId;
 
@@ -111,10 +111,10 @@ class ByStoreAndProductAggregationRepresentation {
 
   private int itemsCount;
 
-  public ByStoreAndProductAggregationRepresentation() {
+  public ByStoreAndProductAggregationView() {
   }
 
-  public ByStoreAndProductAggregationRepresentation(
+  public ByStoreAndProductAggregationView(
       final int storeId,
       final int productId,
       final double minCheckValue,
@@ -141,7 +141,7 @@ class ByStoreAndProductAggregationRepresentation {
 }
 
 @XmlAccessorType(XmlAccessType.FIELD)
-class CompactByStoreAndProductAggregationRepresentation {
+class CompactByStoreAndProductAggregationView {
 
   @XmlElement(name = "sid")
   private Integer storeId;
@@ -150,29 +150,29 @@ class CompactByStoreAndProductAggregationRepresentation {
   @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
   private Double value;
 
-  public CompactByStoreAndProductAggregationRepresentation(
+  public CompactByStoreAndProductAggregationView(
       final Integer storeId,
       final Double value) {
     this.storeId = storeId;
     this.value = value;
   }
 
-  public CompactByStoreAndProductAggregationRepresentation() {
+  public CompactByStoreAndProductAggregationView() {
   }
 }
 
 @XmlRootElement(name = "results")
 @XmlAccessorType(XmlAccessType.FIELD)
-class CompactByStoreAndProductAggregationRepresentations {
+class CompactByStoreAndProductAggregationViews {
   @XmlElement(name = "r")
   @XmlElementWrapper(name = "list")
-  private List<CompactByStoreAndProductAggregationRepresentation> results;
+  private List<CompactByStoreAndProductAggregationView> results;
 
-  public CompactByStoreAndProductAggregationRepresentations(
-      final List<CompactByStoreAndProductAggregationRepresentation> results) {
+  public CompactByStoreAndProductAggregationViews(
+      final List<CompactByStoreAndProductAggregationView> results) {
     this.results = results;
   }
 
-  public CompactByStoreAndProductAggregationRepresentations() {
+  public CompactByStoreAndProductAggregationViews() {
   }
 }

@@ -28,10 +28,10 @@ public class ByDateAndStoreAndProductAggregationResource {
   @Path("/aggregation/byDateAndStore")
   @ApiOperation(value = "Calculate all statistics aggregated by date and store and product for "
       + "all products at once.")
-  public List<ByDateAndStoreAndProductAggregationRepresentation> aggregateByDateAndStore() {
-    final List<ByDateAndStoreAndProductAggregationRepresentation> list = service
+  public List<ByDateAndStoreAndProductAggregationView> aggregateByDateAndStore() {
+    final List<ByDateAndStoreAndProductAggregationView> list = service
         .aggregateAllStatisticsAtOnce().stream()
-        .map(ar -> new ByDateAndStoreAndProductAggregationRepresentation(
+        .map(ar -> new ByDateAndStoreAndProductAggregationView(
             ar.getTimestamp(),
             ar.getStoreId(),
             ar.getProductId(),
@@ -121,7 +121,7 @@ public class ByDateAndStoreAndProductAggregationResource {
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-class ByDateAndStoreAndProductAggregationRepresentation {
+class ByDateAndStoreAndProductAggregationView {
 
   private long timestamp;
 
@@ -147,10 +147,10 @@ class ByDateAndStoreAndProductAggregationRepresentation {
 
   private int itemsCount;
 
-  public ByDateAndStoreAndProductAggregationRepresentation() {
+  public ByDateAndStoreAndProductAggregationView() {
   }
 
-  public ByDateAndStoreAndProductAggregationRepresentation(
+  public ByDateAndStoreAndProductAggregationView(
       final long timestamp,
       final int storeId,
       final int productId,

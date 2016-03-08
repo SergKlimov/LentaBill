@@ -30,13 +30,13 @@ public class ByDateAndStoreAggregationResource {
   @GET
   @Path("/aggregation/byDateAndStore")
   @ApiOperation(value = "Aggregate checks info by date and sore", notes = "Anything Else?")
-  public List<ByDateAndStoreAggregationRepresentation> aggregateByDateAndStore(
+  public List<ByDateAndStoreAggregationView> aggregateByDateAndStore(
       final @QueryParam("since") long since,
       final @QueryParam("limit") int limit) {
-    final List<ByDateAndStoreAggregationRepresentation> list = service
+    final List<ByDateAndStoreAggregationView> list = service
         .aggregateAllStatisticsAtOnceForDateRange(since, limit)
         .stream()
-        .map(ar -> new ByDateAndStoreAggregationRepresentation(
+        .map(ar -> new ByDateAndStoreAggregationView(
             ar.getTimestamp(),
             ar.getStoreId(),
             ar.getMinCheckValue(),
@@ -53,17 +53,17 @@ public class ByDateAndStoreAggregationResource {
   @ApiOperation(
       value = "Aggregate checks info by date and sore using arbitrary function as a parameter.",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public CompactByDateAndStoreAggregationRepresentations aggregateByDateAndStore(
+  public CompactByDateAndStoreAggregationViews aggregateByDateAndStore(
       final @PathParam("aggregationFunction") String aggregationFunction) {
-    final List<CompactByDateAndStoreAggregationRepresentation> list = service
+    final List<CompactByDateAndStoreAggregationView> list = service
         .aggregateOneValueStatistic(aggregationFunction)
         .stream()
-        .map(ar -> new CompactByDateAndStoreAggregationRepresentation(
+        .map(ar -> new CompactByDateAndStoreAggregationView(
             ar.getOrigin(),
             ar.getStoreId(),
             ar.getValue())
         ).collect(toList());
-    return new CompactByDateAndStoreAggregationRepresentations(list);
+    return new CompactByDateAndStoreAggregationViews(list);
   }
 
   @GET
@@ -71,22 +71,22 @@ public class ByDateAndStoreAggregationResource {
   @ApiOperation(
       value = "Build forecast for checks info aggregated by date and sore using arbitrary function",
       notes = "Available functions are: min, avg, max, sum, count.")
-  public CompactByDateAndStoreAggregationRepresentations forecastAggregationByDateAndStore(
+  public CompactByDateAndStoreAggregationViews forecastAggregationByDateAndStore(
       final @PathParam("aggregationFunction") String aggregationFunction) {
-    final List<CompactByDateAndStoreAggregationRepresentation> list = service
+    final List<CompactByDateAndStoreAggregationView> list = service
         .forecastOneValueStatistic(aggregationFunction)
         .stream()
-        .map(ar -> new CompactByDateAndStoreAggregationRepresentation(
+        .map(ar -> new CompactByDateAndStoreAggregationView(
             ar.getOrigin(),
             ar.getStoreId(),
             ar.getValue())
         ).collect(toList());
-    return new CompactByDateAndStoreAggregationRepresentations(list);
+    return new CompactByDateAndStoreAggregationViews(list);
   }
 }
 
 @XmlAccessorType(XmlAccessType.FIELD)
-class CompactByDateAndStoreAggregationRepresentation {
+class CompactByDateAndStoreAggregationView {
   @XmlElement(name = "ts")
   private Long timestamp;
 
@@ -97,7 +97,7 @@ class CompactByDateAndStoreAggregationRepresentation {
   @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
   private Double value;
 
-  public CompactByDateAndStoreAggregationRepresentation(
+  public CompactByDateAndStoreAggregationView(
       final Long timestamp,
       final Integer storeId,
       final Double value) {
@@ -106,29 +106,29 @@ class CompactByDateAndStoreAggregationRepresentation {
     this.value = value;
   }
 
-  public CompactByDateAndStoreAggregationRepresentation() {
+  public CompactByDateAndStoreAggregationView() {
   }
 }
 
 @XmlRootElement(name = "results")
 @XmlAccessorType(XmlAccessType.FIELD)
-class CompactByDateAndStoreAggregationRepresentations {
+class CompactByDateAndStoreAggregationViews {
   @XmlElement(name = "r")
   @XmlElementWrapper(name = "list")
-  private List<CompactByDateAndStoreAggregationRepresentation> results;
+  private List<CompactByDateAndStoreAggregationView> results;
 
-  public CompactByDateAndStoreAggregationRepresentations(
-      final List<CompactByDateAndStoreAggregationRepresentation> results) {
+  public CompactByDateAndStoreAggregationViews(
+      final List<CompactByDateAndStoreAggregationView> results) {
     this.results = results;
   }
 
-  public CompactByDateAndStoreAggregationRepresentations() {
+  public CompactByDateAndStoreAggregationViews() {
   }
 }
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-class ByDateAndStoreAggregationRepresentation {
+class ByDateAndStoreAggregationView {
 
   private Long timestamp;
 
@@ -148,10 +148,10 @@ class ByDateAndStoreAggregationRepresentation {
 
   private Integer checksCount;
 
-  public ByDateAndStoreAggregationRepresentation() {
+  public ByDateAndStoreAggregationView() {
   }
 
-  public ByDateAndStoreAggregationRepresentation(
+  public ByDateAndStoreAggregationView(
       final long timestamp,
       final int storeId,
       final Double minCheckValue,
