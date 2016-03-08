@@ -70,7 +70,7 @@ function drawPlot(table, plotName, type) {
 function createDateStoreReport() {
     fetchXML(address + "/api/checks/aggregation/byDateAndStore", {since: from, limit: limit}, function (d) {
         var fullDataSet = $(d).find("checksAggregationResultRepresentation");
-        var data = prepareDataByDateStore(fullDataSet, reportType, storeIds);
+        var data = prepareData(fullDataSet, reportType, storeIds, "timestamp", "storeId");
         var reportContent = buildChecksAggregationViews(fullDataSet);
         $("#reportTable").html(reportContent);
 
@@ -83,8 +83,6 @@ function createAllReport() {
         var fullDataSet = $(d).find("checksAggregationResultRepresentation");
         var data = prepareDataByAll(fullDataSet, reportType, storeIds, productIds[0]);
         var reportContent = buildChecksAggregationViews(fullDataSet);
-        var data = prepareDataByDateStore(fullDataSet, "minCheckValue", storeIds.toArray(), 0);
-        var reportContent = buildChecksAggregationViews(fullDataSet, reportType[0], reportTypeTime[0], reportTypeSid[0]);
         $("#reportTable").html(reportContent);
 
         drawPlot(data, stores, 0);
@@ -93,17 +91,18 @@ function createAllReport() {
 function createDateStoreReportForecast() {
     fetchXML(address + "/api/checks/forecast/byDateAndStore/min", {since: fromForec, limit: limitForec}, function (d) {
         var fullDataSet = $(d).find("r");
-        var data = prepareDataByDateStore(fullDataSet, "v", storeIds.toArray(), 1);
+        var data = prepareDataByDateStore(fullDataSet, reportType, storeIds, "ts", "sid");
         var reportContent = buildChecksAggregationViews(fullDataSet, reportType[1], reportTypeTime[1], reportTypeSid[1]);
         $("#reportTableForec").html(reportContent);
 
         drawPlot(data, stores, 1);
     });
 }
+
 function createDateProductReport() {
     fetchXML(address + "/api/products/aggregation/byDateAndStore", {}, function (d) {
         var fullDataSet = $(d).find("productsAggregationByStoreAndDateResultRepresentation");
-        var data = prepareDataByDateProduct(fullDataSet, reportType, productIdsEnabled);
+        var data = prepareData(fullDataSet, reportType, productIdsEnabled, "timestamp", "productId");
         var reportContent = buildChecksAggregationViews(fullDataSet);
         $("#reportTable").html(reportContent);
 
@@ -111,27 +110,20 @@ function createDateProductReport() {
     });
 }
 
-function createProductStoreReport() {
-    fetchXML(address + "/api/products/aggregation/byDateAndStore", {}, function (d) {
-        var fullDataSet = $(d).find("productsAggregationByStoreAndDateResultRepresentation");
-        var data = prepareDataByDateProduct(fullDataSet, reportType, productIds);
-        var reportContent = buildChecksAggregationViews(fullDataSet);
-        var data = prepareDataByDateProduct(fullDataSet, "minCheckValue", productIds.toArray());
-        var reportContent = buildChecksAggregationViews(fullDataSet, reportType[0], reportTypeTime[0], reportTypeSid[0]);
-        $("#reportTable").html(reportContent);
+//function createProductStoreReport() {
+//    fetchXML(address + "/api/products/aggregation/byDateAndStore", {}, function (d) {
+//        var fullDataSet = $(d).find("productsAggregationByStoreAndDateResultRepresentation");
+//        var data = prepareDataByDateProduct(fullDataSet, reportType, productIds);
+//        var reportContent = buildChecksAggregationViews(fullDataSet);
+//        $("#reportTable").html(reportContent);
+//
+//        drawPlot(data, products, 0);
+//    });
+//}
 
-        drawPlot(data, products, 0);
-    });
-}
-
-function prepareDataByDateStore(dataList, value, stores, type) {
+function prepareData(dataList, value, stores, ts_key, store_key) {
     var rawTs = $(dataList).map(function() {
-        switch(type) {
-            case 0:
-                return Number($(this).find("timestamp").text())
-            default:
-                return Number($(this).find("ts").text())
-        }
+        return Number($(this).find(ts_key).text()); // ts
     });
     var timestamps = $.unique(rawTs).map(function() {
         return new Date(this)
@@ -139,35 +131,7 @@ function prepareDataByDateStore(dataList, value, stores, type) {
 
     var list = stores.map(function (store) {
         var dataByStore = $(dataList).filter(function () {
-            switch(type) {
-                case 0:
-                    return Number($(this).find("storeId").text()) == store;
-                default:
-                    return Number($(this).find("sid").text()) == store;
-            }
-        });
-        var res = dataByStore.map(function() {
-            return Number($(this).find(value).text())
-        });
-        return res;
-    });
-    list.unshift(timestamps); // Prepend
-    var table = transpose(list);
-    return table;
-}
-
-// TODO: Merge
-function prepareDataByDateProduct(dataList, value, products) {
-    var rawTs = $(dataList).map(function() {
-        return Number($(this).find("timestamp").text())
-    });
-    var timestamps = $.unique(rawTs).map(function() {
-        return new Date(this)
-    });
-
-    var list = products.map(function (product) {
-        var dataByStore = $(dataList).filter(function () {
-            return Number($(this).find("productId").text()) == product;
+            return Number($(this).find(store_key).text()) == store; // sid
         });
         var res = dataByStore.map(function() {
             return Number($(this).find(value).text())
