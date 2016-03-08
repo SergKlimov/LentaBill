@@ -121,10 +121,4 @@ public class ByDateAndStoreAndProductAggregationService
             care.getValue()
         )).collect(toList());
   }
-
-  @Override
-  public List<CompactByDateAndStoreAndProductAggregation> aggregateUsingByStoreAndDate(
-      String aggregationFunction) {
-    return null;
-  }
 }

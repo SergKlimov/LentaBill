@@ -1,7 +1,6 @@
 package com.kspt.it.services.aggregation.synthetic;
 
 import com.kspt.it.Tuple2;
-import com.kspt.it.Tuple3;
 import com.kspt.it.services.aggregation.ByDateAndStoreAndProductAggregationApi;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
@@ -55,21 +54,6 @@ public class SyntheticByDateAndStoreAndProductAggregationApi
             d.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
             storeId,
             productId,
-            100 * Math.random()))
-        .collect(toList());
-  }
-
-  @Override
-  public List<CompactByDateAndStoreAndProductAggregation> aggregateUsingByStoreAndDate(
-      final String aggregationFunction) {
-    return range(0, daysCount)
-        .mapToObj(i -> LocalDate.now().minusDays(i))
-        .flatMap(d -> range(0, storesCount).mapToObj(s -> new Tuple2<>(d, s)))
-        .flatMap(t2 -> range(0, productsCount).mapToObj(p -> new Tuple3<>(t2._1, t2._2, p)))
-        .map(t3 -> new CompactByDateAndStoreAndProductAggregation(
-            t3._1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
-            t3._2,
-            t3._3,
             100 * Math.random()))
         .collect(toList());
   }
