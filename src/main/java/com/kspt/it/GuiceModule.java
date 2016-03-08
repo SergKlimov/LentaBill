@@ -13,6 +13,7 @@ import com.kspt.it.dao.aggregation.ByDateAndStoreAggregationDAO;
 import com.kspt.it.dao.aggregation.ByDateAndStoreAndProductAggregationDAO;
 import com.kspt.it.dao.aggregation.ByStoreAndProductAggregationDAO;
 import com.kspt.it.dao.meta.ChecksMetaDAO;
+import com.kspt.it.dao.meta.ProductsDAO;
 import com.kspt.it.dao.meta.StoresMetaDAO;
 import com.kspt.it.services.aggregation.ByDateAndProductAggregationApi;
 import com.kspt.it.services.aggregation.ByDateAndStoreAggregationApi;
@@ -118,10 +119,12 @@ public class GuiceModule extends AbstractModule {
     if (type.equals("real")) {
       return new MetaRetrievingService(
           i.getInstance(ChecksMetaDAO.class),
-          i.getInstance(StoresMetaDAO.class), productsDao);
+          i.getInstance(StoresMetaDAO.class),
+          i.getInstance(ProductsDAO.class));
     } else {
       final Config serviceConfig = c.getConfig("services_types." + type);
       final int storesCount = serviceConfig.getInt("stores_count");
+      final int productsCount = serviceConfig.getInt("products_count");
       return new SyntheticMetaRetrievingApi(storesCount, productsCount);
     }
   }
