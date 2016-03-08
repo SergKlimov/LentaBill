@@ -118,11 +118,11 @@ public class GuiceModule extends AbstractModule {
     if (type.equals("real")) {
       return new MetaRetrievingService(
           i.getInstance(ChecksMetaDAO.class),
-          i.getInstance(StoresMetaDAO.class));
+          i.getInstance(StoresMetaDAO.class), productsDao);
     } else {
       final Config serviceConfig = c.getConfig("services_types." + type);
       final int storesCount = serviceConfig.getInt("stores_count");
-      return new SyntheticMetaRetrievingApi(storesCount);
+      return new SyntheticMetaRetrievingApi(storesCount, productsCount);
     }
   }
 

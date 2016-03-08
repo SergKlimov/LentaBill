@@ -7,7 +7,9 @@ public interface MetaRetrievingApi {
 
   Range<Long> getDataCollectionOrigin();
 
-  List<StoreMeta> getStoresMeta();
+  List<Store> getStoresMeta();
 
+  List<Product> getAllProducts();
 
+  Product findProductInfo(final int id);
 }
