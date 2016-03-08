@@ -30,13 +30,13 @@ public class ByDateAndStoreAggregationResource {
   @GET
   @Path("/aggregation/byDateAndStore")
   @ApiOperation(value = "Aggregate checks info by date and sore", notes = "Anything Else?")
-  public List<ByDateAndStoreAggregationView> aggregateByDateAndStore(
+  public List<ChecksAggregationResultRepresentation> aggregateByDateAndStore(
       final @QueryParam("since") long since,
       final @QueryParam("limit") int limit) {
-    final List<ByDateAndStoreAggregationView> list = service
+    final List<ChecksAggregationResultRepresentation> list = service
         .aggregateAllStatisticsAtOnceForDateRange(since, limit)
         .stream()
-        .map(ar -> new ByDateAndStoreAggregationView(
+        .map(ar -> new ChecksAggregationResultRepresentation(
             ar.getTimestamp(),
             ar.getStoreId(),
             ar.getMinCheckValue(),
@@ -128,7 +128,7 @@ class CompactByDateAndStoreAggregationViews {
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-class ByDateAndStoreAggregationView {
+class ChecksAggregationResultRepresentation {
 
   private Long timestamp;
 
@@ -148,10 +148,10 @@ class ByDateAndStoreAggregationView {
 
   private Integer checksCount;
 
-  public ByDateAndStoreAggregationView() {
+  public ChecksAggregationResultRepresentation() {
   }
 
-  public ByDateAndStoreAggregationView(
+  public ChecksAggregationResultRepresentation(
       final long timestamp,
       final int storeId,
       final Double minCheckValue,

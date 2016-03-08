@@ -29,10 +29,10 @@ public class ByStoreAndProductAggregationResource {
   @GET
   @Path("/aggregation/byStore")
   @ApiOperation(value = "Aggregate products info by sore", notes = "Anything Else?")
-  public List<ByStoreAndProductAggregationView> aggregateByStore() {
-    final List<ByStoreAndProductAggregationView> list = service
+  public List<ProductsAggregationByStoreResultRepresentation> aggregateByStore() {
+    final List<ProductsAggregationByStoreResultRepresentation> list = service
         .aggregateAllStatisticsAtOnce().stream()
-        .map(ar -> new ByStoreAndProductAggregationView(
+        .map(ar -> new ProductsAggregationByStoreResultRepresentation(
             ar.getStoreId(),
             ar.getProductId(),
             ar.getMinCheckValue(),
@@ -87,7 +87,7 @@ public class ByStoreAndProductAggregationResource {
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-class ByStoreAndProductAggregationView {
+class ProductsAggregationByStoreResultRepresentation {
 
   private int storeId;
 
@@ -111,10 +111,10 @@ class ByStoreAndProductAggregationView {
 
   private int itemsCount;
 
-  public ByStoreAndProductAggregationView() {
+  public ProductsAggregationByStoreResultRepresentation() {
   }
 
-  public ByStoreAndProductAggregationView(
+  public ProductsAggregationByStoreResultRepresentation(
       final int storeId,
       final int productId,
       final double minCheckValue,

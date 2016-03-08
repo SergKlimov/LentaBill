@@ -38,9 +38,9 @@ public class MetaRetrievingResource {
   @GET
   @Path("/storesMeta")
   @ApiOperation(value = "Retrieves stores info.")
-  public List<StoreRepresentation> getStoresMeta() {
-    final List<StoreRepresentation> list = api.getStoresMeta().stream()
-        .map(sm -> new StoreRepresentation(sm.getId(), sm.getName()))
+  public List<StoreMetaRepresentation> getStoresMeta() {
+    final List<StoreMetaRepresentation> list = api.getStoresMeta().stream()
+        .map(sm -> new StoreMetaRepresentation(sm.getId(), sm.getName()))
         .collect(toList());
     return list;
   }
@@ -84,15 +84,15 @@ class DataCollectionDomainRepresentation {
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-class StoreRepresentation {
+class StoreMetaRepresentation {
   private int id;
 
   private String name;
 
-  public StoreRepresentation() {
+  public StoreMetaRepresentation() {
   }
 
-  public StoreRepresentation(final int id, final String name) {
+  public StoreMetaRepresentation(final int id, final String name) {
     this.id = id;
     this.name = name;
   }
