@@ -45,6 +45,6 @@ public class SyntheticMetaRetrievingApi implements MetaRetrievingApi {
 
   @Override
   public Product findProductInfo(final int id) {
-    return new Product(id, String.format("store-%d", id));
+    return new Product(id, String.format("product-%d", id));
   }
 }
