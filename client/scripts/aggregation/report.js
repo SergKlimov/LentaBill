@@ -68,8 +68,6 @@ function createDateStoreReport() {
         var reportContent = buildChecksAggregationViews(fullDataSet);
         $("#reportTable").html(reportContent);
         drawPlot(fullDataSet);
-
-        $("#ex2").slider({});
     });
 }
 

@@ -4,13 +4,11 @@
 
 $(document).ready(function () {
     var userList = new List('users', {valueNames: ['name', 'born']});
-    google.charts.load('current', {packages: ['corechart', 'line']});
-
+    google.charts.load("current", {packages:["corechart"]});
     google.charts.setOnLoadCallback(drawBasic);
-
     function drawBasic() {
         chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-        chart_options = {
+         chart_options = {
             hAxis: {
                 title: 'Time'
             },
