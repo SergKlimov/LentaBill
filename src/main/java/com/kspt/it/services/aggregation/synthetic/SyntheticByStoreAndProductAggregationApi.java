@@ -34,7 +34,7 @@ public class SyntheticByStoreAndProductAggregationApi implements ByStoreAndProdu
   }
 
   @Override
-  public List<CompactByStoreAndProductAggregation> aggregateUsingByStore(
+  public List<CompactByStoreAndProductAggregation> aggregateValues(
       String aggregationFunction) {
     return range(0, storesCount)
         .boxed()

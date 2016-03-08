@@ -6,7 +6,13 @@ public interface ByStoreAndProductAggregationApi {
 
   List<ByStoreAndProductAggregation> aggregateByStoreAndProduct();
 
-  List<CompactByStoreAndProductAggregation> aggregateUsingByStore(final String aggregationFunction);
+  List<CompactByStoreAndProductAggregation> aggregateValues(
+      int productId,
+      String aggregationFunction);
+
+  List<CompactByStoreAndProductAggregation> aggregateQuantity(
+      int productId,
+      String aggregationFunction);
 
   class ByStoreAndProductAggregation {
 
@@ -115,7 +121,7 @@ public interface ByStoreAndProductAggregationApi {
           this.value = value;
       }
 
-      public long getStoreId() {
+      public int getStoreId() {
           return storeId;
       }
 

@@ -32,8 +32,26 @@ public class ByStoreAndProductAggregationService implements ByStoreAndProductAgg
   }
 
   @Override
-  public List<CompactByStoreAndProductAggregation> aggregateUsingByStore(
+  public List<CompactByStoreAndProductAggregation> aggregateValues(
+      final int productId,
       final String aggregationFunction) {
-    return null;
+    return dao.aggregateValues(productId, aggregationFunction).stream()
+        .map(care -> new CompactByStoreAndProductAggregation(
+            care.getStoreId(),
+            care.getProductId(),
+            care.getValue()))
+        .collect(toList());
+  }
+
+  @Override
+  public List<CompactByStoreAndProductAggregation> aggregateQuantity(
+      final int productId,
+      final String aggregationFunction) {
+    return dao.aggregateQuantity(productId, aggregationFunction).stream()
+        .map(care -> new CompactByStoreAndProductAggregation(
+            care.getStoreId(),
+            care.getProductId(),
+            care.getValue()))
+        .collect(toList());
   }
 }

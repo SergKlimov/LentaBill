@@ -43,14 +43,17 @@ public class ByStoreAndProductAggregationDAO {
         .findList();
   }
 
-  public List<CompactByStoreAndProductAggregationEntry> aggregateValueByStoreUsing(
+  public List<CompactByStoreAndProductAggregationEntry> aggregateValues(
+      final int productId,
       final String aggregationFunction) {
     return aggregateByStoreUsing(
+        productId,
         aggregationFunction,
         "product_facts.value * product_facts.quantity");
   }
 
   private List<CompactByStoreAndProductAggregationEntry> aggregateByStoreUsing(
+      final int productId,
       final String aggregationFunction,
       final String aggregationSubject) {
     final String query = "SELECT "
@@ -58,8 +61,8 @@ public class ByStoreAndProductAggregationDAO {
         + "product_facts.product_id AS productId, "
         + aggregationFunction + "(" + aggregationSubject + ") AS value "
         + "FROM "
-        + "product_facts "
-        + "JOIN supplier_dimensions "
+        + "(SELECT * FROM product_facts WHERE product_id = " + productId + ") "
+        + "LEFT JOIN supplier_dimensions "
         + "ON product_facts.supplier_id = supplier_dimensions.id "
         + "GROUP BY "
         + "product_facts.product_id, "
@@ -70,9 +73,10 @@ public class ByStoreAndProductAggregationDAO {
         .findList();
   }
 
-  public List<CompactByStoreAndProductAggregationEntry> aggregateQuantityByStoreUsing(
+  public List<CompactByStoreAndProductAggregationEntry> aggregateQuantity(
+      final int productId,
       final String aggregationFunction) {
-    return aggregateByStoreUsing(aggregationFunction, "product_facts.quantity");
+    return aggregateByStoreUsing(productId, aggregationFunction, "product_facts.quantity");
   }
 
   @Entity

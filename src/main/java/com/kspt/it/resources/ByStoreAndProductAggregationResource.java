@@ -9,11 +9,13 @@ import static java.util.stream.Collectors.toList;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
 @Path("/products/")
@@ -47,6 +49,42 @@ public class ByStoreAndProductAggregationResource {
             ar.getAllProductsQuantitySum(),
             ar.getItemsCount())
         ).collect(toList());
+    return list;
+  }
+
+  @GET
+  @Path("/{productId}/aggregate/value/byStore/{aggregationFunction}")
+  @ApiOperation(
+      value = "Aggregate value of a particular product within a particular store aggregated by "
+          + "date using arbitrary aggregation function.",
+      notes = "Available functions are: min, avg, max, sum, count.")
+  public List<CompactByStoreAndProductAggregationRepresentation> aggregateValues(
+      final @PathParam("productId") Integer productId,
+      final @PathParam("aggregationFunction") String aggregationFunction) {
+    final List<CompactByStoreAndProductAggregationRepresentation> list = service
+        .aggregateValues(productId, aggregationFunction).stream()
+        .map(car -> new CompactByStoreAndProductAggregationRepresentation(
+            car.getStoreId(),
+            car.getValue()))
+        .collect(toList());
+    return list;
+  }
+
+  @GET
+  @Path("/{productId}/aggregate/quantity/byStore/{aggregationFunction}")
+  @ApiOperation(
+      value = "Aggregate quantity of a particular product within a particular store aggregated by "
+          + "date using arbitrary aggregation function.",
+      notes = "Available functions are: min, avg, max, sum, count.")
+  public List<CompactByStoreAndProductAggregationRepresentation> aggregateQuantity(
+      final @PathParam("productId") Integer productId,
+      final @PathParam("aggregationFunction") String aggregationFunction) {
+    final List<CompactByStoreAndProductAggregationRepresentation> list = service
+        .aggregateQuantity(productId, aggregationFunction).stream()
+        .map(car -> new CompactByStoreAndProductAggregationRepresentation(
+            car.getStoreId(),
+            car.getValue()))
+        .collect(toList());
     return list;
   }
 }
@@ -103,5 +141,25 @@ class ByStoreAndProductAggregationRepresentation {
     this.maxProductQuantity = maxProductQuantity;
     this.allProductsQuantitySum = allProductsQuantitySum;
     this.itemsCount = itemsCount;
+  }
+}
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+class CompactByStoreAndProductAggregationRepresentation {
+
+  private Integer storeId;
+
+  @XmlJavaTypeAdapter(XMLDoubleAdapter.class)
+  private Double value;
+
+  public CompactByStoreAndProductAggregationRepresentation(
+      final Integer storeId,
+      final Double value) {
+    this.storeId = storeId;
+    this.value = value;
+  }
+
+  public CompactByStoreAndProductAggregationRepresentation() {
   }
 }
