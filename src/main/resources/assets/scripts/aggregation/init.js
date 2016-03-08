@@ -3,7 +3,6 @@
  */
 
 $(document).ready(function () {
-    var userList = new List('users', {valueNames: ['name', 'born']});
     google.charts.load("current", {packages:["corechart"]});
     google.charts.setOnLoadCallback(drawBasic);
     function drawBasic() {
@@ -24,24 +23,29 @@ $(document).ready(function() {
     $("#createReportButton").click(reportButtonPressed);
     fetchStoreList();
     fetchProductList();
+    fillProducts();
 });
 
 var reportType = "minCheckValue";
+
 var stores;
 var storeIds;
 
 var products;
 var productIds;
 
+var productsEnabled;
+var productIdsEnabled;
+
 function fetchStoreList() {
     fetchXML("http://localhost:8080/api/meta/storesMeta", {}, function(d) {
         var records = $(d).find("storeMetaRepresentation");
         stores = $(records).map(function() {
             return $(this).find("name").text();
-        });
+        }).toArray();
         storeIds = $(records).map(function() {
             return Number($(this).find("id").text());
-        });
+        }).toArray();
     });
 }
 
@@ -50,9 +54,12 @@ function fetchProductList() {
         var records = $(d).find("productRepresentation");
         products = $(records).map(function() {
             return $(this).find("name").text();
-        });
+        }).toArray();
         productIds = $(records).map(function() {
             return Number($(this).find("id").text());
-        });
+        }).toArray();
+
+        productsEnabled = products.slice();
+        productIdsEnabled = productIds.slice();
     });
 }

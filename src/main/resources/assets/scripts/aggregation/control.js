@@ -27,9 +27,12 @@ function showChart() {
 
 function showSlider () {
   var changeSlider = function (data) {
+    createSlider(data);
+    createReport();
+  };
+  var createSlider = function (data) {
     from = data.from;
     limit = moment(data.to, "X").diff(moment(data.from, "X"), 'days');
-    createReport()
   };
   $("#range").ionRangeSlider({
     type: 'double',
@@ -43,7 +46,7 @@ function showSlider () {
     prettify: function (num) {
       return moment(num, "X").format("Do MMMM");
     },
-    onStart: changeSlider,
+    onStart: createSlider,
     onChange: changeSlider,
   });
 }

@@ -14,9 +14,12 @@ function createReport() {
 
     if (isChecked(byProduct)) {
         $("#products").show();
+        fillProducts();
     }
 
-    if (isChecked(byDate) && isChecked(byStore)) {
+    if (isChecked(byDate) && isChecked(byStore) && isChecked(byProduct)) {
+        createAllReport();
+    } else if (isChecked(byDate) && isChecked(byStore)) {
         createDateStoreReport();
     } else if (isChecked(byDate) && isChecked(byProduct)) {
         createDateProductReport();
@@ -46,8 +49,8 @@ function drawPlot(table, plotName) {
     data = new google.visualization.DataTable();
 
     data.addColumn('date', 'Date');
-    plotName.each(function() {
-        data.addColumn('number', this);
+    plotName.forEach(function(value) {
+        data.addColumn('number', value);
     });
 
     table.forEach(function (value) {
@@ -60,7 +63,18 @@ function drawPlot(table, plotName) {
 function createDateStoreReport() {
     fetchXML(address + "/api/checks/aggregation/byDateAndStore", {since: from, limit: limit}, function (d) {
         var fullDataSet = $(d).find("checksAggregationResultRepresentation");
-        var data = prepareDataByDateStore(fullDataSet, "minCheckValue", storeIds.toArray());
+        var data = prepareDataByDateStore(fullDataSet, reportType, storeIds);
+        var reportContent = buildChecksAggregationViews(fullDataSet);
+        $("#reportTable").html(reportContent);
+
+        drawPlot(data, stores);
+    });
+}
+
+function createAllReport() {
+    fetchXML(address + "/api/checks/aggregation/byDateAndStore", {since: from, limit: limit}, function (d) {
+        var fullDataSet = $(d).find("checksAggregationResultRepresentation");
+        var data = prepareDataByAll(fullDataSet, reportType, storeIds, productIds[0]);
         var reportContent = buildChecksAggregationViews(fullDataSet);
         $("#reportTable").html(reportContent);
 
@@ -71,7 +85,18 @@ function createDateStoreReport() {
 function createDateProductReport() {
     fetchXML(address + "/api/products/aggregation/byDateAndStore", {}, function (d) {
         var fullDataSet = $(d).find("productsAggregationByStoreAndDateResultRepresentation");
-        var data = prepareDataByDateProduct(fullDataSet, "minCheckValue", productIds.toArray());
+        var data = prepareDataByDateProduct(fullDataSet, reportType, productIdsEnabled);
+        var reportContent = buildChecksAggregationViews(fullDataSet);
+        $("#reportTable").html(reportContent);
+
+        drawPlot(data, productsEnabled);
+    });
+}
+
+function createProductStoreReport() {
+    fetchXML(address + "/api/products/aggregation/byDateAndStore", {}, function (d) {
+        var fullDataSet = $(d).find("productsAggregationByStoreAndDateResultRepresentation");
+        var data = prepareDataByDateProduct(fullDataSet, reportType, productIds);
         var reportContent = buildChecksAggregationViews(fullDataSet);
         $("#reportTable").html(reportContent);
 
@@ -124,12 +149,74 @@ function prepareDataByDateProduct(dataList, value, products) {
     return table;
 }
 
+function prepareDataByAll(dataList, value, stores, product) {
+    var rawTs = $(dataList).map(function() {
+        return Number($(this).find("timestamp").text())
+    });
+    var timestamps = $.unique(rawTs).map(function() {
+        return new Date(this)
+    });
+
+    var list = stores.map(function (store) {
+        var dataByStore = $(dataList).filter(function () {
+            return Number($(this).find("storeId").text()) == store;
+        });
+
+        dataFiltered = $(dataByStore).filter(function () {
+            return Number($(this).find("productId").text()) == product;
+        });
+
+        var res = dataFiltered.map(function() {
+            return Number($(this).find(value).text())
+        });
+        return res;
+    });
+    list.unshift(timestamps); // Prepend
+    var table = transpose(list);
+    return table;
+}
+
 function setType(btn, type) {
     reportType = type;
     $(btn).siblings().each(function () {
         $(this).removeClass("active");
     });
     $(btn).addClass("active");
+
+    createReport();
+}
+
+function fillProducts() {
+    var productList = new List('products', {
+        valueNames: ['name'],
+        item: '<li class="list-group-item active" onclick="changeProduct(this)"><p class="name"></p></li>'
+    });
+    productList.clear();
+    products.forEach(function (val) {
+        productList.add({
+            name: val
+        });
+    });
+    fillProducts = function(){};
+}
+
+function changeProduct(elem) {
+    var enabled = $(elem).hasClass("active");
+    var text = $(elem).text();
+    if (enabled) {
+        $(elem).attr("list-group-item");
+
+        var pos = productsEnabled.indexOf(text);
+        productsEnabled.splice(pos, 1);
+        productIdsEnabled.splice(pos, 1);
+    } else {
+        $(elem).attr("list-group-item active");
+
+        productsEnabled.push(text);
+        var pos = products.indexOf(text);
+        var id = productIds[pos];
+        productIdsEnabled.push(id);
+    }
 
     createReport();
 }

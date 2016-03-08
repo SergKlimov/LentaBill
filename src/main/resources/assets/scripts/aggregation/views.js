@@ -1,6 +1,6 @@
 function buildTable(dataList, selector) {
   var timestamps = $(dataList).map(function() {return $(this).find("timestamp").text()});
-  var tableHeader = buildTableHeader($.unique(timestamps))
+  var tableHeader = buildTableHeader($.unique(timestamps));
   var tableBody = buildTableBody(dataList, selector);
   var table = "<table class=\"table striped hovered cell-hovered bordered\">" +
     wrapByTag(wrapByTag(tableHeader, "tr", ""), "thead", "") +
