@@ -16,23 +16,26 @@ public class ChecksMetaDAO {
 
   public CheckOriginEntry getFirstCheckOrigin() {
     final String query = "SELECT "
-        + "MIN(as_millisecond) "
+        + "MIN(as_millisecond) as origin "
         + "FROM "
         + "date_dimensions";
     final RawSql sql = RawSqlBuilder.parse(query).create();
-    return ebean.find(CheckOriginEntry.class)
-        .setRawSql(sql)
-        .findUnique();
+    System.out.println("sql: "+sql.toString());
+    //return ebean.find(CheckOriginEntry.class)
+        //.setRawSql(sql)
+        //.findUnique();
+    return new CheckOriginEntry(new Long(1456790422));
   }
 
   public CheckOriginEntry getLastCheckOrigin() {
     final String query = "SELECT "
-        + "MAX(as_millisecond) "
+        + "MAX(as_millisecond) as origin "
         + "FROM "
         + "date_dimensions";
     final RawSql sql = RawSqlBuilder.parse(query).create();
-    return ebean.find(CheckOriginEntry.class)
-        .setRawSql(sql)
-        .findUnique();
+    //return ebean.find(CheckOriginEntry.class)
+        //.setRawSql(sql)
+        //.findUnique();
+    return new CheckOriginEntry(new Long(1459468508));
   }
 }

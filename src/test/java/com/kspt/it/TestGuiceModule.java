@@ -3,6 +3,7 @@ package com.kspt.it;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebean.RawSqlBuilder;
+import com.avaje.ebean.SqlUpdate;
 import com.avaje.ebean.config.DataSourceConfig;
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.config.dbplatform.H2Platform;
