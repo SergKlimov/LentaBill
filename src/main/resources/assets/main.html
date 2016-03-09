@@ -42,6 +42,12 @@
 <body>
 
 <div class="container">
+    <div style="font-size: 200%">
+        <i class="fa fa-shopping-basket"></i>
+        <i class="fa fa-pie-chart"></i>
+        <span style="margin-left: 25px">Shop network statistics page</span>
+    </div>
+    <hr style="border-color: black; background-color: black; border-style: solid;">
     <div class="row">
         <div class="col-md-4 checkbox">
             <div style="border: 2px solid; border-radius: 20px; padding: 20px;">
@@ -91,13 +97,14 @@
                 <div class="btn-group" role="group">
                     <button type="button" onclick="setType(this, 'minCheckValue')" class="btn btn-default active">Min</button>
                     <button type="button" onclick="setType(this, 'maxCheckValue')" class="btn btn-default">Max</button>
-                    <button type="button" class="btn btn-default">Average</button>
+                    <button type="button" onclick="setType(this, 'avgCheckValue')" class="btn btn-default">Average</button>
                     <button type="button" class="btn btn-default">Count</button>
                 </div>
                 <div class="btn-group" role="group">
                     <button id="tableButton" type="button" class="btn btn-default active" onclick="showTable()"><i class="fa fa-list"></i></button>
                     <button id="chartButton" type="button" class="btn btn-default" onclick="showChart()"><i class="fa fa-line-chart"></i></button>
                 </div>
+                <p style="text-align: center"><b>Report:</b></p>
                 <div id="tableBlock" style="display: none">
                     <table id="reportTable" class="table table-striped">
 
@@ -108,6 +115,7 @@
                 <div id="range" type="text" value=""/>
             </div>
             <div id="reportViewForec" class="listview" data-role="listview">
+                <p style="text-align: center"><b>Forecast:</b></p>
                 <div id="tableBlockForec" style="display: none">
                     <table id="reportTableForec" class="table table-striped">
 

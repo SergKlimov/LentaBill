@@ -1,7 +1,10 @@
-function buildTable(dataList, selector, typeTime, typeSid) {
-  var timestamps = $(dataList).map(function() {return $(this).find(typeTime).text()});
-  var tableHeader = buildTableHeader($.unique(timestamps))
-  var tableBody = buildTableBody(dataList, selector, typeSid);
+function buildTable(dataList, rowNames) {
+  var data = transpose(dataList);
+  var timestamps = data[0];
+  var tableHeader = buildTableHeader(timestamps);
+  var noTimestamps = data.slice();
+  noTimestamps.shift();
+  var tableBody = buildTableBody(noTimestamps, rowNames);
   var table = "<table class=\"table striped hovered cell-hovered bordered\">" +
     wrapByTag(wrapByTag(tableHeader, "tr", ""), "thead", "") +
     wrapByTag(tableBody, "tbody", "") +
@@ -9,37 +12,27 @@ function buildTable(dataList, selector, typeTime, typeSid) {
   return table;
 }
 
-function buildTableHeader(uniqueTimestamps) {
-  var tableHeadersWithDate = $(uniqueTimestamps)
-    .sort(byTimestampComparator)
+function buildTableHeader(timestamps) {
+  var tableHeadersWithDate = $(timestamps)
     .map(function() {
-      return Number(this);
-    }).map(function() {
-      return toHumanReadableDate(this);
+      return toHumanReadableDate(this)
     }).map(function() {
       return wrapByTag(this, "th", "");
     });
     return wrapByTag("", "th", "") + concatArray(tableHeadersWithDate, "");
 }
 
-function buildRow(rowTitle, dataList, selector) {
-  var tableCellsWithValues = dataList
-    .sort(byTimestampComparator)
-    .map(function() {
-      return $(this).find(selector).text();
-    }).map(function() {
-      return wrapByTag(this, "td", "");
+function buildRow(row, name) {
+  var tableCellsWithValues = row
+    .map(function(value) {
+      return wrapByTag(value, "td", "");
     });
-    return wrapByTag(rowTitle, "td", "") + concatArray(tableCellsWithValues, "");
+    return wrapByTag(name, "td", "") + concatArray(tableCellsWithValues, "");
 }
 
-function buildTableBody(dataList, selector, typeSid) {
-  var tableRows = $(storesMeta).map(function() {
-    var storeId = this.id;
-    var dataForStore = $(dataList).filter(function(idx) {
-      return Number($(this).find(typeSid).text()) == storeId;
-    })
-    return buildRow(this.name, dataForStore, selector);
+function buildTableBody(dataList, rowNames) {
+  var tableRows = $(dataList).map(function(i) {
+    return buildRow(this, rowNames[i]);
   }).map(function() {
     return wrapByTag(this, "tr", "");
   });

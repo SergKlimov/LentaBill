@@ -26,8 +26,7 @@ function byTimestampComparator(o1, o2) {
   return ts1 - ts2;
 }
 
-function toHumanReadableDate(timestampMs) {
-  var date = new Date(timestampMs);
+function toHumanReadableDate(date) {
   var year = date.getFullYear();
   var month = "0" + (date.getMonth() + 1);
   var day = "0" + date.getDate();

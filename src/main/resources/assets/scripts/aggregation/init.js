@@ -13,7 +13,7 @@ $(document).ready(function () {
                 title: 'Time'
             },
             vAxis: {
-                title: 'Popularity'
+                title: 'Check value'
             }
         };
         data = new google.visualization.DataTable();
@@ -27,9 +27,7 @@ $(document).ready(function() {
     fillProducts();
 });
 
-var reportType = {0: "minCheckValue", 1:"v"};
-var reportTypeTime={0: "timestamp", 1: "ts"};
-var reportTypeSid={0: "storeId", 1: "sid"};
+var reportType = "minCheckValue"; // v
 var stores;
 var storeIds;
 

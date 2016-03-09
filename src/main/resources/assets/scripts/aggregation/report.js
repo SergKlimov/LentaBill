@@ -24,16 +24,13 @@ function createReport() {
         createDateStoreReportForecast();
     } else if (isChecked(byDate) && isChecked(byProduct)) {
         createDateProductReport();
+        //createDateProductReportForecast();
     } else if (isChecked(byStore) && isChecked(byProduct)) {
-
+        createProductStoreReport();
     }
     else {
         alert("Unsupported aggregation type")
     }
-}
-
-function buildChecksAggregationViews(dataList, type, typeTime, typeSid) {
-    return buildTable(dataList, type, typeTime, typeSid);
 }
 
 function fetchXML(url, params, callback) {
@@ -46,7 +43,7 @@ function fetchXML(url, params, callback) {
     });
 }
 
-function drawPlot(table, plotName, type) {
+function drawPlot(table, plotName, chartObj) {
     data = new google.visualization.DataTable();
 
     data.addColumn('date', 'Date');
@@ -57,24 +54,53 @@ function drawPlot(table, plotName, type) {
     table.forEach(function (value) {
         data.addRow(value)
     });
-    switch(type) {
-        case 0:
-            chart.draw(data, chart_options);
-            break;
-        default:
-            chartForec.draw(data, chart_options);
-            break;
-    }
+    chartObj.draw(data, chart_options);
+}
+
+function drawBars(table, plotName, chartObj) {
+    data = new google.visualization.DataTable();
+
+    plotName.forEach(function(value) {
+        data.addColumn('number', value);
+    });
+
+    table.forEach(function (value) {
+        data.addRow(value)
+    });
+    chartObj = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+    chartObj.draw(data, chart_options);
 }
 
 function createDateStoreReport() {
-    fetchXML(address + "/api/checks/aggregation/byDateAndStore", {since: from, limit: limit}, function (d) {
+    fetchXML(address + "/api/checks/aggregation/byDateAndStore", {since: from*1000, limit: limit}, function (d) {
         var fullDataSet = $(d).find("checksAggregationResultRepresentation");
         var data = prepareData(fullDataSet, reportType, storeIds, "timestamp", "storeId");
-        var reportContent = buildChecksAggregationViews(fullDataSet);
+        var reportContent = buildTable(data, stores);
         $("#reportTable").html(reportContent);
 
-        drawPlot(data, stores);
+        drawPlot(data, stores, chart);
+    });
+}
+
+function createDateStoreReportForecast() {
+    fetchXML(address + "/api/checks/forecast/byDateAndStore/min", {since: fromForec, limit: limitForec}, function (d) {
+        var fullDataSet = $(d).find("r");
+        var data = prepareData(fullDataSet, "v", storeIds, "ts", "sid");
+        var reportContent = buildTable(data, stores);
+        $("#reportTableForec").html(reportContent);
+
+        drawPlot(data, stores, chartForec);
+    });
+}
+
+function createDateProductReportForecast() {
+    fetchXML(address + "/api/products/0/forecast/value/byDate/min", {since: fromForec, limit: limitForec}, function (d) {
+        var fullDataSet = $(d).find("r");
+        var data = prepareData2(fullDataSet, "p", storeIds, "ts");
+        var reportContent = buildTable(data, stores);
+        $("#reportTableForec").html(reportContent);
+
+        drawPlot(data, stores, chartForec);
     });
 }
 
@@ -82,20 +108,10 @@ function createAllReport() {
     fetchXML(address + "/api/checks/aggregation/byDateAndStore", {since: from, limit: limit}, function (d) {
         var fullDataSet = $(d).find("checksAggregationResultRepresentation");
         var data = prepareDataByAll(fullDataSet, reportType, storeIds, productIds[0]);
-        var reportContent = buildChecksAggregationViews(fullDataSet);
+        var reportContent = buildTable(data, stores);
         $("#reportTable").html(reportContent);
 
-        drawPlot(data, stores, 0);
-    });
-}
-function createDateStoreReportForecast() {
-    fetchXML(address + "/api/checks/forecast/byDateAndStore/min", {since: fromForec, limit: limitForec}, function (d) {
-        var fullDataSet = $(d).find("r");
-        var data = prepareDataByDateStore(fullDataSet, reportType, storeIds, "ts", "sid");
-        var reportContent = buildChecksAggregationViews(fullDataSet, reportType[1], reportTypeTime[1], reportTypeSid[1]);
-        $("#reportTableForec").html(reportContent);
-
-        drawPlot(data, stores, 1);
+        drawPlot(data, stores, chart);
     });
 }
 
@@ -103,23 +119,22 @@ function createDateProductReport() {
     fetchXML(address + "/api/products/aggregation/byDateAndStore", {}, function (d) {
         var fullDataSet = $(d).find("productsAggregationByStoreAndDateResultRepresentation");
         var data = prepareData(fullDataSet, reportType, productIdsEnabled, "timestamp", "productId");
-        var reportContent = buildChecksAggregationViews(fullDataSet);
+        var reportContent = buildTable(data, productsEnabled);
         $("#reportTable").html(reportContent);
 
-        drawPlot(data, productsEnabled);
+        drawPlot(data, productsEnabled, chart);
     });
 }
 
-//function createProductStoreReport() {
-//    fetchXML(address + "/api/products/aggregation/byDateAndStore", {}, function (d) {
-//        var fullDataSet = $(d).find("productsAggregationByStoreAndDateResultRepresentation");
-//        var data = prepareDataByDateProduct(fullDataSet, reportType, productIds);
-//        var reportContent = buildChecksAggregationViews(fullDataSet);
-//        $("#reportTable").html(reportContent);
-//
-//        drawPlot(data, products, 0);
-//    });
-//}
+function createProductStoreReport() {
+    fetchXML(address + "/api/products/aggregation/byStore", {}, function (d) {
+        var fullDataSet = $(d).find("productsAggregationByStoreResultRepresentation");
+        var data = prepareDataNoTs(fullDataSet, reportType, storeIds, productIds[0]);
+        $("#reportTable").html("Look at the plot");
+
+        drawBars(data, stores, 0);
+    });
+}
 
 function prepareData(dataList, value, stores, ts_key, store_key) {
     var rawTs = $(dataList).map(function() {
@@ -139,6 +154,44 @@ function prepareData(dataList, value, stores, ts_key, store_key) {
         return res;
     });
     list.unshift(timestamps); // Prepend
+    var table = transpose(list);
+    return table;
+}
+
+function prepareData2(dataList, value, stores, ts_key) {
+    var rawTs = $(dataList).map(function() {
+        return Number($(this).find(ts_key).text()); // ts
+    });
+    var timestamps = $.unique(rawTs).map(function() {
+        return new Date(this)
+    });
+
+    var res = $(dataList).map(function() {
+        return Number($(this).find(value).text())
+    });
+
+    var list = [res];
+
+    list.unshift(timestamps); // Prepend
+    var table = transpose(list);
+    return table;
+}
+
+function prepareDataNoTs(dataList, value, stores, product) {
+    var list = stores.map(function (store) {
+        var dataByStore = $(dataList).filter(function () {
+            return Number($(this).find("storeId").text()) == store;
+        });
+
+        dataFiltered = $(dataByStore).filter(function () {
+            return Number($(this).find("productId").text()) == product;
+        });
+
+        var res = dataFiltered.map(function() {
+            return Number($(this).find(value).text())
+        });
+        return res;
+    });
     var table = transpose(list);
     return table;
 }
